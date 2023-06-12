@@ -1,0 +1,26 @@
+{
+  "extends": ["react-app", "prettier", "plugin:storybook/recommended"],
+  "plugins": ["prettier", "simple-import-sort"],
+  "overrides": [
+    {
+      "files": ["*.js", "*.jsx", "*.ts", "*.tsx"],
+      "rules": {
+        "simple-import-sort/imports": [
+          "error",
+          {
+            "groups": [
+              ["^\\u0000"],
+              ["^react", "^@?\\w"],
+              ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
+              ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"]
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "rules": {
+    "prettier/prettier": ["error"],
+    "simple-import-sort/imports": "error"
+  }
+}
