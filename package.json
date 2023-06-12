@@ -1,0 +1,44 @@
+{
+  "name": "@melfore/konva-timeline",
+  "version": "0.0.1",
+  "description": "Melfore ReactJS Timeline library made with Konva",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "storybook dev -p 6006",
+    "build": "storybook build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/melfore/konva-timeline.git"
+  },
+  "author": "@melfore",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/melfore/konva-timeline/issues"
+  },
+  "homepage": "https://github.com/melfore/konva-timeline#readme",
+  "peerDependencies": {
+    "react": ">= 18 < 19",
+    "react-dom": ">= 18 < 19"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.22.5",
+    "@babel/preset-react": "^7.22.5",
+    "@babel/preset-typescript": "^7.22.5",
+    "@storybook/addon-essentials": "^7.0.20",
+    "@storybook/addon-interactions": "^7.0.20",
+    "@storybook/addon-links": "^7.0.20",
+    "@storybook/blocks": "^7.0.20",
+    "@storybook/react": "^7.0.20",
+    "@storybook/react-webpack5": "^7.0.20",
+    "@storybook/testing-library": "^0.0.14-next.2",
+    "@types/react": "^18.2.11",
+    "@types/react-dom": "^18.2.4",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "storybook": "^7.0.20",
+    "typescript": "^5.1.3"
+  }
+}
