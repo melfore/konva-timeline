@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "outDir": "./dist",
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2016",
+  },
+  "exclude": [
+    "dist",
+    "node_modules",
+    "src/**/*.test.tsx",
+    "src/**/*.stories.tsx"
+  ]
+}
