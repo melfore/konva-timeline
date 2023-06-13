@@ -4,11 +4,12 @@
   "description": "Melfore ReactJS Timeline library made with Konva",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "storybook dev -p 6006",
-    "build": "tsc",
     "build:storybook": "storybook build",
-    "prepare": "husky install"
+    "build": "tsc",
+    "commit": "commit",
+    "prepare": "husky install",
+    "start": "storybook dev -p 6006",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,9 @@
     "@babel/preset-env": "^7.22.5",
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.22.5",
+    "@commitlint/cli": "^17.6.5",
+    "@commitlint/config-conventional": "^17.6.5",
+    "@commitlint/prompt-cli": "^17.6.5",
     "@storybook/addon-essentials": "^7.0.20",
     "@storybook/addon-interactions": "^7.0.20",
     "@storybook/addon-links": "^7.0.20",
