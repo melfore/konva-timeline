@@ -17,7 +17,7 @@ interface GridProps {
 }
 
 const Grid: FC<GridProps> = ({ categories, columnsCount, columnWidth, height, hoursResolution, width }) => {
-  const columns = new Array(columnsCount).fill("").map((v, index) => index * hoursResolution);
+  const columns = new Array(columnsCount).fill("").map((v, index) => (index * hoursResolution) % 24);
 
   return (
     <Group>

@@ -22,9 +22,11 @@ export const Primary: Story = {
       { id: 3, label: "Third", color: "gray" },
       { id: 4, label: "Fourth", color: "aqua" },
     ],
+    columnWidth: 60,
+    hoursResolution: 1,
     timeRange: {
       begin: new Date().valueOf(),
-      end: new Date().valueOf() + 86400000,
+      end: new Date().valueOf() + 86400000 * 3,
     },
   },
 };
