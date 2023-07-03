@@ -3,6 +3,40 @@ import { Group, Layer, Line, Stage, Text } from "react-konva";
 
 import Grid, { Category } from "../Grid";
 
+const COLUMN_WIDTH = 60;
+
+type Resolution = "1hrs" | "2hrs" | "4hrs" | "8hrs" | "12hrs";
+// | "1day"
+// | "1week"
+// | "2weeks"
+// | "1month"
+// | "2months"
+// | "3months"
+// | "6months"
+// | "1year";
+
+type Scale = "hour" | "day" | "week" | "month" | "year";
+
+export type ResolutionSetup = {
+  columnSize: number;
+  size: number;
+  unit: Scale;
+  scale: Scale;
+  scaleUnits: number;
+};
+
+type ResolutionsSetup = {
+  [key in Resolution]: ResolutionSetup;
+};
+
+const RESOLUTIONS_SETUP: ResolutionsSetup = {
+  "1hrs": { columnSize: COLUMN_WIDTH, size: 1, unit: "hour", scale: "day", scaleUnits: 24 },
+  "2hrs": { columnSize: COLUMN_WIDTH, size: 2, unit: "hour", scale: "day", scaleUnits: 24 },
+  "4hrs": { columnSize: COLUMN_WIDTH, size: 4, unit: "hour", scale: "day", scaleUnits: 24 },
+  "8hrs": { columnSize: COLUMN_WIDTH * 2, size: 8, unit: "hour", scale: "day", scaleUnits: 24 },
+  "12hrs": { columnSize: COLUMN_WIDTH * 3, size: 12, unit: "hour", scale: "day", scaleUnits: 24 },
+};
+
 interface TimeRange {
   begin: number;
   end: number;
@@ -11,7 +45,7 @@ interface TimeRange {
 interface TimelineProps {
   categories: Category[];
   columnWidth?: number;
-  hoursResolution?: number;
+  resolution?: Resolution;
   timeRange: TimeRange;
 }
 
@@ -22,23 +56,16 @@ interface StageSize {
 
 const CATEGORIES_COLUMN_WIDTH = 200;
 
-const COLUMN_WIDTH = 60;
-
 const DEFAULT_STAGE_SIZE: StageSize = { height: 0, width: 0 };
 
 const Timeline: FC<TimelineProps> = ({
   categories,
-  columnWidth: externalColumnWidth = COLUMN_WIDTH,
-  hoursResolution = 1,
+  columnWidth: externalColumnWidth,
+  resolution: externalResolution = "1hrs",
   timeRange,
 }) => {
   const [size, setSize] = useState<StageSize>(DEFAULT_STAGE_SIZE);
   const wrapper = useRef<HTMLDivElement>(null);
-
-  const columnWidth = useMemo(
-    () => (externalColumnWidth < COLUMN_WIDTH ? COLUMN_WIDTH : externalColumnWidth),
-    [externalColumnWidth]
-  );
 
   useEffect(() => {
     if (!wrapper.current) {
@@ -49,10 +76,17 @@ const Timeline: FC<TimelineProps> = ({
     setSize({ height, width });
   }, []);
 
+  const resolution = useMemo(() => RESOLUTIONS_SETUP[externalResolution].size, [externalResolution]);
+
+  const columnWidth = useMemo(() => {
+    const resolutionColumnWidth = RESOLUTIONS_SETUP[externalResolution].columnSize;
+    return !externalColumnWidth || externalColumnWidth < COLUMN_WIDTH ? resolutionColumnWidth : externalColumnWidth;
+  }, [externalColumnWidth, externalResolution]);
+
   const timeRangeDurationAsHours = useMemo(() => {
     const timeRangeDuration = timeRange.end - timeRange.begin;
-    return Math.ceil(timeRangeDuration / (1000 * 60 * 60 * hoursResolution));
-  }, [hoursResolution, timeRange]);
+    return Math.ceil(timeRangeDuration / (1000 * 60 * 60 * resolution));
+  }, [resolution, timeRange]);
 
   const stageWidth = useMemo(() => {
     return columnWidth * timeRangeDurationAsHours;
@@ -109,7 +143,7 @@ const Timeline: FC<TimelineProps> = ({
               columnsCount={timeRangeDurationAsHours}
               columnWidth={columnWidth}
               height={size.height}
-              hoursResolution={hoursResolution}
+              resolution={RESOLUTIONS_SETUP[externalResolution]}
               width={stageWidth}
             />
           </Layer>

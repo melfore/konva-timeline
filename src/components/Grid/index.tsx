@@ -1,6 +1,8 @@
 import React, { FC } from "react";
 import { Group, Line, Text } from "react-konva";
 
+import { ResolutionSetup } from "../Timeline";
+
 export interface Category {
   id: number;
   label: string;
@@ -12,12 +14,12 @@ interface GridProps {
   columnsCount: number;
   columnWidth: number;
   height: number;
-  hoursResolution: number;
+  resolution: ResolutionSetup;
   width: number;
 }
 
-const Grid: FC<GridProps> = ({ categories, columnsCount, columnWidth, height, hoursResolution, width }) => {
-  const columns = new Array(columnsCount).fill("").map((v, index) => (index * hoursResolution) % 24);
+const Grid: FC<GridProps> = ({ categories, columnsCount, columnWidth, height, resolution, width }) => {
+  const columns = new Array(columnsCount).fill("").map((v, index) => (index * resolution.size) % resolution.scaleUnits);
 
   return (
     <Group>
