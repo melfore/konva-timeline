@@ -1,10 +1,10 @@
 import React, { FC } from "react";
 import { Group, Line, Text } from "react-konva";
 
-import { ResolutionSetup } from "../Timeline";
+import { ResolutionSetup, TimeRange } from "../Timeline";
 
 export interface Category {
-  id: number;
+  id: string;
   label: string;
   color: string;
 }
@@ -15,11 +15,14 @@ interface GridProps {
   columnWidth: number;
   height: number;
   resolution: ResolutionSetup;
+  timeRange: TimeRange;
   width: number;
 }
 
 const Grid: FC<GridProps> = ({ categories, columnsCount, columnWidth, height, resolution, width }) => {
-  const columns = new Array(columnsCount).fill("").map((v, index) => (index * resolution.size) % resolution.scaleUnits);
+  const { size, scaleUnits } = resolution;
+
+  const columns = new Array(columnsCount).fill("").map((v, index) => (index * size) % scaleUnits);
 
   return (
     <Group>
@@ -31,10 +34,13 @@ const Grid: FC<GridProps> = ({ categories, columnsCount, columnWidth, height, re
       <Line points={[0, 0, 0, height]} stroke="blue" />
       {columns.map((column, index) => (
         <Group key={`timeslot-${index}`}>
-          <Line x={columnWidth * index} y={0} points={[0, 0, 0, height]} stroke="red" />
+          <Line x={columnWidth * index} y={0} points={[0, 0, 0, height]} stroke="gray" />
           <Text x={10 + columnWidth * index} y={20} text={`${column}:00`} />
         </Group>
       ))}
+      <Group key={`timeslot-last`}>
+        <Line x={columnWidth * columns.length} y={0} points={[0, 0, 0, height]} stroke="gray" />
+      </Group>
     </Group>
   );
 };
