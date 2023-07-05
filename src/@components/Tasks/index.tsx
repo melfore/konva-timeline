@@ -2,14 +2,16 @@ import React, { FC, useCallback, useState } from "react";
 import { Label, Layer, Tag, Text } from "react-konva";
 import { KonvaEventObject } from "konva/lib/Node";
 
-import { Category, TaskData, TimeRange } from "../../@utils/timeline-utils";
-import { ResolutionSetup } from "../Timeline";
+import { Category } from "../../@utils/categories";
+import { TaskData } from "../../@utils/tasks";
+import { TimeRange } from "../../@utils/time-range";
+import { ResolutionData } from "../../@utils/time-resolution";
 
 import Task from "./components/Task";
 
 interface TasksProps {
   categories: Category[];
-  resolution: ResolutionSetup;
+  resolution: ResolutionData;
   tasks: TaskData[];
   timeRange: TimeRange;
 }

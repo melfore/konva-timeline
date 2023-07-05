@@ -26,6 +26,30 @@ export const Primary: Story = {
     tasks: [
       {
         categoryId: "1",
+        label: "Skip: totally outside interval",
+        time: {
+          start: 0,
+          end: 1,
+        },
+      },
+      {
+        categoryId: "1",
+        label: "Partial: starts outside interval",
+        time: {
+          start: 688423600000,
+          end: 1688423600000,
+        },
+      },
+      {
+        categoryId: "1",
+        label: "Partial: ends outside interval",
+        time: {
+          start: 1688440800000,
+          end: 2688423600000,
+        },
+      },
+      {
+        categoryId: "1",
         label: "Test 1",
         time: {
           // Tuesday, 4 July 2023 02:30:00 GMT+02:00

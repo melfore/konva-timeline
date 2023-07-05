@@ -1,27 +1,24 @@
 import React, { createContext, PropsWithChildren, useContext, useMemo } from "react";
-import { DateTime, Interval } from "luxon";
+import { Interval } from "luxon";
 
-import { TimelineInput } from "../@utils/timeline-utils";
+import { filterOutOfInterval, TaskData } from "../@utils/tasks";
+import { toInterval } from "../@utils/time-range";
+import { TimelineInput } from "../@utils/timeline";
 
 type TimelineProviderProps = PropsWithChildren<TimelineInput>;
 
 type TimelineContextType = {
-  interval: any;
+  interval: Interval;
+  tasks: TaskData[];
 };
 
 const TimelineContext = createContext<TimelineContextType | undefined>(undefined);
 
-export const TimelineProvider = ({ children, range }: TimelineProviderProps) => {
-  const interval = useMemo(() => {
-    const dateStart = DateTime.fromMillis(range.start);
-    const dateEnd = DateTime.fromMillis(range.end);
+export const TimelineProvider = ({ children, tasks: externalTasks, range }: TimelineProviderProps) => {
+  const interval = useMemo(() => toInterval(range), [range]);
+  const tasks = useMemo(() => filterOutOfInterval(externalTasks, interval), [externalTasks, interval]);
 
-    return Interval.fromDateTimes(dateStart, dateEnd);
-  }, [range]);
-
-  console.log("interval", interval);
-
-  return <TimelineContext.Provider value={{ interval }}>{children}</TimelineContext.Provider>;
+  return <TimelineContext.Provider value={{ interval, tasks }}>{children}</TimelineContext.Provider>;
 };
 
 export const useTimelineContext = () => {
