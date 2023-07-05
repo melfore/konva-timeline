@@ -1,1 +1,1 @@
-export { default as Timeline } from "./components/Timeline";
+export { default as KonvaTimeline } from "./KonvaTimeline";
