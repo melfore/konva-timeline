@@ -1,21 +1,21 @@
 import React, { FC } from "react";
 import { Group, Layer, Line, Text } from "react-konva";
 
-import { Category } from "../../@utils/categories";
+import { Resource } from "../../@utils/resources";
 import { TimeRange } from "../../@utils/time-range";
 import { ResolutionData } from "../../@utils/time-resolution";
 
 interface GridProps {
-  categories: Category[];
   columnsCount: number;
   columnWidth: number;
   height: number;
   resolution: ResolutionData;
+  resources: Resource[];
   timeRange: TimeRange;
   width: number;
 }
 
-const Grid: FC<GridProps> = ({ categories, columnsCount, columnWidth, height, resolution, width }) => {
+const Grid: FC<GridProps> = ({ columnsCount, columnWidth, height, resolution, resources, width }) => {
   const { size, scaleUnits } = resolution;
 
   const columns = new Array(columnsCount).fill("").map((v, index) => (index * size) % scaleUnits);
@@ -23,7 +23,7 @@ const Grid: FC<GridProps> = ({ categories, columnsCount, columnWidth, height, re
   return (
     <Layer>
       <Group>
-        {[{ id: -1, label: "Header" }, ...categories].map((heading, index) => (
+        {[{ id: -1, label: "Header" }, ...resources].map((heading, index) => (
           <Group key={`heading-${heading.id}`}>
             <Line x={0} y={50 * (index + 1)} points={[0, 0, width, 0]} stroke="black" />
           </Group>

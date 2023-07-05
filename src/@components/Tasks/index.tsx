@@ -2,7 +2,7 @@ import React, { FC, useCallback, useState } from "react";
 import { Label, Layer, Tag, Text } from "react-konva";
 import { KonvaEventObject } from "konva/lib/Node";
 
-import { Category } from "../../@utils/categories";
+import { Resource } from "../../@utils/resources";
 import { TaskData } from "../../@utils/tasks";
 import { TimeRange } from "../../@utils/time-range";
 import { ResolutionData } from "../../@utils/time-resolution";
@@ -10,18 +10,18 @@ import { ResolutionData } from "../../@utils/time-resolution";
 import Task from "./components/Task";
 
 interface TasksProps {
-  categories: Category[];
   resolution: ResolutionData;
+  resources: Resource[];
   tasks: TaskData[];
   timeRange: TimeRange;
 }
 
-const Tasks: FC<TasksProps> = ({ categories, resolution, tasks, timeRange }) => {
+const Tasks: FC<TasksProps> = ({ resolution, resources, tasks, timeRange }) => {
   const [task, setTask] = useState<{ x: number; y: number; id: string } | null>(null);
 
-  const getCategoryById = useCallback(
-    (categoryId: string) => categories.findIndex(({ id }) => categoryId === id),
-    [categories]
+  const getResourceById = useCallback(
+    (resourceId: string) => resources.findIndex(({ id }) => resourceId === id),
+    [resources]
   );
 
   const onTaskOver = useCallback((e: KonvaEventObject<MouseEvent>) => {
@@ -65,22 +65,22 @@ const Tasks: FC<TasksProps> = ({ categories, resolution, tasks, timeRange }) => 
 
   return (
     <Layer onMouseOver={onTaskOver} onMouseMove={onTaskOver} onMouseLeave={() => setTask(null)}>
-      {tasks.map(({ categoryId, label, time }, index) => {
-        const categoryIndex = getCategoryById(categoryId);
-        if (categoryIndex < 0) {
+      {tasks.map(({ label, resourceId, time }, index) => {
+        const resourceIndex = getResourceById(resourceId);
+        if (resourceIndex < 0) {
           return null;
         }
 
-        const category = categories[categoryIndex];
+        const resource = resources[resourceIndex];
         const xBegin = ((time.start - timeRange.start) / (1000 * 60 * 60 * resolution.size)) * resolution.columnSize;
         const width = ((time.end - time.start) / (1000 * 60 * 60 * resolution.size)) * resolution.columnSize;
         return (
           <Task
             key={`task-${index}`}
-            color={category.color}
+            color={resource.color}
             label={label}
             x={xBegin}
-            y={50 * (categoryIndex + 1) + 5}
+            y={50 * (resourceIndex + 1) + 5}
             width={width}
           />
         );

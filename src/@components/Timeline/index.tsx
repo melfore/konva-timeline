@@ -15,15 +15,15 @@ interface StageSize {
   width: number;
 }
 
-const CATEGORIES_COLUMN_WIDTH = 200;
+const RESOURCES_COLUMN_WIDTH = 200;
 
 const DEFAULT_STAGE_SIZE: StageSize = { height: 0, width: 0 };
 
 const Timeline: FC<TimelineInput> = ({
-  categories,
   columnWidth: externalColumnWidth,
   resolution: externalResolution = "1hrs",
   range,
+  resources,
 }) => {
   const { tasks } = useTimelineContext();
 
@@ -77,18 +77,18 @@ const Timeline: FC<TimelineInput> = ({
             backgroundColor: "white",
             boxShadow: "4px 4px 32px 1px #0000000f",
             left: 0,
-            height: (categories.length + 1) * 50,
+            height: (resources.length + 1) * 50,
             position: "sticky",
             top: 0,
             width: "200px",
             zIndex: 1,
           }}
         >
-          <Stage height={size.height} width={CATEGORIES_COLUMN_WIDTH}>
+          <Stage height={size.height} width={RESOURCES_COLUMN_WIDTH}>
             <Layer>
-              {[{ id: -1, label: "Header" }, ...categories].map((heading, index) => (
+              {[{ id: -1, label: "Header" }, ...resources].map((heading, index) => (
                 <Group x={0} y={0} key={`heading-${heading.id}`}>
-                  <Line y={50 * (index + 1)} points={[0, 0, CATEGORIES_COLUMN_WIDTH, 0]} stroke="blue" />
+                  <Line y={50 * (index + 1)} points={[0, 0, RESOURCES_COLUMN_WIDTH, 0]} stroke="blue" />
                   <Text y={20 + 50 * index} text={heading.label} />
                 </Group>
               ))}
@@ -100,7 +100,7 @@ const Timeline: FC<TimelineInput> = ({
           style={{
             backgroundColor: "white",
             left: "201px",
-            height: (categories.length + 1) * 50,
+            height: (resources.length + 1) * 50,
             position: "absolute",
             top: 0,
             width: stageWidth,
@@ -108,7 +108,7 @@ const Timeline: FC<TimelineInput> = ({
         >
           <Stage height={size.height} width={stageWidth}>
             <Grid
-              categories={categories}
+              resources={resources}
               columnsCount={timeRangeDurationAsHours}
               columnWidth={columnWidth}
               height={size.height}
@@ -116,7 +116,7 @@ const Timeline: FC<TimelineInput> = ({
               timeRange={range}
               width={stageWidth}
             />
-            <Tasks categories={categories} resolution={resolutionData} tasks={tasks} timeRange={range} />
+            <Tasks resources={resources} resolution={resolutionData} tasks={tasks} timeRange={range} />
           </Stage>
         </div>
       </div>
