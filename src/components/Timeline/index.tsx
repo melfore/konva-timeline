@@ -2,8 +2,44 @@ import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import { Group, Layer, Line, Stage, Text } from "react-konva";
 
 import Grid, { Category } from "../Grid";
+import Tasks from "../Tasks";
+import { TaskData } from "../Tasks/components/Task";
 
-interface TimeRange {
+const COLUMN_WIDTH = 60;
+
+type Resolution = "1hrs" | "2hrs" | "6hrs" | "12hrs";
+// | "1day"
+// | "1week"
+// | "2weeks"
+// | "1month"
+// | "2months"
+// | "3months"
+// | "6months"
+// | "1year";
+
+type Scale = "hour" | "day" | "week" | "month" | "year";
+
+export type ResolutionSetup = {
+  columnSize: number;
+  label: string;
+  size: number;
+  unit: Scale;
+  scale: Scale;
+  scaleUnits: number;
+};
+
+type ResolutionsSetup = {
+  [key in Resolution]: ResolutionSetup;
+};
+
+const RESOLUTIONS_SETUP: ResolutionsSetup = {
+  "1hrs": { columnSize: COLUMN_WIDTH, label: "1 Hour", size: 1, unit: "hour", scale: "day", scaleUnits: 24 },
+  "2hrs": { columnSize: COLUMN_WIDTH, label: "2 Hours", size: 2, unit: "hour", scale: "day", scaleUnits: 24 },
+  "6hrs": { columnSize: COLUMN_WIDTH * 2, label: "1/4 of Day", size: 6, unit: "hour", scale: "day", scaleUnits: 24 },
+  "12hrs": { columnSize: COLUMN_WIDTH * 3, label: "1/2 of Day", size: 12, unit: "hour", scale: "day", scaleUnits: 24 },
+};
+
+export interface TimeRange {
   begin: number;
   end: number;
 }
@@ -11,7 +47,8 @@ interface TimeRange {
 interface TimelineProps {
   categories: Category[];
   columnWidth?: number;
-  hoursResolution?: number;
+  resolution?: Resolution;
+  tasks: TaskData[];
   timeRange: TimeRange;
 }
 
@@ -22,23 +59,18 @@ interface StageSize {
 
 const CATEGORIES_COLUMN_WIDTH = 200;
 
-const COLUMN_WIDTH = 60;
-
 const DEFAULT_STAGE_SIZE: StageSize = { height: 0, width: 0 };
 
 const Timeline: FC<TimelineProps> = ({
   categories,
-  columnWidth: externalColumnWidth = COLUMN_WIDTH,
-  hoursResolution = 1,
+  columnWidth: externalColumnWidth,
+  resolution: externalResolution = "1hrs",
+  tasks,
   timeRange,
 }) => {
+  const [resolution, setResolution] = useState(externalResolution);
   const [size, setSize] = useState<StageSize>(DEFAULT_STAGE_SIZE);
   const wrapper = useRef<HTMLDivElement>(null);
-
-  const columnWidth = useMemo(
-    () => (externalColumnWidth < COLUMN_WIDTH ? COLUMN_WIDTH : externalColumnWidth),
-    [externalColumnWidth]
-  );
 
   useEffect(() => {
     if (!wrapper.current) {
@@ -49,71 +81,108 @@ const Timeline: FC<TimelineProps> = ({
     setSize({ height, width });
   }, []);
 
+  useEffect(() => {
+    setResolution(externalResolution);
+  }, [externalResolution]);
+
+  const resolutionSize = useMemo(() => RESOLUTIONS_SETUP[resolution].size, [resolution]);
+
+  const columnWidth = useMemo(() => {
+    const resolutionColumnWidth = RESOLUTIONS_SETUP[resolution].columnSize;
+    return !externalColumnWidth || externalColumnWidth < COLUMN_WIDTH ? resolutionColumnWidth : externalColumnWidth;
+  }, [externalColumnWidth, resolution]);
+
   const timeRangeDurationAsHours = useMemo(() => {
     const timeRangeDuration = timeRange.end - timeRange.begin;
-    return Math.ceil(timeRangeDuration / (1000 * 60 * 60 * hoursResolution));
-  }, [hoursResolution, timeRange]);
+    return Math.ceil(timeRangeDuration / (1000 * 60 * 60 * resolutionSize));
+  }, [resolutionSize, timeRange]);
 
   const stageWidth = useMemo(() => {
     return columnWidth * timeRangeDurationAsHours;
   }, [columnWidth, timeRangeDurationAsHours]);
 
+  const resolutions = Object.keys(RESOLUTIONS_SETUP) as Resolution[];
+
   return (
-    <div
-      style={{
-        backgroundColor: "black",
-        display: "inline-block",
-        overflow: "scroll",
-        position: "relative",
-        width: "100%",
-      }}
-    >
-      <div
-        style={{
-          backgroundColor: "white",
-          boxShadow: "4px 4px 32px 1px #0000000f",
-          left: 0,
-          minHeight: "300px",
-          position: "sticky",
-          top: 0,
-          width: "200px",
-          zIndex: 1,
-        }}
-      >
-        <Stage height={size.height} width={CATEGORIES_COLUMN_WIDTH}>
-          <Layer>
-            {[{ id: -1, label: "Header" }, ...categories].map((heading, index) => (
-              <Group x={0} y={0} key={`heading-${heading.id}`}>
-                <Line y={50 * (index + 1)} points={[0, 0, CATEGORIES_COLUMN_WIDTH, 0]} stroke="black" />
-                <Text y={20 + 50 * index} text={heading.label} />
-              </Group>
-            ))}
-          </Layer>
-        </Stage>
+    <div>
+      <div style={{ margin: `16px 0`, width: "100%" }}>
+        <span>Select Resolution</span>:
+        {resolutions.map((key) => (
+          <button
+            key={`button-resolution-${key}`}
+            disabled={key === resolution}
+            onClick={() => setResolution(key)}
+            style={{ margin: "0 8px" }}
+          >
+            {RESOLUTIONS_SETUP[key].label}
+          </button>
+        ))}
       </div>
       <div
-        ref={wrapper}
         style={{
-          backgroundColor: "white",
-          left: "201px",
-          minHeight: "300px",
-          position: "absolute",
-          top: 0,
-          width: stageWidth,
+          border: "1px solid black",
+          display: "inline-block",
+          overflow: "scroll",
+          position: "relative",
+          width: "100%",
         }}
       >
-        <Stage height={size.height} width={stageWidth}>
-          <Layer>
-            <Grid
-              categories={categories}
-              columnsCount={timeRangeDurationAsHours}
-              columnWidth={columnWidth}
-              height={size.height}
-              hoursResolution={hoursResolution}
-              width={stageWidth}
-            />
-          </Layer>
-        </Stage>
+        <div
+          style={{
+            backgroundColor: "white",
+            boxShadow: "4px 4px 32px 1px #0000000f",
+            left: 0,
+            height: (categories.length + 1) * 50,
+            position: "sticky",
+            top: 0,
+            width: "200px",
+            zIndex: 1,
+          }}
+        >
+          <Stage height={size.height} width={CATEGORIES_COLUMN_WIDTH}>
+            <Layer>
+              {[{ id: -1, label: "Header" }, ...categories].map((heading, index) => (
+                <Group x={0} y={0} key={`heading-${heading.id}`}>
+                  <Line y={50 * (index + 1)} points={[0, 0, CATEGORIES_COLUMN_WIDTH, 0]} stroke="blue" />
+                  <Text y={20 + 50 * index} text={heading.label} />
+                </Group>
+              ))}
+            </Layer>
+          </Stage>
+        </div>
+        <div
+          ref={wrapper}
+          style={{
+            backgroundColor: "white",
+            left: "201px",
+            height: (categories.length + 1) * 50,
+            position: "absolute",
+            top: 0,
+            width: stageWidth,
+          }}
+        >
+          <Stage height={size.height} width={stageWidth}>
+            <Layer>
+              <Grid
+                categories={categories}
+                columnsCount={timeRangeDurationAsHours}
+                columnWidth={columnWidth}
+                height={size.height}
+                resolution={RESOLUTIONS_SETUP[resolution]}
+                timeRange={timeRange}
+                width={stageWidth}
+              />
+            </Layer>
+            <Layer>
+              <Tasks
+                categories={categories}
+                resolution={RESOLUTIONS_SETUP[resolution]}
+                tasks={tasks}
+                timeRange={timeRange}
+              />
+            </Layer>
+          </Stage>
+        </div>
       </div>
     </div>
   );
