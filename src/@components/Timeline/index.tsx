@@ -150,14 +150,7 @@ const Timeline: FC<TimelineInput> = ({
                 width={stageWidth}
               />
             </Layer>
-            <Layer>
-              <Tasks
-                categories={categories}
-                resolution={RESOLUTIONS_SETUP[resolution]}
-                tasks={tasks}
-                timeRange={range}
-              />
-            </Layer>
+            <Tasks categories={categories} resolution={RESOLUTIONS_SETUP[resolution]} tasks={tasks} timeRange={range} />
           </Stage>
         </div>
       </div>

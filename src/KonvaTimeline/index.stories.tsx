@@ -36,7 +36,7 @@ export const Primary: Story = {
       },
       {
         categoryId: "1",
-        label: "Test 2",
+        label: "Test 1-2",
         time: {
           // Tuesday, 4 July 2023 03:30:00 GMT+02:00
           start: 1688434200000,
