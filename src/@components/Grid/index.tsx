@@ -1,13 +1,8 @@
 import React, { FC } from "react";
 import { Group, Line, Text } from "react-konva";
 
-import { ResolutionSetup, TimeRange } from "../Timeline";
-
-export interface Category {
-  id: string;
-  label: string;
-  color: string;
-}
+import { Category, TimeRange } from "../../@utils/timeline-utils";
+import { ResolutionSetup } from "../Timeline";
 
 interface GridProps {
   categories: Category[];

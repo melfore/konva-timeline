@@ -1,14 +1,6 @@
 import React, { FC } from "react";
 import { Rect } from "react-konva";
 
-import { TimeRange } from "../../../Timeline";
-
-export interface TaskData {
-  categoryId: string;
-  label: string;
-  time: TimeRange;
-}
-
 interface TaskProps {
   color: string;
   label: string;

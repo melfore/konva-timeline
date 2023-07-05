@@ -1,21 +1,11 @@
 import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import { Group, Layer, Line, Stage, Text } from "react-konva";
 
-import Grid, { Category } from "../Grid";
+import { Resolution, TimelineInput } from "../../@utils/timeline-utils";
+import Grid from "../Grid";
 import Tasks from "../Tasks";
-import { TaskData } from "../Tasks/components/Task";
 
 const COLUMN_WIDTH = 60;
-
-type Resolution = "1hrs" | "2hrs" | "6hrs" | "12hrs";
-// | "1day"
-// | "1week"
-// | "2weeks"
-// | "1month"
-// | "2months"
-// | "3months"
-// | "6months"
-// | "1year";
 
 type Scale = "hour" | "day" | "week" | "month" | "year";
 
@@ -39,19 +29,6 @@ const RESOLUTIONS_SETUP: ResolutionsSetup = {
   "12hrs": { columnSize: COLUMN_WIDTH * 3, label: "1/2 of Day", size: 12, unit: "hour", scale: "day", scaleUnits: 24 },
 };
 
-export interface TimeRange {
-  begin: number;
-  end: number;
-}
-
-interface TimelineProps {
-  categories: Category[];
-  columnWidth?: number;
-  resolution?: Resolution;
-  tasks: TaskData[];
-  timeRange: TimeRange;
-}
-
 interface StageSize {
   height: number;
   width: number;
@@ -61,12 +38,12 @@ const CATEGORIES_COLUMN_WIDTH = 200;
 
 const DEFAULT_STAGE_SIZE: StageSize = { height: 0, width: 0 };
 
-const Timeline: FC<TimelineProps> = ({
+const Timeline: FC<TimelineInput> = ({
   categories,
   columnWidth: externalColumnWidth,
   resolution: externalResolution = "1hrs",
   tasks,
-  timeRange,
+  range,
 }) => {
   const [resolution, setResolution] = useState(externalResolution);
   const [size, setSize] = useState<StageSize>(DEFAULT_STAGE_SIZE);
@@ -93,9 +70,9 @@ const Timeline: FC<TimelineProps> = ({
   }, [externalColumnWidth, resolution]);
 
   const timeRangeDurationAsHours = useMemo(() => {
-    const timeRangeDuration = timeRange.end - timeRange.begin;
+    const timeRangeDuration = range.end - range.start;
     return Math.ceil(timeRangeDuration / (1000 * 60 * 60 * resolutionSize));
-  }, [resolutionSize, timeRange]);
+  }, [range, resolutionSize]);
 
   const stageWidth = useMemo(() => {
     return columnWidth * timeRangeDurationAsHours;
@@ -169,7 +146,7 @@ const Timeline: FC<TimelineProps> = ({
                 columnWidth={columnWidth}
                 height={size.height}
                 resolution={RESOLUTIONS_SETUP[resolution]}
-                timeRange={timeRange}
+                timeRange={range}
                 width={stageWidth}
               />
             </Layer>
@@ -178,7 +155,7 @@ const Timeline: FC<TimelineProps> = ({
                 categories={categories}
                 resolution={RESOLUTIONS_SETUP[resolution]}
                 tasks={tasks}
-                timeRange={timeRange}
+                timeRange={range}
               />
             </Layer>
           </Stage>
