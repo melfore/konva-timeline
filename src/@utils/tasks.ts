@@ -3,6 +3,7 @@ import { Interval } from "luxon";
 import { TimeRange, toInterval } from "./time-range";
 
 export interface TaskData {
+  id: string;
   label: string;
   resourceId: string;
   time: TimeRange;
