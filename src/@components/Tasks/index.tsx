@@ -1,7 +1,9 @@
 import React, { FC, useCallback, useState } from "react";
 import { Layer } from "react-konva";
+import { Html } from "react-konva-utils";
 import { KonvaEventObject } from "konva/lib/Node";
 
+import { useTimelineContext } from "../../@contexts/Timeline";
 import { Resource } from "../../@utils/resources";
 import { TaskData, TaskTooltipData } from "../../@utils/tasks";
 import { TimeRange } from "../../@utils/time-range";
@@ -17,6 +19,8 @@ interface TasksProps {
 }
 
 const Tasks: FC<TasksProps> = ({ resolution, resources, tasks, timeRange }) => {
+  const { taskTooltipContent } = useTimelineContext();
+
   const [taskTooltip, setTaskTooltip] = useState<TaskTooltipData | null>(null);
 
   const getResourceById = useCallback(
@@ -48,6 +52,38 @@ const Tasks: FC<TasksProps> = ({ resolution, resources, tasks, timeRange }) => {
     [getTaskById]
   );
 
+  const renderTaskTooltipContent = useCallback(
+    (taskTooltip: TaskTooltipData | null) => {
+      if (!taskTooltip) {
+        return null;
+      }
+
+      console.log({ taskTooltip });
+
+      return taskTooltipContent ? (
+        <Html
+          transform={false}
+          divProps={{
+            style: {
+              border: "1px solid black",
+              backgroundColor: "white",
+              padding: "16px",
+              position: "fixed",
+              top: 200,
+              left: 200,
+              zIndex: 100,
+            },
+          }}
+        >
+          {taskTooltipContent(taskTooltip.task)}
+        </Html>
+      ) : (
+        <TaskTooltip {...taskTooltip} />
+      );
+    },
+    [taskTooltipContent]
+  );
+
   return (
     <Layer onMouseOver={onTaskOver} onMouseMove={onTaskOver} onMouseLeave={onTaskExit}>
       {tasks.map(({ id, label, resourceId, time }, index) => {
@@ -71,7 +107,7 @@ const Tasks: FC<TasksProps> = ({ resolution, resources, tasks, timeRange }) => {
           />
         );
       })}
-      {taskTooltip && <TaskTooltip {...taskTooltip} />}
+      {renderTaskTooltipContent(taskTooltip)}
     </Layer>
   );
 };
