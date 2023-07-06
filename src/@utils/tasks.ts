@@ -1,5 +1,6 @@
 import { Interval } from "luxon";
 
+import { Point } from "./konva";
 import { TimeRange, toInterval } from "./time-range";
 
 export interface TaskLayoutData {
@@ -10,6 +11,10 @@ export interface TaskLayoutData {
 export interface TaskData extends TaskLayoutData {
   resourceId: string;
   time: TimeRange;
+}
+
+export interface TaskTooltipData extends Point {
+  task: TaskData | null;
 }
 
 /**
