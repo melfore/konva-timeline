@@ -6,8 +6,7 @@ import { Resource } from "../../@utils/resources";
 import { TaskData } from "../../@utils/tasks";
 import { TimeRange } from "../../@utils/time-range";
 import { ResolutionData } from "../../@utils/time-resolution";
-
-import Task from "./components/Task";
+import Task from "../Task";
 
 interface TasksProps {
   resolution: ResolutionData;
