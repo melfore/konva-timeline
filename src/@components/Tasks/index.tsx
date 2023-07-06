@@ -64,19 +64,20 @@ const Tasks: FC<TasksProps> = ({ resolution, resources, tasks, timeRange }) => {
 
   return (
     <Layer onMouseOver={onTaskOver} onMouseMove={onTaskOver} onMouseLeave={() => setTask(null)}>
-      {tasks.map(({ label, resourceId, time }, index) => {
+      {tasks.map(({ id, label, resourceId, time }, index) => {
         const resourceIndex = getResourceById(resourceId);
         if (resourceIndex < 0) {
           return null;
         }
 
-        const resource = resources[resourceIndex];
+        const { color: resourceColor } = resources[resourceIndex];
         const xBegin = ((time.start - timeRange.start) / (1000 * 60 * 60 * resolution.size)) * resolution.columnSize;
         const width = ((time.end - time.start) / (1000 * 60 * 60 * resolution.size)) * resolution.columnSize;
         return (
           <Task
             key={`task-${index}`}
-            color={resource.color}
+            id={id}
+            color={resourceColor}
             label={label}
             x={xBegin}
             y={50 * (resourceIndex + 1) + 5}

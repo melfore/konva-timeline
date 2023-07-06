@@ -1,16 +1,17 @@
 import React, { FC } from "react";
 import { Rect } from "react-konva";
 
-interface TaskProps {
+import { TaskLayoutData } from "../../@utils/tasks";
+
+interface TaskProps extends TaskLayoutData {
   color: string;
-  label: string;
+  width: number;
   x: number;
   y: number;
-  width: number;
 }
 
-const Task: FC<TaskProps> = ({ color, label, x, y, width }) => {
-  return <Rect id={label} cornerRadius={4} fill={color} height={40} stroke="black" x={x} y={y} width={width} />;
+const Task: FC<TaskProps> = ({ color, id, label, x, y, width }) => {
+  return <Rect id={id} cornerRadius={4} fill={color} height={40} stroke="black" x={x} y={y} width={width} />;
 };
 
 export default Task;

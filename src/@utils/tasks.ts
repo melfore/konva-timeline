@@ -2,9 +2,12 @@ import { Interval } from "luxon";
 
 import { TimeRange, toInterval } from "./time-range";
 
-export interface TaskData {
+export interface TaskLayoutData {
   id: string;
   label: string;
+}
+
+export interface TaskData extends TaskLayoutData {
   resourceId: string;
   time: TimeRange;
 }
