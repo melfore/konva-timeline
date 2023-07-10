@@ -1,4 +1,3 @@
-import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import KonvaTimeline from ".";
@@ -108,11 +107,6 @@ export const Primary: Story = {
         },
       },
     ],
-    taskTooltipContent: (task) => (
-      <div>
-        <h1>{task.label}</h1>
-      </div>
-    ),
     range: {
       start: 1688421600000,
       end: 1688421600000 + 86400000 * 3,
