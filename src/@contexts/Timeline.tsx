@@ -10,6 +10,7 @@ type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
 };
 
 type TimelineContextType = {
+  hideResources?: boolean;
   interval: Interval;
   tasks: TaskData[];
   taskTooltipContent?: (task: any) => React.ReactNode;
@@ -19,6 +20,7 @@ const TimelineContext = createContext<TimelineContextType | undefined>(undefined
 
 export const TimelineProvider = ({
   children,
+  hideResources = false,
   tasks: externalTasks,
   taskTooltipContent,
   range,
@@ -27,7 +29,9 @@ export const TimelineProvider = ({
   const tasks = useMemo(() => filterOutOfInterval(externalTasks, interval), [externalTasks, interval]);
 
   return (
-    <TimelineContext.Provider value={{ interval, tasks, taskTooltipContent }}>{children}</TimelineContext.Provider>
+    <TimelineContext.Provider value={{ hideResources, interval, tasks, taskTooltipContent }}>
+      {children}
+    </TimelineContext.Provider>
   );
 };
 
