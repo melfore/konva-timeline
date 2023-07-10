@@ -25,6 +25,7 @@ export const Primary: Story = {
     ],
     tasks: [
       {
+        id: "1",
         resourceId: "1",
         label: "Skip: totally outside interval",
         time: {
@@ -33,6 +34,7 @@ export const Primary: Story = {
         },
       },
       {
+        id: "2",
         resourceId: "1",
         label: "Partial: starts outside interval",
         time: {
@@ -41,6 +43,7 @@ export const Primary: Story = {
         },
       },
       {
+        id: "3",
         resourceId: "1",
         label: "Partial: ends outside interval",
         time: {
@@ -49,6 +52,7 @@ export const Primary: Story = {
         },
       },
       {
+        id: "4",
         resourceId: "1",
         label: "Test 1",
         time: {
@@ -59,6 +63,7 @@ export const Primary: Story = {
         },
       },
       {
+        id: "5",
         resourceId: "1",
         label: "Test 1-2",
         time: {
@@ -69,6 +74,7 @@ export const Primary: Story = {
         },
       },
       {
+        id: "6",
         resourceId: "2",
         label: "Test 2",
         time: {
@@ -79,6 +85,7 @@ export const Primary: Story = {
         },
       },
       {
+        id: "7",
         resourceId: "3",
         label: "Test 3",
         time: {
@@ -89,6 +96,7 @@ export const Primary: Story = {
         },
       },
       {
+        id: "8",
         resourceId: "4",
         label: "Test 4",
         time: {
