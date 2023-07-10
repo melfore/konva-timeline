@@ -5,6 +5,7 @@ import { Resolution } from "./time-resolution";
 
 export type TimelineInput = {
   columnWidth?: number;
+  hideResources?: boolean;
   resolution?: Resolution;
   tasks: TaskData[];
   range: TimeRange;

@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { Group, Layer, Line, Text } from "react-konva";
 
-import { Resource } from "../../@utils/resources";
+import { useTimelineContext } from "../../@contexts/Timeline";
 import { TimeRange } from "../../@utils/time-range";
 import { ResolutionData } from "../../@utils/time-resolution";
 
@@ -10,12 +10,13 @@ interface GridProps {
   columnWidth: number;
   height: number;
   resolution: ResolutionData;
-  resources: Resource[];
   timeRange: TimeRange;
   width: number;
 }
 
-const Grid: FC<GridProps> = ({ columnsCount, columnWidth, height, resolution, resources, width }) => {
+const Grid: FC<GridProps> = ({ columnsCount, columnWidth, height, resolution, width }) => {
+  const { resources } = useTimelineContext();
+
   const { size, scaleUnits } = resolution;
 
   const columns = new Array(columnsCount).fill("").map((v, index) => (index * size) % scaleUnits);
@@ -23,8 +24,8 @@ const Grid: FC<GridProps> = ({ columnsCount, columnWidth, height, resolution, re
   return (
     <Layer>
       <Group>
-        {[{ id: -1, label: "Header" }, ...resources].map((heading, index) => (
-          <Group key={`heading-${heading.id}`}>
+        {resources.map(({ id }, index) => (
+          <Group key={`heading-${id}`}>
             <Line x={0} y={50 * (index + 1)} points={[0, 0, width, 0]} stroke="black" />
           </Group>
         ))}

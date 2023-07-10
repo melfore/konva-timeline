@@ -23,9 +23,8 @@ const Timeline: FC<TimelineInput> = ({
   columnWidth: externalColumnWidth,
   resolution: externalResolution = "1hrs",
   range,
-  resources,
 }) => {
-  const { tasks } = useTimelineContext();
+  const { hideResources, resources, wrapperHeight } = useTimelineContext();
 
   const [resolution, setResolution] = useState(externalResolution);
   const [size, setSize] = useState<StageSize>(DEFAULT_STAGE_SIZE);
@@ -67,40 +66,42 @@ const Timeline: FC<TimelineInput> = ({
         style={{
           border: "1px solid black",
           display: "inline-block",
+          height: wrapperHeight,
           overflow: "scroll",
           position: "relative",
           width: "100%",
         }}
       >
-        <div
-          style={{
-            backgroundColor: "white",
-            boxShadow: "4px 4px 32px 1px #0000000f",
-            left: 0,
-            height: (resources.length + 1) * 50,
-            position: "sticky",
-            top: 0,
-            width: "200px",
-            zIndex: 1,
-          }}
-        >
-          <Stage height={size.height} width={RESOURCES_COLUMN_WIDTH}>
-            <Layer>
-              {[{ id: -1, label: "Header" }, ...resources].map((heading, index) => (
-                <Group x={0} y={0} key={`heading-${heading.id}`}>
-                  <Line y={50 * (index + 1)} points={[0, 0, RESOURCES_COLUMN_WIDTH, 0]} stroke="blue" />
-                  <Text y={20 + 50 * index} text={heading.label} />
-                </Group>
-              ))}
-            </Layer>
-          </Stage>
-        </div>
+        {!hideResources && (
+          <div
+            style={{
+              backgroundColor: "white",
+              boxShadow: "4px 4px 32px 1px #0000000f",
+              left: 0,
+              height: wrapperHeight,
+              position: "sticky",
+              top: 0,
+              width: RESOURCES_COLUMN_WIDTH,
+              zIndex: 1,
+            }}
+          >
+            <Stage height={size.height} width={RESOURCES_COLUMN_WIDTH}>
+              <Layer>
+                {resources.map(({ id, label }, index) => (
+                  <Group x={0} y={0} key={`heading-${id}`}>
+                    <Line y={50 * (index + 1)} points={[0, 0, RESOURCES_COLUMN_WIDTH, 0]} stroke="blue" />
+                    <Text y={20 + 50 * index} text={label} />
+                  </Group>
+                ))}
+              </Layer>
+            </Stage>
+          </div>
+        )}
         <div
           ref={wrapper}
           style={{
-            backgroundColor: "white",
-            left: "201px",
-            height: (resources.length + 1) * 50,
+            left: hideResources ? 0 : RESOURCES_COLUMN_WIDTH + 1,
+            height: wrapperHeight,
             position: "absolute",
             top: 0,
             width: stageWidth,
@@ -108,7 +109,6 @@ const Timeline: FC<TimelineInput> = ({
         >
           <Stage height={size.height} width={stageWidth}>
             <Grid
-              resources={resources}
               columnsCount={timeRangeDurationAsHours}
               columnWidth={columnWidth}
               height={size.height}
@@ -116,7 +116,7 @@ const Timeline: FC<TimelineInput> = ({
               timeRange={range}
               width={stageWidth}
             />
-            <Tasks resources={resources} resolution={resolutionData} tasks={tasks} timeRange={range} />
+            <Tasks resolution={resolutionData} timeRange={range} />
           </Stage>
         </div>
       </div>
