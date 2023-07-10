@@ -2,6 +2,7 @@ import React, { FC, useCallback, useState } from "react";
 import { Layer } from "react-konva";
 import { Html } from "react-konva-utils";
 import { KonvaEventObject } from "konva/lib/Node";
+import { DateTime } from "luxon";
 
 import { useTimelineContext } from "../../@contexts/Timeline";
 import { TaskTooltipData } from "../../@utils/tasks";
@@ -14,7 +15,7 @@ interface TasksProps {
 }
 
 const Tasks: FC<TasksProps> = ({ timeRange }) => {
-  const { resolution, resources, tasks, taskTooltipContent } = useTimelineContext();
+  const { interval, resolution, resources, tasks, taskTooltipContent } = useTimelineContext();
 
   const [taskTooltip, setTaskTooltip] = useState<TaskTooltipData | null>(null);
 
@@ -86,8 +87,25 @@ const Tasks: FC<TasksProps> = ({ timeRange }) => {
         }
 
         const { color: resourceColor } = resources[resourceIndex];
-        const xBegin = ((time.start - timeRange.start) / (1000 * 60 * 60 * resolution.size)) * resolution.columnSize;
-        const width = ((time.end - time.start) / (1000 * 60 * 60 * resolution.size)) * resolution.columnSize;
+        const intervalStart = interval.start;
+        const intervalEnd = interval.end;
+        if (!intervalStart || !intervalEnd) {
+          return null;
+        }
+
+        const timeStart = DateTime.fromMillis(time.start);
+        const startOffsetInUnit = timeStart.diff(intervalStart).as(resolution.unit);
+        const xBegin = (startOffsetInUnit * resolution.columnSize) / resolution.size;
+        console.log("=> startOffset", { startOffsetInUnit, unit: resolution.unit, xBegin });
+
+        const timeEnd = DateTime.fromMillis(time.end);
+        const widthOffsetInUnit = timeEnd.diff(timeStart).as(resolution.unit);
+        const width = (widthOffsetInUnit * resolution.columnSize) / resolution.size;
+        console.log("=> widthOffset", { widthOffsetInUnit, unit: resolution.unit, width });
+        console.log("====================================");
+
+        // console.log({ xBegin, width });
+
         return (
           <Task
             key={`task-${index}`}

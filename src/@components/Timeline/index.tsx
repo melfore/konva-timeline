@@ -18,14 +18,10 @@ const RESOURCES_COLUMN_WIDTH = 200;
 
 const DEFAULT_STAGE_SIZE: StageSize = { height: 0, width: 0 };
 
-const Timeline: FC<TimelineInput> = ({
-  columnWidth: externalColumnWidth,
-  resolution: externalResolution = "1hrs",
-  range,
-}) => {
-  const { hideResources, resolution, resources, timeBlocks, wrapperHeight } = useTimelineContext();
+const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth, range }) => {
+  const { hideResources, resolution, resolutionKey, resources, setResolutionKey, timeBlocks, wrapperHeight } =
+    useTimelineContext();
 
-  const [resolutionKey, setResolutionKey] = useState(externalResolution);
   const [size, setSize] = useState<StageSize>(DEFAULT_STAGE_SIZE);
   const wrapper = useRef<HTMLDivElement>(null);
 
@@ -37,10 +33,6 @@ const Timeline: FC<TimelineInput> = ({
     const { clientHeight: height, clientWidth: width } = wrapper.current;
     setSize({ height, width });
   }, []);
-
-  useEffect(() => {
-    setResolutionKey(externalResolution);
-  }, [externalResolution]);
 
   const columnWidth = useMemo(() => {
     return !externalColumnWidth || externalColumnWidth < COLUMN_WIDTH ? resolution.columnSize : externalColumnWidth;

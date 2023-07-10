@@ -17,7 +17,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     hideResources: false,
-    resolution: "1day",
+    resolution: "1hrs",
     resources: [
       { id: "1", label: "First", color: "orange" },
       { id: "2", label: "Second", color: "purple" },
