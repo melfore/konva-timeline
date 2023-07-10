@@ -6,17 +6,15 @@ import { KonvaEventObject } from "konva/lib/Node";
 import { useTimelineContext } from "../../@contexts/Timeline";
 import { TaskTooltipData } from "../../@utils/tasks";
 import { TimeRange } from "../../@utils/time-range";
-import { ResolutionData } from "../../@utils/time-resolution";
 import Task from "../Task";
 import TaskTooltip from "../TaskTooltip";
 
 interface TasksProps {
-  resolution: ResolutionData;
   timeRange: TimeRange;
 }
 
-const Tasks: FC<TasksProps> = ({ resolution, timeRange }) => {
-  const { resources, tasks, taskTooltipContent } = useTimelineContext();
+const Tasks: FC<TasksProps> = ({ timeRange }) => {
+  const { resolution, resources, tasks, taskTooltipContent } = useTimelineContext();
 
   const [taskTooltip, setTaskTooltip] = useState<TaskTooltipData | null>(null);
 
@@ -54,8 +52,6 @@ const Tasks: FC<TasksProps> = ({ resolution, timeRange }) => {
       if (!taskTooltip) {
         return null;
       }
-
-      console.log({ taskTooltip });
 
       return taskTooltipContent ? (
         <Html

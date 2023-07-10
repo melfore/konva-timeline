@@ -4,6 +4,7 @@ import { Interval } from "luxon";
 import { Resource } from "../@utils/resources";
 import { filterOutOfInterval, TaskData } from "../@utils/tasks";
 import { toInterval } from "../@utils/time-range";
+import { getResolutionData, ResolutionData } from "../@utils/time-resolution";
 import { TimelineInput } from "../@utils/timeline";
 
 type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
@@ -13,9 +14,11 @@ type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
 type TimelineContextType = {
   hideResources?: boolean;
   interval: Interval;
+  resolution: ResolutionData;
   resources: Resource[];
   tasks: TaskData[];
   taskTooltipContent?: (task: any) => React.ReactNode;
+  timeBlocks: Interval[];
   wrapperHeight: number;
 };
 
@@ -27,9 +30,12 @@ export const TimelineProvider = ({
   tasks: externalTasks,
   taskTooltipContent,
   range,
+  resolution: externalResolution = "1hrs",
   resources: externalResources,
 }: TimelineProviderProps) => {
   const interval = useMemo(() => toInterval(range), [range]);
+
+  const resolution = useMemo(() => getResolutionData(externalResolution), [externalResolution]);
 
   const resources = useMemo(
     (): Resource[] => [{ color: "transparent", id: "-1", label: "Header" }, ...externalResources],
@@ -40,8 +46,23 @@ export const TimelineProvider = ({
 
   const wrapperHeight = useMemo(() => resources.length * 50, [resources]);
 
+  const timeBlocks = useMemo(() => {
+    return interval.splitBy({ [resolution.unit]: resolution.size });
+  }, [interval, resolution]);
+
   return (
-    <TimelineContext.Provider value={{ hideResources, interval, resources, tasks, taskTooltipContent, wrapperHeight }}>
+    <TimelineContext.Provider
+      value={{
+        hideResources,
+        interval,
+        resolution,
+        resources,
+        tasks,
+        taskTooltipContent,
+        timeBlocks,
+        wrapperHeight,
+      }}
+    >
       {children}
     </TimelineContext.Provider>
   );
