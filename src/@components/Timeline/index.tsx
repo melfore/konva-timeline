@@ -89,7 +89,7 @@ const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth, range }
           }}
         >
           <Stage height={size.height} width={stageWidth}>
-            <Grid columnWidth={columnWidth} height={size.height} timeRange={range} width={stageWidth} />
+            <Grid columnWidth={columnWidth} height={size.height} width={stageWidth} />
             <Tasks timeRange={range} />
           </Stage>
         </div>

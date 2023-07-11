@@ -79,7 +79,7 @@ const Tasks: FC<TasksProps> = ({ timeRange }) => {
   );
 
   return (
-    <Layer onMouseOver={onTaskOver} onMouseMove={onTaskOver} onMouseLeave={onTaskExit}>
+    <Layer>
       {tasks.map(({ id, label, resourceId, time }, index) => {
         const resourceIndex = getResourceById(resourceId);
         if (resourceIndex < 0) {
@@ -95,12 +95,12 @@ const Tasks: FC<TasksProps> = ({ timeRange }) => {
 
         const timeStart = DateTime.fromMillis(time.start);
         const startOffsetInUnit = timeStart.diff(intervalStart).as(resolution.unit);
-        const xBegin = (startOffsetInUnit * resolution.columnSize) / resolution.size;
+        const xBegin = (startOffsetInUnit * resolution.columnSize) / resolution.sizeInUnits;
         console.log("=> startOffset", { startOffsetInUnit, unit: resolution.unit, xBegin });
 
         const timeEnd = DateTime.fromMillis(time.end);
         const widthOffsetInUnit = timeEnd.diff(timeStart).as(resolution.unit);
-        const width = (widthOffsetInUnit * resolution.columnSize) / resolution.size;
+        const width = (widthOffsetInUnit * resolution.columnSize) / resolution.sizeInUnits;
         console.log("=> widthOffset", { widthOffsetInUnit, unit: resolution.unit, width });
         console.log("====================================");
 
@@ -112,6 +112,9 @@ const Tasks: FC<TasksProps> = ({ timeRange }) => {
             id={id}
             color={resourceColor}
             label={label}
+            onMouseLeave={onTaskExit}
+            // onMouseMove={onTaskOver}
+            onMouseOver={onTaskOver}
             x={xBegin}
             y={50 * resourceIndex + 5}
             width={width}

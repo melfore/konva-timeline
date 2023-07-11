@@ -55,7 +55,7 @@ export const TimelineProvider = ({
   const wrapperHeight = useMemo(() => resources.length * 50, [resources]);
 
   const timeBlocks = useMemo(() => {
-    return interval.splitBy({ [resolution.unit]: resolution.size });
+    return interval.splitBy({ [resolution.unit]: resolution.sizeInUnits });
   }, [interval, resolution]);
 
   return (
