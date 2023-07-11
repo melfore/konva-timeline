@@ -2,7 +2,6 @@ import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import { Group, Layer, Line, Stage, Text } from "react-konva";
 
 import { useTimelineContext } from "../../@contexts/Timeline";
-import { getResolutionData } from "../../@utils/time-resolution";
 import { TimelineInput } from "../../@utils/timeline";
 import Grid from "../Grid";
 import Resolutions from "../Resolutions";
@@ -19,14 +18,10 @@ const RESOURCES_COLUMN_WIDTH = 200;
 
 const DEFAULT_STAGE_SIZE: StageSize = { height: 0, width: 0 };
 
-const Timeline: FC<TimelineInput> = ({
-  columnWidth: externalColumnWidth,
-  resolution: externalResolution = "1hrs",
-  range,
-}) => {
-  const { hideResources, resources, wrapperHeight } = useTimelineContext();
+const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth, range }) => {
+  const { hideResources, resolution, resolutionKey, resources, setResolutionKey, timeBlocks, wrapperHeight } =
+    useTimelineContext();
 
-  const [resolution, setResolution] = useState(externalResolution);
   const [size, setSize] = useState<StageSize>(DEFAULT_STAGE_SIZE);
   const wrapper = useRef<HTMLDivElement>(null);
 
@@ -39,29 +34,15 @@ const Timeline: FC<TimelineInput> = ({
     setSize({ height, width });
   }, []);
 
-  useEffect(() => {
-    setResolution(externalResolution);
-  }, [externalResolution]);
-
-  const resolutionData = useMemo(() => getResolutionData(resolution), [resolution]);
-  const { columnSize: resolutionColumnSize, size: resolutionSize } = resolutionData;
-
   const columnWidth = useMemo(() => {
-    return !externalColumnWidth || externalColumnWidth < COLUMN_WIDTH ? resolutionColumnSize : externalColumnWidth;
-  }, [externalColumnWidth, resolutionColumnSize]);
+    return !externalColumnWidth || externalColumnWidth < COLUMN_WIDTH ? resolution.columnSize : externalColumnWidth;
+  }, [externalColumnWidth, resolution]);
 
-  const timeRangeDurationAsHours = useMemo(() => {
-    const timeRangeDuration = range.end - range.start;
-    return Math.ceil(timeRangeDuration / (1000 * 60 * 60 * resolutionSize));
-  }, [range, resolutionSize]);
-
-  const stageWidth = useMemo(() => {
-    return columnWidth * timeRangeDurationAsHours;
-  }, [columnWidth, timeRangeDurationAsHours]);
+  const stageWidth = useMemo(() => columnWidth * timeBlocks.length, [columnWidth, timeBlocks]);
 
   return (
     <div>
-      <Resolutions resolution={resolution} onResolutionChange={setResolution} />
+      <Resolutions resolution={resolutionKey} onResolutionChange={setResolutionKey} />
       <div
         style={{
           border: "1px solid black",
@@ -108,15 +89,8 @@ const Timeline: FC<TimelineInput> = ({
           }}
         >
           <Stage height={size.height} width={stageWidth}>
-            <Grid
-              columnsCount={timeRangeDurationAsHours}
-              columnWidth={columnWidth}
-              height={size.height}
-              resolution={resolutionData}
-              timeRange={range}
-              width={stageWidth}
-            />
-            <Tasks resolution={resolutionData} timeRange={range} />
+            <Grid columnWidth={columnWidth} height={size.height} width={stageWidth} />
+            <Tasks timeRange={range} />
           </Stage>
         </div>
       </div>

@@ -1,25 +1,52 @@
-import React, { FC } from "react";
-import { Group, Layer, Line, Text } from "react-konva";
+import React, { FC, useCallback } from "react";
+import { Group, Layer, Line, Rect, Text } from "react-konva";
 
 import { useTimelineContext } from "../../@contexts/Timeline";
-import { TimeRange } from "../../@utils/time-range";
-import { ResolutionData } from "../../@utils/time-resolution";
+import { displayInterval } from "../../@utils/time-resolution";
 
 interface GridProps {
-  columnsCount: number;
   columnWidth: number;
   height: number;
-  resolution: ResolutionData;
-  timeRange: TimeRange;
   width: number;
 }
 
-const Grid: FC<GridProps> = ({ columnsCount, columnWidth, height, resolution, width }) => {
-  const { resources } = useTimelineContext();
+const Grid: FC<GridProps> = ({ columnWidth, height, width }) => {
+  const { interval, resolution, resources, timeBlocks } = useTimelineContext();
 
-  const { size, scaleUnits } = resolution;
+  const { sizeInUnits, unit, unitAbove } = resolution;
 
-  const columns = new Array(columnsCount).fill("").map((v, index) => (index * size) % scaleUnits);
+  const unitAboveIntervals = interval.splitBy({ [unitAbove]: 1 });
+  const oneUnitAboveDuration = unitAboveIntervals[0].toDuration().as(unit) / sizeInUnits;
+  const oneUnitAboveColumnWidth = columnWidth * oneUnitAboveDuration;
+
+  const gridLabels = useCallback(
+    (index: number) => {
+      const rest = index % oneUnitAboveDuration === 0;
+      if (!rest) {
+        return null;
+      }
+
+      const unitAboveIntervalIndex = Math.ceil(index / oneUnitAboveDuration);
+      const unitAboveInterval = unitAboveIntervals[unitAboveIntervalIndex];
+
+      const unitAboveStartX = unitAboveIntervalIndex * oneUnitAboveColumnWidth;
+
+      return (
+        <Group>
+          <Rect fill="white" x={5 + unitAboveStartX} y={5} height={18} width={oneUnitAboveColumnWidth - 10} />
+          <Text
+            x={5 + unitAboveStartX}
+            y={10}
+            text={displayInterval(unitAboveInterval, unitAbove)}
+            align="center"
+            width={oneUnitAboveColumnWidth - 10}
+          />
+          <Line x={unitAboveStartX} y={0} points={[0, 0, 0, height]} stroke="gray" />
+        </Group>
+      );
+    },
+    [height, oneUnitAboveDuration, oneUnitAboveColumnWidth, unitAbove, unitAboveIntervals]
+  );
 
   return (
     <Layer>
@@ -30,14 +57,16 @@ const Grid: FC<GridProps> = ({ columnsCount, columnWidth, height, resolution, wi
           </Group>
         ))}
         <Line points={[0, 0, 0, height]} stroke="blue" />
-        {columns.map((column, index) => (
+        {timeBlocks.map((column, index) => (
           <Group key={`timeslot-${index}`}>
-            <Line x={columnWidth * index} y={0} points={[0, 0, 0, height]} stroke="gray" />
-            <Text x={10 + columnWidth * index} y={20} text={`${column}:00`} />
+            {gridLabels(index)}
+            <Line x={columnWidth * index} y={40} points={[0, 0, 0, height]} stroke="gray" strokeWidth={1} />
+            <Rect fill="white" x={columnWidth * index - 15} y={30} height={15} width={30} />
+            <Text x={columnWidth * index - 15} y={32} text={displayInterval(column, resolution.unit)} />
           </Group>
         ))}
         <Group key={`timeslot-last`}>
-          <Line x={columnWidth * columns.length} y={0} points={[0, 0, 0, height]} stroke="gray" />
+          <Line x={columnWidth * timeBlocks.length} y={0} points={[0, 0, 0, height]} stroke="gray" />
         </Group>
       </Group>
     </Layer>
