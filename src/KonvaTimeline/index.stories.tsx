@@ -17,7 +17,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     hideResources: false,
-    resolution: "1hrs",
+    resolution: "12hrs",
     resources: [
       { id: "1", label: "First", color: "orange" },
       { id: "2", label: "Second", color: "purple" },
@@ -110,7 +110,7 @@ export const Primary: Story = {
     ],
     range: {
       start: 1688421600000,
-      end: 1688421600000 + 86400000 * 14,
+      end: 1688421600000 + 86400000 * 365 * 5,
     },
   },
 };
