@@ -6,15 +6,12 @@ import { DateTime } from "luxon";
 
 import { useTimelineContext } from "../../@contexts/Timeline";
 import { TaskTooltipData } from "../../@utils/tasks";
-import { TimeRange } from "../../@utils/time-range";
 import Task from "../Task";
 import TaskTooltip from "../TaskTooltip";
 
-interface TasksProps {
-  timeRange: TimeRange;
-}
+interface TasksProps {}
 
-const Tasks: FC<TasksProps> = ({ timeRange }) => {
+const Tasks: FC<TasksProps> = () => {
   const { interval, resolution, resources, tasks, taskTooltipContent } = useTimelineContext();
 
   const [taskTooltip, setTaskTooltip] = useState<TaskTooltipData | null>(null);
@@ -96,13 +93,13 @@ const Tasks: FC<TasksProps> = ({ timeRange }) => {
         const timeStart = DateTime.fromMillis(time.start);
         const startOffsetInUnit = timeStart.diff(intervalStart).as(resolution.unit);
         const xBegin = (startOffsetInUnit * resolution.columnSize) / resolution.sizeInUnits;
-        console.log("=> startOffset", { startOffsetInUnit, unit: resolution.unit, xBegin });
+        // console.log("=> startOffset", { startOffsetInUnit, unit: resolution.unit, xBegin });
 
         const timeEnd = DateTime.fromMillis(time.end);
         const widthOffsetInUnit = timeEnd.diff(timeStart).as(resolution.unit);
         const width = (widthOffsetInUnit * resolution.columnSize) / resolution.sizeInUnits;
-        console.log("=> widthOffset", { widthOffsetInUnit, unit: resolution.unit, width });
-        console.log("====================================");
+        // console.log("=> widthOffset", { widthOffsetInUnit, unit: resolution.unit, width });
+        // console.log("====================================");
 
         // console.log({ xBegin, width });
 
@@ -113,7 +110,7 @@ const Tasks: FC<TasksProps> = ({ timeRange }) => {
             color={resourceColor}
             label={label}
             onMouseLeave={onTaskExit}
-            // onMouseMove={onTaskOver}
+            onMouseMove={onTaskOver}
             onMouseOver={onTaskOver}
             x={xBegin}
             y={50 * resourceIndex + 5}
