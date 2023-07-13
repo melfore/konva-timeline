@@ -34,24 +34,24 @@ export const Primary: Story = {
           end: 1,
         },
       },
-      // {
-      //   id: "2",
-      //   resourceId: "1",
-      //   label: "Partial: starts outside interval",
-      //   time: {
-      //     start: 688423600000,
-      //     end: 1688423600000,
-      //   },
-      // },
-      // {
-      //   id: "3",
-      //   resourceId: "1",
-      //   label: "Partial: ends outside interval",
-      //   time: {
-      //     start: 1688440800000,
-      //     end: 2688423600000,
-      //   },
-      // },
+      {
+        id: "2",
+        resourceId: "1",
+        label: "Partial: starts outside interval",
+        time: {
+          start: 688423600000,
+          end: 1688423600000,
+        },
+      },
+      {
+        id: "3",
+        resourceId: "1",
+        label: "Partial: ends outside interval",
+        time: {
+          start: 1688440800000,
+          end: 2688423600000,
+        },
+      },
       {
         id: "4",
         resourceId: "1",
