@@ -107,10 +107,9 @@ const Tasks: FC<TasksProps> = () => {
           <Task
             key={`task-${index}`}
             id={id}
-            color={resourceColor}
+            fill={resourceColor}
             label={label}
             onMouseLeave={onTaskExit}
-            onMouseMove={onTaskOver}
             onMouseOver={onTaskOver}
             x={xBegin}
             y={50 * resourceIndex + 5}

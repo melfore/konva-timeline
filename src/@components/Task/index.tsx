@@ -1,28 +1,53 @@
-import React, { FC } from "react";
+import React from "react";
 import { Rect } from "react-konva";
 
 import { TaskLayoutData } from "../../@utils/tasks";
 
 interface TaskProps extends TaskLayoutData {
-  color: string;
+  /**
+   * The fill color of the task
+   */
+  fill: string;
+  /**
+   * On mouse leave event handler
+   */
   onMouseLeave?: (e: any) => void;
-  onMouseMove?: (e: any) => void;
+  /**
+   * On mouse over event handler
+   */
   onMouseOver?: (e: any) => void;
+  /**
+   * The stroke color of the task
+   */
+  stroke?: string;
+  /**
+   * The width of the task
+   */
   width: number;
+  /**
+   * The x coordinate of the task
+   */
   x: number;
+  /**
+   * The y coordinate of the task
+   */
   y: number;
 }
 
-const Task: FC<TaskProps> = ({ color, id, onMouseLeave, onMouseMove, onMouseOver, x, y, width }) => {
+const TASK_BORDER_RADIUS = 4;
+const TASK_HEIGHT = 40;
+
+const Task = ({ fill, id, onMouseLeave, onMouseOver, stroke = "black", x, y, width }: TaskProps) => {
   return (
     <Rect
       id={id}
-      fill={color}
-      height={40}
+      cornerRadius={TASK_BORDER_RADIUS}
+      fill={fill}
+      height={TASK_HEIGHT}
       onMouseLeave={onMouseLeave}
-      onMouseMove={onMouseMove}
+      onMouseMove={onMouseOver}
       onMouseOver={onMouseOver}
-      stroke="black"
+      stroke={stroke}
       x={x}
       y={y}
       width={width}
