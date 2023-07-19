@@ -7,7 +7,7 @@ interface TaskProps extends TaskLayoutData {
   /**
    * The fill color of the task
    */
-  fill: string;
+  fill?: string;
   /**
    * On mouse leave event handler
    */
@@ -37,7 +37,10 @@ interface TaskProps extends TaskLayoutData {
 const TASK_BORDER_RADIUS = 4;
 const TASK_HEIGHT = 40;
 
-const Task = ({ fill, id, onMouseLeave, onMouseOver, stroke = "black", x, y, width }: TaskProps) => {
+/**
+ * This component renders a task as a rectangle.
+ */
+const Task = ({ fill = "white", id, onMouseLeave, onMouseOver, stroke = "black", x, y, width }: TaskProps) => {
   return (
     <Rect
       id={id}
