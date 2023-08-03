@@ -5,6 +5,7 @@ import { TimelineProvider } from "../@contexts/Timeline";
 import { TimelineInput } from "../@utils/timeline";
 
 interface KonvaTimelineProps extends TimelineInput {
+  debug?: boolean;
   taskTooltipContent?: (task: any) => React.ReactNode;
 }
 

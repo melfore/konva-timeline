@@ -1,13 +1,21 @@
 import React, { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
 import { Interval } from "luxon";
 
-import { Resource } from "../@utils/resources";
+import { logDebug } from "../@utils/logger";
+import { Resource, RESOURCE_HEADER, RESOURCE_ROW_HEIGHT } from "../@utils/resources";
 import { filterOutOfInterval, TaskData } from "../@utils/tasks";
 import { toInterval } from "../@utils/time-range";
 import { getResolutionData, Resolution, ResolutionData } from "../@utils/time-resolution";
 import { TimelineInput } from "../@utils/timeline";
 
+declare global {
+  interface Window {
+    __MELFORE_KONVA_TIMELINE_DEBUG__?: boolean;
+  }
+}
+
 type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
+  debug?: boolean;
   taskTooltipContent?: (task: any) => React.ReactNode;
 };
 
@@ -28,6 +36,7 @@ const TimelineContext = createContext<TimelineContextType | undefined>(undefined
 
 export const TimelineProvider = ({
   children,
+  debug = false,
   hideResources = false,
   tasks: externalTasks,
   taskTooltipContent,
@@ -37,26 +46,51 @@ export const TimelineProvider = ({
 }: TimelineProviderProps) => {
   const [resolutionKey, setResolutionKey] = useState(externalResolution);
 
-  const interval = useMemo(() => toInterval(range), [range]);
-
-  const resolution = useMemo(() => getResolutionData(resolutionKey), [resolutionKey]);
+  useEffect(() => {
+    console.log("=> TimelineProvider.useEffect.debug", debug);
+    window.__MELFORE_KONVA_TIMELINE_DEBUG__ = debug;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
+    if (externalResolution === resolutionKey) {
+      return;
+    }
+
+    logDebug("TimelineProvider", "useEffect.resolutionKey");
     setResolutionKey(externalResolution);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [externalResolution]);
 
-  const resources = useMemo(
-    (): Resource[] => [{ color: "transparent", id: "-1", label: "Header" }, ...externalResources],
-    [externalResources]
-  );
+  const interval = useMemo(() => {
+    logDebug("TimelineProvider", "useMemo.interval");
+    return toInterval(range);
+  }, [range]);
 
-  const tasks = useMemo(() => filterOutOfInterval(externalTasks, interval), [externalTasks, interval]);
+  const resolution = useMemo(() => {
+    logDebug("TimelineProvider", "useMemo.resolution");
+    return getResolutionData(resolutionKey);
+  }, [resolutionKey]);
 
-  const wrapperHeight = useMemo(() => resources.length * 50, [resources]);
+  const resources = useMemo(() => {
+    logDebug("TimelineProvider", "useMemo.resources");
+    return [RESOURCE_HEADER, ...externalResources];
+  }, [externalResources]);
+
+  const tasks = useMemo(() => {
+    logDebug("TimelineProvider", "useMemo.tasks");
+    return filterOutOfInterval(externalTasks, interval);
+  }, [externalTasks, interval]);
 
   const timeBlocks = useMemo(() => {
+    logDebug("TimelineProvider", "useMemo.timeBlocks");
     return interval.splitBy({ [resolution.unit]: resolution.sizeInUnits });
   }, [interval, resolution]);
+
+  const wrapperHeight = useMemo(() => {
+    logDebug("TimelineProvider", "useMemo.wrapperHeight");
+    return resources.length * RESOURCE_ROW_HEIGHT;
+  }, [resources]);
 
   return (
     <TimelineContext.Provider

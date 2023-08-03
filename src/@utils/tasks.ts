@@ -4,7 +4,13 @@ import { Point } from "./konva";
 import { TimeRange, toInterval } from "./time-range";
 
 export interface TaskLayoutData {
+  /**
+   * Unique identifier of the task
+   */
   id: string;
+  /**
+   * Label of the task
+   */
   label: string;
 }
 
