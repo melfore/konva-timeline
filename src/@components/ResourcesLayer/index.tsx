@@ -1,7 +1,7 @@
 import React, { FC } from "react";
-import { Layer } from "react-konva";
 
 import { useTimelineContext } from "../../@contexts/Timeline";
+import { KonvaLayer } from "../@konva";
 import ResourceHeader from "../ResourceHeader";
 
 interface ResourcesLayerProps {}
@@ -13,11 +13,11 @@ const ResourcesLayer: FC<ResourcesLayerProps> = () => {
   const { resources } = useTimelineContext();
 
   return (
-    <Layer listening={false}>
+    <KonvaLayer>
       {resources.map((resource, index) => (
-        <ResourceHeader {...resource} index={index} />
+        <ResourceHeader key={`resource-${resource.id}`} {...resource} index={index} />
       ))}
-    </Layer>
+    </KonvaLayer>
   );
 };
 

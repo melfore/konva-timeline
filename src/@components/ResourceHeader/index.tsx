@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react";
+import React, { FC } from "react";
 
 import {
   Resource,
@@ -15,11 +15,9 @@ interface ResourceHeaderProps extends Resource {
 /**
  * This component renders a Resource header with text and delimiter line
  */
-const ResourceHeader: FC<ResourceHeaderProps> = ({ id, index, label }) => {
-  const resourceKey = useMemo(() => `resource-${id}`, [id]);
-
+const ResourceHeader: FC<ResourceHeaderProps> = ({ index, label }) => {
   return (
-    <KonvaGroup x={0} y={0} key={resourceKey}>
+    <KonvaGroup x={0} y={0}>
       <KonvaLine points={[0, 0, RESOURCE_HEADER_WIDTH, 0]} stroke="blue" y={RESOURCE_HEADER_HEIGHT * (index + 1)} />
       <KonvaGroup x={RESOURCE_HEADER_TEXT_OFFSET} y={RESOURCE_HEADER_TEXT_OFFSET}>
         <KonvaText text={label} y={RESOURCE_HEADER_HEIGHT * index} />
