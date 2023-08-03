@@ -19,11 +19,11 @@
     "prefix": "tsreact-component",
     "description": "Create a new TSReact component",
     "body": [
-      "import React, { FC } from \"react\";",
+      "import React from \"react\";",
       "",
       "interface $1Props {}",
       "",
-      "const $1: FC<$1Props> = () => {",
+      "const $1 = ({}: $1Props) => {",
       "  return null;",
       "};",
       "",
