@@ -2,7 +2,7 @@ import React, { createContext, PropsWithChildren, useContext, useEffect, useMemo
 import { Interval } from "luxon";
 
 import { logDebug } from "../@utils/logger";
-import { Resource, RESOURCE_HEADER, RESOURCE_ROW_HEIGHT } from "../@utils/resources";
+import { Resource, RESOURCE_HEADER, RESOURCE_HEADER_HEIGHT } from "../@utils/resources";
 import { filterOutOfInterval, TaskData } from "../@utils/tasks";
 import { toInterval } from "../@utils/time-range";
 import { getResolutionData, Resolution, ResolutionData } from "../@utils/time-resolution";
@@ -89,7 +89,7 @@ export const TimelineProvider = ({
 
   const wrapperHeight = useMemo(() => {
     logDebug("TimelineProvider", "useMemo.wrapperHeight");
-    return resources.length * RESOURCE_ROW_HEIGHT;
+    return resources.length * RESOURCE_HEADER_HEIGHT;
   }, [resources]);
 
   return (

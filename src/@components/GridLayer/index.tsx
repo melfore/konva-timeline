@@ -4,13 +4,13 @@ import { Group, Layer, Line, Rect, Text } from "react-konva";
 import { useTimelineContext } from "../../@contexts/Timeline";
 import { displayInterval } from "../../@utils/time-resolution";
 
-interface GridProps {
+interface GridLayerProps {
   columnWidth: number;
   height: number;
   width: number;
 }
 
-const Grid: FC<GridProps> = ({ columnWidth, height, width }) => {
+const GridLayer: FC<GridLayerProps> = ({ columnWidth, height, width }) => {
   const { interval, resolution, resources, timeBlocks } = useTimelineContext();
 
   const { sizeInUnits, unit, unitAbove } = resolution;
@@ -73,4 +73,4 @@ const Grid: FC<GridProps> = ({ columnWidth, height, width }) => {
   );
 };
 
-export default Grid;
+export default GridLayer;

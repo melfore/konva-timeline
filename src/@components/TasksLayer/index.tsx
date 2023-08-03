@@ -9,9 +9,9 @@ import { TaskTooltipData } from "../../@utils/tasks";
 import Task from "../Task";
 import TaskTooltip from "../TaskTooltip";
 
-interface TasksProps {}
+interface TasksLayerProps {}
 
-const Tasks: FC<TasksProps> = () => {
+const TasksLayer: FC<TasksLayerProps> = () => {
   const { interval, resolution, resources, tasks, taskTooltipContent } = useTimelineContext();
 
   const [taskTooltip, setTaskTooltip] = useState<TaskTooltipData | null>(null);
@@ -122,4 +122,4 @@ const Tasks: FC<TasksProps> = () => {
   );
 };
 
-export default Tasks;
+export default TasksLayer;

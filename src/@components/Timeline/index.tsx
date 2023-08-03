@@ -1,11 +1,13 @@
 import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Group, Layer, Line, Stage, Text } from "react-konva";
+import { Stage } from "react-konva";
 import Konva from "konva";
 
 import { useTimelineContext } from "../../@contexts/Timeline";
+import { RESOURCE_HEADER_WIDTH } from "../../@utils/resources";
 import { TimelineInput } from "../../@utils/timeline";
-import Grid from "../Grid";
-import Tasks from "../Tasks";
+import GridLayer from "../GridLayer";
+import ResourcesLayer from "../ResourcesLayer";
+import TasksLayer from "../TasksLayer";
 
 const COLUMN_WIDTH = 60;
 
@@ -14,12 +16,10 @@ interface StageSize {
   width: number;
 }
 
-const RESOURCES_COLUMN_WIDTH = 200;
-
 const DEFAULT_STAGE_SIZE: StageSize = { height: 0, width: 0 };
 
 const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
-  const { hideResources, resolution, resources, timeBlocks, wrapperHeight } = useTimelineContext();
+  const { hideResources, resolution, timeBlocks, wrapperHeight } = useTimelineContext();
 
   const [size, setSize] = useState<StageSize>(DEFAULT_STAGE_SIZE);
   const stageRef = useRef<Konva.Stage>(null);
@@ -75,26 +75,19 @@ const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
             height: wrapperHeight,
             position: "sticky",
             top: 0,
-            width: RESOURCES_COLUMN_WIDTH,
+            width: RESOURCE_HEADER_WIDTH,
             zIndex: 1,
           }}
         >
-          <Stage height={size.height} width={RESOURCES_COLUMN_WIDTH}>
-            <Layer>
-              {resources.map(({ id, label }, index) => (
-                <Group x={0} y={0} key={`heading-${id}`}>
-                  <Line y={50 * (index + 1)} points={[0, 0, RESOURCES_COLUMN_WIDTH, 0]} stroke="blue" />
-                  <Text y={20 + 50 * index} text={label} />
-                </Group>
-              ))}
-            </Layer>
+          <Stage height={size.height} width={RESOURCE_HEADER_WIDTH}>
+            <ResourcesLayer />
           </Stage>
         </div>
       )}
       <div
         ref={wrapper}
         style={{
-          left: hideResources ? 0 : RESOURCES_COLUMN_WIDTH + 1,
+          left: hideResources ? 0 : RESOURCE_HEADER_WIDTH + 1,
           height: wrapperHeight,
           overflow: "auto",
           position: "absolute",
@@ -105,8 +98,8 @@ const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
       >
         <div style={{ height: size.height, overflow: "hidden", width: stageWidth }}>
           <Stage ref={stageRef} height={size.height} width={size.width}>
-            <Grid columnWidth={columnWidth} height={size.height} width={stageWidth} />
-            <Tasks />
+            <GridLayer columnWidth={columnWidth} height={size.height} width={stageWidth} />
+            <TasksLayer />
           </Stage>
         </div>
       </div>

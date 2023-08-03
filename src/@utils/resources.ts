@@ -4,7 +4,9 @@ export interface Resource {
   color: string;
 }
 
-export const RESOURCE_ROW_HEIGHT = 50;
+export const RESOURCE_HEADER_HEIGHT = 50;
+export const RESOURCE_HEADER_TEXT_OFFSET = 20;
+export const RESOURCE_HEADER_WIDTH = 200;
 
 export const RESOURCE_HEADER: Resource = {
   color: "transparent",
