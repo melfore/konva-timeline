@@ -12,7 +12,7 @@ import TaskTooltip from "../TaskTooltip";
 interface TasksLayerProps {}
 
 const TasksLayer: FC<TasksLayerProps> = () => {
-  const { interval, resolution, resources, tasks, taskTooltipContent } = useTimelineContext();
+  const { drawRange, interval, resolution, resources, tasks, taskTooltipContent } = useTimelineContext();
 
   const [taskTooltip, setTaskTooltip] = useState<TaskTooltipData | null>(null);
 
@@ -102,6 +102,10 @@ const TasksLayer: FC<TasksLayerProps> = () => {
         // console.log("====================================");
 
         // console.log({ xBegin, width });
+
+        if (xBegin > drawRange.end || xBegin + width < drawRange.start) {
+          return null;
+        }
 
         return (
           <Task

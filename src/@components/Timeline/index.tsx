@@ -19,11 +19,14 @@ interface StageSize {
 const DEFAULT_STAGE_SIZE: StageSize = { height: 0, width: 0 };
 
 const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
-  const { hideResources, resolution, timeBlocks, wrapperHeight } = useTimelineContext();
+  const { hideResources, resolution, setDrawRange, timeBlocks, wrapperHeight } = useTimelineContext();
 
   const [size, setSize] = useState<StageSize>(DEFAULT_STAGE_SIZE);
   const stageRef = useRef<Konva.Stage>(null);
   const wrapper = useRef<HTMLDivElement>(null);
+
+  // const [minX, setMinX] = useState(0);
+  // const maxX = useMemo(() => minX + size.width, [minX, size.width]);
 
   const repositionStage = useCallback(() => {
     if (!wrapper.current || !stageRef.current) {
@@ -32,11 +35,13 @@ const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
 
     var dx = wrapper.current.scrollLeft;
     var dy = wrapper.current.scrollTop;
-    console.log("=> repositionStage", { dx, dy });
+    // console.log("=> repositionStage", dx, dy);
     stageRef.current.container().style.transform = "translate(" + dx + "px, " + dy + "px)";
     stageRef.current.x(-dx);
     stageRef.current.y(-dy);
-  }, []);
+    // setMinX(dx);
+    setDrawRange({ start: dx, end: dx + size.width });
+  }, [setDrawRange, size.width]);
 
   useEffect(() => {
     if (!wrapper.current) {
@@ -46,8 +51,9 @@ const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
     const { clientHeight: height, clientWidth: width } = wrapper.current;
     wrapper.current.addEventListener("scroll", repositionStage);
     setSize({ height, width });
+    setDrawRange({ start: 0, end: width });
     repositionStage();
-  }, [repositionStage]);
+  }, [setDrawRange, repositionStage]);
 
   const columnWidth = useMemo(() => {
     return !externalColumnWidth || externalColumnWidth < COLUMN_WIDTH ? resolution.columnSize : externalColumnWidth;
