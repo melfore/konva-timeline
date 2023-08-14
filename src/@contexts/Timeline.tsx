@@ -1,7 +1,7 @@
 import React, { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
 import { Interval } from "luxon";
 
-import { logDebug } from "../@utils/logger";
+import { logDebug, logWarn } from "../@utils/logger";
 import { Resource, RESOURCE_HEADER, RESOURCE_HEADER_HEIGHT } from "../@utils/resources";
 import { filterOutOfInterval, TaskData } from "../@utils/tasks";
 import { TimeRange, toInterval } from "../@utils/time-range";
@@ -52,10 +52,9 @@ export const TimelineProvider = ({
   const [resolutionKey, setResolutionKey] = useState(externalResolution);
 
   useEffect(() => {
-    console.log("=> TimelineProvider.useEffect.debug", debug);
+    logWarn("TimelineProvider", `Debug ${debug ? "ON" : "OFF"}`);
     window.__MELFORE_KONVA_TIMELINE_DEBUG__ = debug;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [debug]);
 
   useEffect(() => {
     if (externalResolution === resolutionKey) {
