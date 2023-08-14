@@ -26,12 +26,12 @@ type TimelineContextType = {
   resolution: ResolutionData;
   resolutionKey: Resolution;
   resources: Resource[];
+  resourcesContentHeight: number;
   setDrawRange: (range: TimeRange) => void;
   setResolutionKey: (resolution: Resolution) => void;
   tasks: TaskData[];
   taskTooltipContent?: (task: any) => React.ReactNode;
   timeBlocks: Interval[];
-  wrapperHeight: number;
 };
 
 const TimelineContext = createContext<TimelineContextType | undefined>(undefined);
@@ -82,6 +82,11 @@ export const TimelineProvider = ({
     return [RESOURCE_HEADER, ...externalResources];
   }, [externalResources]);
 
+  const resourcesContentHeight = useMemo(() => {
+    logDebug("TimelineProvider", "Calculating resources content height...");
+    return RESOURCE_HEADER_HEIGHT * resources.length;
+  }, [resources]);
+
   const tasks = useMemo(() => {
     logDebug("TimelineProvider", "Preparing tasks...");
     return filterOutOfInterval(externalTasks, interval);
@@ -92,11 +97,6 @@ export const TimelineProvider = ({
     return interval.splitBy({ [resolution.unit]: resolution.sizeInUnits });
   }, [interval, resolution]);
 
-  const wrapperHeight = useMemo(() => {
-    logDebug("TimelineProvider", "Calculating wrapper height...");
-    return resources.length * RESOURCE_HEADER_HEIGHT;
-  }, [resources]);
-
   return (
     <TimelineContext.Provider
       value={{
@@ -106,12 +106,12 @@ export const TimelineProvider = ({
         resolution,
         resolutionKey,
         resources,
+        resourcesContentHeight,
         setDrawRange,
         setResolutionKey,
         tasks,
         taskTooltipContent,
         timeBlocks,
-        wrapperHeight,
       }}
     >
       {children}
