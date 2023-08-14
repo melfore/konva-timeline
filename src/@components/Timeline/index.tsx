@@ -26,6 +26,16 @@ const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
   const stageRef = useRef<Konva.Stage>(null);
   const wrapper = useRef<HTMLDivElement>(null);
 
+  const onWindowResize = useCallback(() => {
+    if (!wrapper.current) {
+      return;
+    }
+
+    logDebug("Timeline", "Resizing window...");
+    const { clientHeight: height, clientWidth: width } = wrapper.current;
+    setSize({ height, width });
+  }, []);
+
   const onStageScroll = useCallback(() => {
     if (!wrapper.current || !stageRef.current) {
       return;
@@ -42,6 +52,16 @@ const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
   }, [setDrawRange, size.width]);
 
   useEffect(() => {
+    logDebug("Timeline", "Initial applying of onResize event listener...");
+    window.addEventListener("resize", onWindowResize);
+    onWindowResize();
+
+    return () => {
+      window.removeEventListener("resize", onWindowResize);
+    };
+  }, [onWindowResize]);
+
+  useEffect(() => {
     if (!wrapper.current) {
       return;
     }
@@ -52,14 +72,9 @@ const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
   }, [onStageScroll]);
 
   useEffect(() => {
-    if (!wrapper.current) {
-      return;
-    }
-
     logDebug("Timeline", "Applying effects of size changes...");
-    const { clientHeight: height, clientWidth: width } = wrapper.current;
-    setSize({ height, width });
-  }, [hideResources]);
+    onWindowResize();
+  }, [hideResources, onWindowResize]);
 
   const columnWidth = useMemo(() => {
     return !externalColumnWidth || externalColumnWidth < COLUMN_WIDTH ? resolution.columnSize : externalColumnWidth;
