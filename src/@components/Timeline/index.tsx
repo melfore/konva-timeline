@@ -46,13 +46,20 @@ const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
       return;
     }
 
-    logDebug("Timeline", "Use effect changes...");
-    const { clientHeight: height, clientWidth: width } = wrapper.current;
+    logDebug("Timeline", "Initial applying of onScroll event listener...");
     wrapper.current.addEventListener("scroll", onStageScroll);
-
-    setSize({ height, width });
     onStageScroll();
-  }, [hideResources, onStageScroll]);
+  }, [onStageScroll]);
+
+  useEffect(() => {
+    if (!wrapper.current) {
+      return;
+    }
+
+    logDebug("Timeline", "Applying effects of size changes...");
+    const { clientHeight: height, clientWidth: width } = wrapper.current;
+    setSize({ height, width });
+  }, [hideResources]);
 
   const columnWidth = useMemo(() => {
     return !externalColumnWidth || externalColumnWidth < COLUMN_WIDTH ? resolution.columnSize : externalColumnWidth;
