@@ -1,7 +1,7 @@
 import React, { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
 import { Interval } from "luxon";
 
-import { logDebug } from "../@utils/logger";
+import { logDebug, logWarn } from "../@utils/logger";
 import { Resource, RESOURCE_HEADER, RESOURCE_HEADER_HEIGHT } from "../@utils/resources";
 import { filterOutOfInterval, TaskData } from "../@utils/tasks";
 import { TimeRange, toInterval } from "../@utils/time-range";
@@ -26,12 +26,12 @@ type TimelineContextType = {
   resolution: ResolutionData;
   resolutionKey: Resolution;
   resources: Resource[];
+  resourcesContentHeight: number;
   setDrawRange: (range: TimeRange) => void;
   setResolutionKey: (resolution: Resolution) => void;
   tasks: TaskData[];
   taskTooltipContent?: (task: any) => React.ReactNode;
   timeBlocks: Interval[];
-  wrapperHeight: number;
 };
 
 const TimelineContext = createContext<TimelineContextType | undefined>(undefined);
@@ -52,10 +52,9 @@ export const TimelineProvider = ({
   const [resolutionKey, setResolutionKey] = useState(externalResolution);
 
   useEffect(() => {
-    console.log("=> TimelineProvider.useEffect.debug", debug);
+    logWarn("TimelineProvider", `Debug ${debug ? "ON" : "OFF"}`);
     window.__MELFORE_KONVA_TIMELINE_DEBUG__ = debug;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [debug]);
 
   useEffect(() => {
     if (externalResolution === resolutionKey) {
@@ -82,6 +81,11 @@ export const TimelineProvider = ({
     return [RESOURCE_HEADER, ...externalResources];
   }, [externalResources]);
 
+  const resourcesContentHeight = useMemo(() => {
+    logDebug("TimelineProvider", "Calculating resources content height...");
+    return RESOURCE_HEADER_HEIGHT * resources.length;
+  }, [resources]);
+
   const tasks = useMemo(() => {
     logDebug("TimelineProvider", "Preparing tasks...");
     return filterOutOfInterval(externalTasks, interval);
@@ -92,11 +96,6 @@ export const TimelineProvider = ({
     return interval.splitBy({ [resolution.unit]: resolution.sizeInUnits });
   }, [interval, resolution]);
 
-  const wrapperHeight = useMemo(() => {
-    logDebug("TimelineProvider", "Calculating wrapper height...");
-    return resources.length * RESOURCE_HEADER_HEIGHT;
-  }, [resources]);
-
   return (
     <TimelineContext.Provider
       value={{
@@ -106,12 +105,12 @@ export const TimelineProvider = ({
         resolution,
         resolutionKey,
         resources,
+        resourcesContentHeight,
         setDrawRange,
         setResolutionKey,
         tasks,
         taskTooltipContent,
         timeBlocks,
-        wrapperHeight,
       }}
     >
       {children}
