@@ -111,7 +111,10 @@ export const Primary: Story = {
     ],
     range: {
       start: 1688421600000,
-      end: 1688421600000 + 86400000 * 365 * 5,
+      // Year report mode
+      // end: 1688421600000 + 86400000 * 365 * 5,
+      // Hourly report mode
+      end: 1688421600000 + 86400000 * 150,
     },
   },
 };

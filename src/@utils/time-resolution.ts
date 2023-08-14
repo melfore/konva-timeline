@@ -1,8 +1,20 @@
 import { Interval } from "luxon";
 
-type Scale = "hour" | "day" | "week" | "month" | "year";
+type Scale = "minute" | "hour" | "day" | "week" | "month" | "year";
 
-export type Resolution = "1hrs" | "2hrs" | "6hrs" | "12hrs" | "1day" | "1week" | "2weeks";
+export type Resolution =
+  | "1min"
+  | "5min"
+  | "10min"
+  | "15min"
+  | "30min"
+  | "1hrs"
+  | "2hrs"
+  | "6hrs"
+  | "12hrs"
+  | "1day"
+  | "1week"
+  | "2weeks";
 
 export type ResolutionData = {
   columnSize: number;
@@ -19,6 +31,41 @@ type ResolutionsData = {
 const COLUMN_WIDTH = 60;
 
 const RESOLUTIONS_DATA: ResolutionsData = {
+  "1min": {
+    columnSize: COLUMN_WIDTH / 2,
+    label: "1 Minute",
+    sizeInUnits: 1,
+    unit: "minute",
+    unitAbove: "hour",
+  },
+  "5min": {
+    columnSize: COLUMN_WIDTH / 2,
+    label: "5 Minutes",
+    sizeInUnits: 5,
+    unit: "minute",
+    unitAbove: "hour",
+  },
+  "10min": {
+    columnSize: COLUMN_WIDTH / 2,
+    label: "10 Minutes",
+    sizeInUnits: 10,
+    unit: "minute",
+    unitAbove: "hour",
+  },
+  "15min": {
+    columnSize: COLUMN_WIDTH,
+    label: "15 Minutes",
+    sizeInUnits: 15,
+    unit: "minute",
+    unitAbove: "hour",
+  },
+  "30min": {
+    columnSize: COLUMN_WIDTH,
+    label: "30 Minutes",
+    sizeInUnits: 30,
+    unit: "minute",
+    unitAbove: "hour",
+  },
   "1hrs": {
     columnSize: COLUMN_WIDTH,
     label: "1 Hour",
@@ -70,7 +117,20 @@ const RESOLUTIONS_DATA: ResolutionsData = {
   },
 };
 
-export const RESOLUTIONS: Resolution[] = ["1hrs", "2hrs", "6hrs", "12hrs", "1day", "1week", "2weeks"];
+export const RESOLUTIONS: Resolution[] = [
+  "1min",
+  "5min",
+  "10min",
+  "15min",
+  "30min",
+  "1hrs",
+  "2hrs",
+  "6hrs",
+  "12hrs",
+  "1day",
+  "1week",
+  "2weeks",
+];
 
 /**
  * Util to display an interval in a human readable format
@@ -84,6 +144,8 @@ export const displayInterval = (interval: Interval, unit: Scale): string => {
   }
 
   switch (unit) {
+    case "minute":
+      return start.toFormat("mm");
     case "hour":
       return start.toFormat("HH:mm");
     case "day":
