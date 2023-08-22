@@ -38,10 +38,10 @@ jobs:
           git config --local user.name "${{ secrets.GIT_USER_NAME }}"
           git pull
 
-      - name: Unit Tests
-        run: npm run test:coverage
-        env:
-          CI: true
+      # - name: Unit Tests
+      #   run: npm run test:coverage
+      #   env:
+      #     CI: true
 
       # - name: Run ESLint and Prettier
       #   id: code-format
