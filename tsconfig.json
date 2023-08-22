@@ -8,12 +8,7 @@
     "outDir": "./dist",
     "skipLibCheck": true,
     "strict": true,
-    "target": "ES2016",
+    "target": "ES2016"
   },
-  "exclude": [
-    "dist",
-    "node_modules",
-    "src/**/*.test.tsx",
-    "src/**/*.stories.tsx"
-  ]
+  "exclude": ["dist", "node_modules", "src/**/*.test.tsx", "src/**/*.stories.tsx"]
 }
