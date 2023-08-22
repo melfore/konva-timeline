@@ -1,4 +1,4 @@
-name: Konva Timeline CI - Release
+name: Konva Timeline - Release
 
 on:
   push:
@@ -76,10 +76,10 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
 
-      # - name: Send Notification
-      #   uses: Co-qn/google-chat-notification@master
-      #   with:
-      #     name: Konva Timeline CI - Release
-      #     url: ${{ secrets.GOOGLE_CHAT }}
-      #     status: ${{ job.status }}
-      #   if: always()
+      - name: Send Notification
+        uses: Co-qn/google-chat-notification@master
+        with:
+          name: Konva Timeline - Release
+          url: ${{ secrets.GOOGLE_CHAT }}
+          status: ${{ job.status }}
+        if: always()
