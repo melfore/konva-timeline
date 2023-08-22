@@ -6,7 +6,9 @@
   "scripts": {
     "build:storybook": "storybook build",
     "build": "tsc",
+    "clean:code": "eslint ./ --ext .js,.jsx,.ts,.tsx --fix && prettier ./ --write",
     "commit": "git-cz",
+    "pre:commit": "npm run clean:code && npm run build",
     "prepare": "husky install",
     "start": "storybook dev -p 6006",
     "test": "echo \"Error: no test specified\" && exit 1"
