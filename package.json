@@ -1,6 +1,6 @@
 {
   "name": "@melfore/konva-timeline",
-  "version": "0.0.0-development",
+  "version": "1.0.0",
   "description": "Melfore ReactJS Timeline library made with Konva",
   "main": "dist/index.js",
   "scripts": {
