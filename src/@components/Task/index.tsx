@@ -36,8 +36,8 @@ const TASK_HEIGHT = 40;
 
 /**
  * This component renders a simple task as a rectangle inside a canvas.
- * Each task is rendered by `TaskLayer` component, with a loop on each task provided to `KonvaTimeline`.
- * `TaskLayer` is also responsible of handling callback for task components.
+ * Each task is rendered by `TasksLayer` component, with a loop on each task provided to `KonvaTimeline`.
+ * `TasksLayer` is also responsible of handling callback for task components.
  *
  * Supported events (click, leave, over) respond with callbacks of type:
  * <br />

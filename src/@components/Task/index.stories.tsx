@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { COLOR_ARG_TYPE, KonvaDecorator } from "../../@utils/stories";
+import { COLOR_ARG_TYPE, TaskDecorator } from "../../@utils/stories";
 
 import Task from ".";
 
 const meta = {
   title: "Components/Task",
   component: Task,
-  decorators: [KonvaDecorator],
+  decorators: [TaskDecorator],
   tags: ["autodocs"],
   argTypes: {
     fill: COLOR_ARG_TYPE,
