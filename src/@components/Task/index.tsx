@@ -1,13 +1,27 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Rect } from "react-konva";
+import { KonvaEventObject } from "konva/lib/Node";
 
-import { KonvaDrawable, KonvaMouseEvents, KonvaPoint } from "../../@utils/konva";
+import { KonvaDrawable, KonvaPoint } from "../../@utils/konva";
 import { TaskData } from "../../@utils/tasks";
+
+type TaskMouseEventHandler = (taskId: string, point: KonvaPoint) => void;
 
 type TaskProps = Pick<TaskData, "id" | "label"> &
   KonvaDrawable &
-  KonvaMouseEvents &
   KonvaPoint & {
+    /**
+     * On mouse click event handler
+     */
+    onClick: TaskMouseEventHandler;
+    /**
+     * On mouse leave event handler
+     */
+    onLeave: TaskMouseEventHandler;
+    /**
+     * On mouse over event handler
+     */
+    onOver: TaskMouseEventHandler;
     /**
      * The width of the task
      */
@@ -27,7 +41,7 @@ const TASK_HEIGHT = 40;
  *
  * Supported events (click, leave, over) respond with callbacks of type:
  * <br />
- *  `(e: KonvaEventObject<MouseEvent>) => void`
+ *  `(taskId: string, point: KonvaPoint) => void`
  *
  * The playground has a simulated canvas with height: 200px and width: 100%
  */
@@ -35,23 +49,55 @@ const Task = ({
   fill = TASK_DEFAULT_FILL,
   id,
   onClick,
-  onMouseLeave,
-  onMouseOver,
+  onLeave,
+  onOver,
   stroke = TASK_DEFAULT_STROKE,
   x,
   y,
   width,
 }: TaskProps) => {
+  const onTaskMouseEvent = useCallback(
+    (e: KonvaEventObject<MouseEvent>, callback: TaskMouseEventHandler) => {
+      const stage = e.target.getStage();
+      if (!stage) {
+        return;
+      }
+
+      const point = stage.getPointerPosition();
+      if (!point) {
+        return;
+      }
+
+      callback(id, point);
+    },
+    [id]
+  );
+
+  const onTaskClick = useCallback(
+    (e: KonvaEventObject<MouseEvent>) => onTaskMouseEvent(e, onClick),
+    [onClick, onTaskMouseEvent]
+  );
+
+  const onTaskLeave = useCallback(
+    (e: KonvaEventObject<MouseEvent>) => onTaskMouseEvent(e, onLeave),
+    [onLeave, onTaskMouseEvent]
+  );
+
+  const onTaskOver = useCallback(
+    (e: KonvaEventObject<MouseEvent>) => onTaskMouseEvent(e, onOver),
+    [onOver, onTaskMouseEvent]
+  );
+
   return (
     <Rect
       id={id}
       cornerRadius={TASK_BORDER_RADIUS}
       fill={fill}
       height={TASK_HEIGHT}
-      onClick={onClick}
-      onMouseLeave={onMouseLeave}
-      onMouseMove={onMouseOver}
-      onMouseOver={onMouseOver}
+      onClick={onTaskClick}
+      onMouseLeave={onTaskLeave}
+      onMouseMove={onTaskOver}
+      onMouseOver={onTaskOver}
       stroke={stroke}
       x={x}
       y={y}

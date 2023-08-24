@@ -1,10 +1,10 @@
 import React, { FC, useCallback, useState } from "react";
 import { Layer } from "react-konva";
 import { Html } from "react-konva-utils";
-import { KonvaEventObject } from "konva/lib/Node";
 import { DateTime } from "luxon";
 
 import { useTimelineContext } from "../../@contexts/Timeline";
+import { KonvaPoint } from "../../@utils/konva";
 import { TaskTooltipData } from "../../@utils/tasks";
 import Task from "../Task";
 import TaskTooltip from "../TaskTooltip";
@@ -23,23 +23,29 @@ const TasksLayer: FC<TasksLayerProps> = () => {
 
   const getTaskById = useCallback((taskId: string) => tasks.find(({ id }) => id === taskId), [tasks]);
 
-  const onTaskExit = useCallback(() => setTaskTooltip(null), []);
+  const onTaskClick = useCallback(
+    (taskId: string, point: KonvaPoint) => {
+      const task = getTaskById(taskId);
+      if (!task) {
+        return;
+      }
+
+      // TODO#lb: add real implementation
+      alert(`You clicked on task '${task.label}'. Point: ${point}`);
+    },
+    [getTaskById]
+  );
+
+  const onTaskLeave = useCallback(() => setTaskTooltip(null), []);
 
   const onTaskOver = useCallback(
-    (e: KonvaEventObject<MouseEvent>) => {
-      const taskShape = e.target;
-      const taskStage = taskShape.getStage();
-      const task = getTaskById(taskShape.id());
-      if (!taskStage || !task) {
+    (taskId: string, point: KonvaPoint) => {
+      const task = getTaskById(taskId);
+      if (!task) {
         return setTaskTooltip(null);
       }
 
-      const mousePosition = taskStage.getPointerPosition();
-      if (!mousePosition) {
-        return setTaskTooltip(null);
-      }
-
-      const { x, y } = mousePosition;
+      const { x, y } = point;
       setTaskTooltip({ task, x, y });
     },
     [getTaskById]
@@ -113,8 +119,9 @@ const TasksLayer: FC<TasksLayerProps> = () => {
             id={id}
             fill={resourceColor}
             label={label}
-            onMouseLeave={onTaskExit}
-            onMouseOver={onTaskOver}
+            onClick={onTaskClick}
+            onLeave={onTaskLeave}
+            onOver={onTaskOver}
             x={xBegin}
             y={50 * resourceIndex + 5}
             width={width}
