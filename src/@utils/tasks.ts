@@ -1,6 +1,5 @@
 import { Interval } from "luxon";
 
-import { KonvaPoint } from "./konva";
 import { TimeRange, toInterval } from "./time-range";
 
 export interface TaskData {
@@ -20,10 +19,6 @@ export interface TaskData {
    * Task time range
    */
   time: TimeRange;
-}
-
-export interface TaskTooltipData extends KonvaPoint {
-  task: TaskData | null;
 }
 
 /**
