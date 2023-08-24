@@ -4,7 +4,7 @@ import { generateStoryData } from "./stories-data";
 import KonvaTimeline from ".";
 
 const meta = {
-  title: "KonvaTimeline",
+  title: "Main/KonvaTimeline",
   component: KonvaTimeline,
   tags: ["autodocs"],
   argTypes: {},
@@ -24,33 +24,5 @@ export const Primary: Story = {
   args: {
     ...primaryStoryData,
     resolution: "1hrs",
-  },
-};
-
-const monthlyStoryData = generateStoryData({
-  averageTaskDurationInMinutes: 10,
-  resourcesCount: 16,
-  tasksCount: 5000,
-  timeRangeInDays: 60,
-});
-
-export const MonthlyReport: Story = {
-  args: {
-    ...monthlyStoryData,
-    resolution: "1min",
-  },
-};
-
-const yearlyStoryData = generateStoryData({
-  averageTaskDurationInMinutes: 600,
-  resourcesCount: 20,
-  tasksCount: 3000,
-  timeRangeInDays: 365 * 5,
-});
-
-export const YearlyReport: Story = {
-  args: {
-    ...yearlyStoryData,
-    resolution: "1day",
   },
 };
