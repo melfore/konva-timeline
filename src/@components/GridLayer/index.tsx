@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from "react";
+import React, { FC, useCallback, useMemo } from "react";
 
 import { useTimelineContext } from "../../@contexts/Timeline";
 import { displayInterval } from "../../@utils/time-resolution";
@@ -15,9 +15,17 @@ const GridLayer: FC<GridLayerProps> = ({ columnWidth, height, width }) => {
 
   const { sizeInUnits, unit, unitAbove } = resolution;
 
-  const unitAboveIntervals = interval.splitBy({ [unitAbove]: 1 });
-  const oneUnitAboveDuration = unitAboveIntervals[0].toDuration().as(unit) / sizeInUnits;
-  const oneUnitAboveColumnWidth = columnWidth * oneUnitAboveDuration;
+  const unitAboveIntervals = useMemo(() => interval.splitBy({ [unitAbove]: 1 }), [interval, unitAbove]);
+
+  const oneUnitAboveDuration = useMemo(
+    () => unitAboveIntervals[0].toDuration().as(unit) / sizeInUnits,
+    [sizeInUnits, unit, unitAboveIntervals]
+  );
+
+  const oneUnitAboveColumnWidth = useMemo(
+    () => columnWidth * oneUnitAboveDuration,
+    [columnWidth, oneUnitAboveDuration]
+  );
 
   const gridLabels = useCallback(
     (index: number) => {
