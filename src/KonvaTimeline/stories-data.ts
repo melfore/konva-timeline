@@ -35,21 +35,12 @@ const generateResources = (count: number): Resource[] => {
   return resources;
 };
 
-const generateTasks = (
-  count: number,
-  avgDurationInMinutes: number,
-  resourcesCount: number,
-  timeRangeInDays: number
-): TaskData[] => {
+const generateTasks = (count: number, avgDurationInMinutes: number, resourcesCount: number): TaskData[] => {
   const tasks: TaskData[] = [];
 
   for (let i = 1; i <= count; i++) {
     const resourceId = `${Math.floor(Math.random() * resourcesCount) + 1}`;
     const lastTaskForResource = tasks.reverse().find((task) => task.resourceId === resourceId);
-
-    if (resourceId === "1") {
-      console.log("=> Resource:", resourceId, "lastTaskForResource:", lastTaskForResource?.id);
-    }
 
     let start = TIME_RANGE_START_DATE.valueOf();
     if (lastTaskForResource) {
@@ -86,7 +77,7 @@ export const generateStoryData = ({
   timeRangeInDays,
 }: StoryDataInput): StoryData => {
   const resources = generateResources(resourcesCount);
-  const tasks = generateTasks(tasksCount, averageTaskDurationInMinutes, resourcesCount, timeRangeInDays);
+  const tasks = generateTasks(tasksCount, averageTaskDurationInMinutes, resourcesCount);
   const range = generateTimeRange(timeRangeInDays);
 
   return { resources, tasks, range };

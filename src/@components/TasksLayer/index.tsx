@@ -1,79 +1,99 @@
 import React, { FC, useCallback, useState } from "react";
 import { Layer } from "react-konva";
-import { Html } from "react-konva-utils";
-import { KonvaEventObject } from "konva/lib/Node";
 import { DateTime } from "luxon";
 
 import { useTimelineContext } from "../../@contexts/Timeline";
-import { TaskTooltipData } from "../../@utils/tasks";
+import { KonvaPoint } from "../../@utils/konva";
+import { RESOURCE_HEADER_HEIGHT } from "../../@utils/resources";
+import { TimeRange } from "../../@utils/time-range";
 import Task from "../Task";
-import TaskTooltip from "../TaskTooltip";
+import TaskTooltip, { TaskTooltipProps } from "../TaskTooltip";
 
 interface TasksLayerProps {}
 
-const TasksLayer: FC<TasksLayerProps> = () => {
-  const { drawRange, interval, resolution, resources, tasks, taskTooltipContent } = useTimelineContext();
+const TASK_PLACEMENT_OFFSET = 5;
 
-  const [taskTooltip, setTaskTooltip] = useState<TaskTooltipData | null>(null);
+/**
+ * This component renders a set of tasks as a Konva Layer.
+ * Tasks are displayed accordingly to their assigned resource (different vertical / row position) and their timing (different horizontal / column position)
+ * `TasksLayer` is also responsible of handling callback for task components offering base implementation for click, leave and over.
+ *
+ * The playground has a canvas that simulates 1 day of data with 1 hour resolution.
+ * Depending on your screen size you might be able to test also the horizontal scrolling behaviour.
+ */
+const TasksLayer: FC<TasksLayerProps> = () => {
+  const {
+    drawRange,
+    interval: { start: intervalStart, end: intervalEnd },
+    resolution,
+    resources,
+    tasks,
+  } = useTimelineContext();
+
+  const [taskTooltip, setTaskTooltip] = useState<TaskTooltipProps | null>(null);
 
   const getResourceById = useCallback(
     (resourceId: string) => resources.findIndex(({ id }) => resourceId === id),
     [resources]
   );
 
-  const getTaskById = useCallback((taskId: string) => tasks.find(({ id }) => id === taskId), [tasks]);
+  const getTaskById = useCallback((taskId: string) => tasks.find(({ id }) => taskId === id), [tasks]);
 
-  const onTaskExit = useCallback(() => setTaskTooltip(null), []);
+  const onTaskClick = useCallback(
+    (taskId: string, point: KonvaPoint) => {
+      const task = getTaskById(taskId);
+      if (!task) {
+        return;
+      }
+
+      // TODO#lb: add real implementation
+      alert(`You clicked on task '${task.label}'. Point x: ${point.x}, y: ${point.y}`);
+    },
+    [getTaskById]
+  );
+
+  const onTaskLeave = useCallback(() => setTaskTooltip(null), []);
 
   const onTaskOver = useCallback(
-    (e: KonvaEventObject<MouseEvent>) => {
-      const taskShape = e.target;
-      const taskStage = taskShape.getStage();
-      const task = getTaskById(taskShape.id());
-      if (!taskStage || !task) {
+    (taskId: string, point: KonvaPoint) => {
+      const task = getTaskById(taskId);
+      if (!task) {
         return setTaskTooltip(null);
       }
 
-      const mousePosition = taskStage.getPointerPosition();
-      if (!mousePosition) {
-        return setTaskTooltip(null);
-      }
-
-      const { x, y } = mousePosition;
+      const { x, y } = point;
       setTaskTooltip({ task, x, y });
     },
     [getTaskById]
   );
 
-  const renderTaskTooltipContent = useCallback(
-    (taskTooltip: TaskTooltipData | null) => {
-      if (!taskTooltip) {
-        return null;
-      }
-
-      return taskTooltipContent ? (
-        <Html
-          transform={false}
-          divProps={{
-            style: {
-              border: "1px solid black",
-              backgroundColor: "white",
-              padding: "16px",
-              position: "fixed",
-              top: 200,
-              left: 200,
-              zIndex: 100,
-            },
-          }}
-        >
-          {taskTooltipContent(taskTooltip.task)}
-        </Html>
-      ) : (
-        <TaskTooltip {...taskTooltip} />
-      );
-    },
-    [taskTooltipContent]
+  const getXCoordinate = useCallback(
+    (offset: number) => (offset * resolution.columnSize) / resolution.sizeInUnits,
+    [resolution.columnSize, resolution.sizeInUnits]
   );
+
+  const getTaskXCoordinate = useCallback(
+    (startTime: number) => {
+      const timeStart = DateTime.fromMillis(startTime);
+      const startOffsetInUnit = timeStart.diff(intervalStart!).as(resolution.unit);
+      return getXCoordinate(startOffsetInUnit);
+    },
+    [getXCoordinate, intervalStart, resolution.unit]
+  );
+
+  const getTaskWidth = useCallback(
+    ({ start, end }: TimeRange) => {
+      const timeStart = DateTime.fromMillis(start);
+      const timeEnd = DateTime.fromMillis(end);
+      const widthOffsetInUnit = timeEnd.diff(timeStart).as(resolution.unit);
+      return getXCoordinate(widthOffsetInUnit);
+    },
+    [getXCoordinate, resolution.unit]
+  );
+
+  if (!intervalStart || !intervalEnd) {
+    return null;
+  }
 
   return (
     <Layer>
@@ -84,26 +104,10 @@ const TasksLayer: FC<TasksLayerProps> = () => {
         }
 
         const { color: resourceColor } = resources[resourceIndex];
-        const intervalStart = interval.start;
-        const intervalEnd = interval.end;
-        if (!intervalStart || !intervalEnd) {
-          return null;
-        }
-
-        const timeStart = DateTime.fromMillis(time.start);
-        const startOffsetInUnit = timeStart.diff(intervalStart).as(resolution.unit);
-        const xBegin = (startOffsetInUnit * resolution.columnSize) / resolution.sizeInUnits;
-        // console.log("=> startOffset", { startOffsetInUnit, unit: resolution.unit, xBegin });
-
-        const timeEnd = DateTime.fromMillis(time.end);
-        const widthOffsetInUnit = timeEnd.diff(timeStart).as(resolution.unit);
-        const width = (widthOffsetInUnit * resolution.columnSize) / resolution.sizeInUnits;
-        // console.log("=> widthOffset", { widthOffsetInUnit, unit: resolution.unit, width });
-        // console.log("====================================");
-
-        // console.log({ xBegin, width });
-
-        if (xBegin > drawRange.end || xBegin + width < drawRange.start) {
+        const xCoordinate = getTaskXCoordinate(time.start);
+        const yCoordinate = RESOURCE_HEADER_HEIGHT * resourceIndex + TASK_PLACEMENT_OFFSET;
+        const width = getTaskWidth(time);
+        if (xCoordinate > drawRange.end || xCoordinate + width < drawRange.start) {
           return null;
         }
 
@@ -113,15 +117,16 @@ const TasksLayer: FC<TasksLayerProps> = () => {
             id={id}
             fill={resourceColor}
             label={label}
-            onMouseLeave={onTaskExit}
-            onMouseOver={onTaskOver}
-            x={xBegin}
-            y={50 * resourceIndex + 5}
+            onClick={onTaskClick}
+            onLeave={onTaskLeave}
+            onOver={onTaskOver}
+            x={xCoordinate}
+            y={yCoordinate}
             width={width}
           />
         );
       })}
-      {renderTaskTooltipContent(taskTooltip)}
+      {taskTooltip && <TaskTooltip {...taskTooltip} />}
     </Layer>
   );
 };
