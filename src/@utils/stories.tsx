@@ -1,6 +1,12 @@
 import React, { useEffect, useRef } from "react";
 import { Layer, Stage } from "react-konva";
 
+export const COLOR_ARG_TYPE = {
+  control: {
+    type: "color",
+  },
+};
+
 export const KonvaDecorator = (storyFn: any) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
