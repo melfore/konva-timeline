@@ -9,7 +9,15 @@ export interface TaskTooltipProps extends KonvaPoint {
   task: TaskData;
 }
 
-const TaskTooltip: FC<TaskTooltipProps> = ({ task, x, y }) => {
+const TASK_TOOLTIP_BACKGROUND = "black";
+const TASK_TOOLTIP_COLOR = "white";
+const TASK_TOOLTIP_POINTER_SIZE = 10;
+const TASK_TOOLTIP_SHADOW_SIZE = 10;
+
+/**
+ * This component renders a task tooltip inside a canvas.
+ */
+const TaskTooltip: FC<TaskTooltipProps> = ({ task: { label: taskLabel }, x, y }) => {
   const {
     drawRange: { start: drawRangeStart },
   } = useTimelineContext();
@@ -19,18 +27,18 @@ const TaskTooltip: FC<TaskTooltipProps> = ({ task, x, y }) => {
   return (
     <Label x={adjustedX} y={y} opacity={0.75}>
       <Tag
-        fill="black"
+        fill={TASK_TOOLTIP_BACKGROUND}
         lineJoin="round"
         pointerDirection="down"
-        pointerHeight={10}
-        pointerWidth={10}
-        shadowBlur={10}
-        shadowColor="black"
-        shadowOffsetX={10}
-        shadowOffsetY={10}
+        pointerHeight={TASK_TOOLTIP_POINTER_SIZE}
+        pointerWidth={TASK_TOOLTIP_POINTER_SIZE}
+        shadowBlur={TASK_TOOLTIP_SHADOW_SIZE}
+        shadowColor={TASK_TOOLTIP_BACKGROUND}
+        shadowOffsetX={TASK_TOOLTIP_SHADOW_SIZE}
+        shadowOffsetY={TASK_TOOLTIP_SHADOW_SIZE}
         shadowOpacity={0.2}
       />
-      <Text text={task.label} fill="white" fontSize={18} padding={5} />
+      <Text text={taskLabel} fill={TASK_TOOLTIP_COLOR} fontSize={18} padding={5} />
     </Label>
   );
 };

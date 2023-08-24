@@ -10,12 +10,16 @@ export const COLOR_ARG_TYPE = {
   },
 };
 
-const STORY_DATA = generateStoryData({
+export const STORY_DATA = generateStoryData({
   averageTaskDurationInMinutes: 180,
   resourcesCount: 3,
   tasksCount: 10,
   timeRangeInDays: 1,
 });
+
+export const LayerDecorator = (storyFn: any) => {
+  return <Layer>{storyFn()}</Layer>;
+};
 
 export const TaskDecorator = (storyFn: any) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
