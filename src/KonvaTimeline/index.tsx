@@ -5,8 +5,10 @@ import { TimelineProvider } from "../@contexts/Timeline";
 import { TimelineInput } from "../@utils/timeline";
 
 interface KonvaTimelineProps extends TimelineInput {
+  /**
+   * Flag to enable debug mode logging
+   */
   debug?: boolean;
-  taskTooltipContent?: (task: any) => React.ReactNode;
 }
 
 const KonvaTimeline: FC<KonvaTimelineProps> = (props) => {

@@ -1,7 +1,13 @@
 import { DateTime, Interval } from "luxon";
 
 export interface TimeRange {
+  /**
+   * Start of time range interval
+   */
   start: number;
+  /**
+   * End of time range interval
+   */
   end: number;
 }
 

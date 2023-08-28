@@ -64,7 +64,7 @@ const TasksLayerInternalDecorator = ({ storyFn }: any) => {
 
 export const TasksLayerDecorator = (storyFn: any) => {
   return (
-    <TimelineProvider {...STORY_DATA}>
+    <TimelineProvider {...STORY_DATA} resolution="1hrs">
       <TasksLayerInternalDecorator storyFn={storyFn} />
     </TimelineProvider>
   );
