@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { memo, useCallback } from "react";
 import { Rect } from "react-konva";
 import { KonvaEventObject } from "konva/lib/Node";
 
@@ -106,4 +106,6 @@ const Task = ({
   );
 };
 
-export default Task;
+export const TaskDocs = Task;
+
+export default memo(Task);

@@ -7,7 +7,8 @@ import ResourceHeader from "../ResourceHeader";
 interface ResourcesLayerProps {}
 
 /**
- * This component renders the complete list of resource headers
+ * This component renders a set of resources as a Konva Layer.
+ * For each resource, a `ResourceHeader` is displayed.
  */
 const ResourcesLayer: FC<ResourcesLayerProps> = () => {
   const { resources } = useTimelineContext();

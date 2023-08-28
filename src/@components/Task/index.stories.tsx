@@ -2,18 +2,18 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { COLOR_ARG_TYPE, TaskDecorator } from "../../@utils/stories";
 
-import Task from ".";
+import { TaskDocs } from ".";
 
 const meta = {
   title: "Components/Task",
-  component: Task,
+  component: TaskDocs,
   decorators: [TaskDecorator],
   tags: ["autodocs"],
   argTypes: {
     fill: COLOR_ARG_TYPE,
     stroke: COLOR_ARG_TYPE,
   },
-} satisfies Meta<typeof Task>;
+} satisfies Meta<typeof TaskDocs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
