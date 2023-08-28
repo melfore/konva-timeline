@@ -45,7 +45,7 @@ export const TimelineProvider = ({
   tasks: externalTasks,
   // taskTooltipContent,
   range,
-  resolution: externalResolution = "1hrs",
+  resolution: externalResolution,
   resources: externalResources,
 }: TimelineProviderProps) => {
   const [drawRange, setDrawRange] = useState(DEFAULT_DRAW_RANGE);

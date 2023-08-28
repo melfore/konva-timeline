@@ -1,0 +1,97 @@
+import { ArgTypes, Canvas, Meta } from "@storybook/blocks";
+
+import { Primary } from "../KonvaTimeline/index.stories.tsx";
+
+<Meta title="Intro/Getting started" />
+
+# @melfore/konva-timeline
+
+`@melfore/konva-timeline` is a TypeScript ReactJS library that uses `konva` and `react-konva` to render a timeline component using canvas.
+
+## Install
+
+To install the library run `npm i @melfore/konva-timeline`
+
+This library has the following required peerDependencies:
+
+```
+"konva": ">= 9.2.0 < 10",
+"react": ">= 18.2.0 < 19",
+"react-dom": ">= 18.2.0 < 19",
+"react-konva": ">= 18.2.9 < 19"
+```
+
+## Usage
+
+Import the `KonvaTimeline` component from `@melfore/konva-timeline` library:
+
+```
+import { KonvaTimeline } from "@melfore/konva-timeline";
+```
+
+Use the component passing the minimum set of required properties:
+
+<Canvas of={Primary} />
+
+### Props
+
+Below the reference for all accepted properties:
+
+<ArgTypes of={Primary} requiredFirst />
+
+#### Resource
+
+```
+interface Resource {
+  /**
+   * Unique identifier of the resource
+   */
+  id: string;
+  /**
+   * Label of the resource
+   */
+  label: string;
+  /**
+   * Color assigned to the resource
+   */
+  color: string;
+}
+```
+
+#### TaskData
+
+```
+interface TaskData {
+  /**
+   * Unique identifier of the task
+   */
+  id: string;
+  /**
+   * Label of the task
+   */
+  label: string;
+  /**
+   * Id of assigned resource
+   */
+  resourceId: string;
+  /**
+   * Task time range
+   */
+  time: TimeRange;
+}
+```
+
+#### TimeRange
+
+```
+interface TimeRange {
+  /**
+   * Start of time range interval
+   */
+  start: number;
+  /**
+   * End of time range interval
+   */
+  end: number;
+}
+```
