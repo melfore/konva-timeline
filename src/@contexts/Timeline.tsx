@@ -16,7 +16,6 @@ declare global {
 
 type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
   debug?: boolean;
-  // taskTooltipContent?: (task: any) => React.ReactNode;
 };
 
 type TimelineContextType = {
@@ -30,7 +29,6 @@ type TimelineContextType = {
   setDrawRange: (range: TimeRange) => void;
   setResolutionKey: (resolution: Resolution) => void;
   tasks: TaskData[];
-  // taskTooltipContent?: (task: any) => React.ReactNode;
   timeBlocks: Interval[];
 };
 
@@ -43,7 +41,6 @@ export const TimelineProvider = ({
   debug = false,
   hideResources = false,
   tasks: externalTasks,
-  // taskTooltipContent,
   range,
   resolution: externalResolution,
   resources: externalResources,
@@ -109,7 +106,6 @@ export const TimelineProvider = ({
         setDrawRange,
         setResolutionKey,
         tasks,
-        // taskTooltipContent,
         timeBlocks,
       }}
     >
