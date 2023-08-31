@@ -1,3 +1,9 @@
+# [1.2.0](https://github.com/melfore/konva-timeline/compare/v1.1.0...v1.2.0) (2023-08-31)
+
+### Features
+
+- offset applied also in x dimension ([17c71ec](https://github.com/melfore/konva-timeline/commit/17c71ec3235c4e04439098688543be6053dbd847))
+
 # [1.1.0](https://github.com/melfore/konva-timeline/compare/v1.0.3...v1.1.0) (2023-08-31)
 
 ### Features
