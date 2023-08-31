@@ -5,12 +5,11 @@ import Konva from "konva";
 import { useTimelineContext } from "../../@contexts/Timeline";
 import { logDebug } from "../../@utils/logger";
 import { RESOURCE_HEADER_WIDTH } from "../../@utils/resources";
-import { TimelineInput } from "../../@utils/timeline";
 import GridLayer from "../GridLayer";
 import ResourcesLayer from "../ResourcesLayer";
 import TasksLayer from "../TasksLayer";
 
-const COLUMN_WIDTH = 60;
+interface TimelineProps {}
 
 interface StageSize {
   height: number;
@@ -19,8 +18,8 @@ interface StageSize {
 
 const DEFAULT_STAGE_SIZE: StageSize = { height: 0, width: 0 };
 
-const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
-  const { hideResources, resolution, resourcesContentHeight, setDrawRange, timeBlocks } = useTimelineContext();
+const Timeline: FC<TimelineProps> = () => {
+  const { hideResources, columnWidth, resourcesContentHeight, setDrawRange, timeBlocks } = useTimelineContext();
 
   const [scrollbarSize, setScrollbarSize] = useState(0);
   const [size, setSize] = useState<StageSize>(DEFAULT_STAGE_SIZE);
@@ -78,10 +77,6 @@ const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
     logDebug("Timeline", "Applying effects of size changes...");
     onWindowResize();
   }, [hideResources, onWindowResize]);
-
-  const columnWidth = useMemo(() => {
-    return !externalColumnWidth || externalColumnWidth < COLUMN_WIDTH ? resolution.columnSize : externalColumnWidth;
-  }, [externalColumnWidth, resolution]);
 
   const fullTimelineWidth = useMemo(() => columnWidth * timeBlocks.length, [columnWidth, timeBlocks]);
 

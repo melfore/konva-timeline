@@ -23,6 +23,7 @@ const TASK_PLACEMENT_OFFSET = 5;
  */
 const TasksLayer: FC<TasksLayerProps> = () => {
   const {
+    columnWidth,
     drawRange,
     interval: { start: intervalStart, end: intervalEnd },
     resolution,
@@ -68,8 +69,8 @@ const TasksLayer: FC<TasksLayerProps> = () => {
   );
 
   const getXCoordinate = useCallback(
-    (offset: number) => (offset * resolution.columnSize) / resolution.sizeInUnits,
-    [resolution.columnSize, resolution.sizeInUnits]
+    (offset: number) => (offset * columnWidth) / resolution.sizeInUnits,
+    [columnWidth, resolution.sizeInUnits]
   );
 
   const getTaskXCoordinate = useCallback(

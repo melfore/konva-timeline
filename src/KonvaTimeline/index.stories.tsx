@@ -13,7 +13,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const primaryStoryData = generateStoryData({
+const { range, resources, tasks } = generateStoryData({
   averageTaskDurationInMinutes: 200,
   resourcesCount: 3,
   tasksCount: 5,
@@ -22,7 +22,9 @@ const primaryStoryData = generateStoryData({
 
 export const Primary: Story = {
   args: {
-    ...primaryStoryData,
+    range,
+    resources,
+    tasks,
     resolution: "1hrs",
   },
 };

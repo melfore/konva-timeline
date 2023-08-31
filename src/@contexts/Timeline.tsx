@@ -2,10 +2,10 @@ import React, { createContext, PropsWithChildren, useContext, useEffect, useMemo
 import { Interval } from "luxon";
 
 import { logDebug, logWarn } from "../@utils/logger";
-import { Resource, RESOURCE_HEADER, RESOURCE_HEADER_HEIGHT } from "../@utils/resources";
-import { filterOutOfInterval, TaskData } from "../@utils/tasks";
+import { RESOURCE_HEADER, RESOURCE_HEADER_HEIGHT } from "../@utils/resources";
+import { filterOutOfInterval } from "../@utils/tasks";
 import { TimeRange, toInterval } from "../@utils/time-range";
-import { getResolutionData, Resolution, ResolutionData } from "../@utils/time-resolution";
+import { DEFAULT_COLUMN_WIDTH, getResolutionData, Resolution, ResolutionData } from "../@utils/time-resolution";
 import { TimelineInput } from "../@utils/timeline";
 
 declare global {
@@ -14,21 +14,18 @@ declare global {
   }
 }
 
-type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
+export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
   debug?: boolean;
 };
 
-type TimelineContextType = {
+type TimelineContextType = Required<Pick<TimelineInput, "columnWidth" | "hideResources" | "resources" | "tasks">> & {
   drawRange: TimeRange;
-  hideResources?: boolean;
   interval: Interval;
   resolution: ResolutionData;
   resolutionKey: Resolution;
-  resources: Resource[];
   resourcesContentHeight: number;
   setDrawRange: (range: TimeRange) => void;
   setResolutionKey: (resolution: Resolution) => void;
-  tasks: TaskData[];
   timeBlocks: Interval[];
 };
 
@@ -38,6 +35,7 @@ const DEFAULT_DRAW_RANGE: TimeRange = { start: 0, end: 0 };
 
 export const TimelineProvider = ({
   children,
+  columnWidth: externalColumnWidth = DEFAULT_COLUMN_WIDTH,
   debug = false,
   hideResources = false,
   tasks: externalTasks,
@@ -73,6 +71,13 @@ export const TimelineProvider = ({
     return getResolutionData(resolutionKey);
   }, [resolutionKey]);
 
+  const columnWidth = useMemo(() => {
+    logDebug("TimelineProvider", "Calculating columnWidth...");
+    return !externalColumnWidth || externalColumnWidth < DEFAULT_COLUMN_WIDTH
+      ? resolution.columnSize
+      : externalColumnWidth;
+  }, [externalColumnWidth, resolution]);
+
   const resources = useMemo(() => {
     logDebug("TimelineProvider", "Preparing resources...");
     return [RESOURCE_HEADER, ...externalResources];
@@ -96,6 +101,7 @@ export const TimelineProvider = ({
   return (
     <TimelineContext.Provider
       value={{
+        columnWidth,
         drawRange,
         hideResources,
         interval,
