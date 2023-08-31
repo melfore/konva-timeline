@@ -84,7 +84,7 @@ const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
 
   const timelineCommonStyle = useMemo(
     (): CSSProperties => ({
-      height: resourcesContentHeight,
+      minHeight: resourcesContentHeight,
     }),
     [resourcesContentHeight]
   );
@@ -94,7 +94,6 @@ const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
       ...timelineCommonStyle,
       border: "1px solid black",
       display: "inline-block",
-      overflow: "scroll",
       position: "relative",
       width: "100%",
     }),
@@ -107,6 +106,7 @@ const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
       backgroundColor: "white",
       boxShadow: "4px 4px 32px 1px #0000000f",
       left: 0,
+      paddingBottom: "16px",
       position: "sticky",
       top: 0,
       width: RESOURCE_HEADER_WIDTH,
@@ -117,11 +117,11 @@ const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
 
   const gridStageWrapperStyle = useMemo(
     (): CSSProperties => ({
-      height: size.height,
+      ...timelineCommonStyle,
       overflow: "hidden",
       width: stageWidth,
     }),
-    [size.height, stageWidth]
+    [stageWidth, timelineCommonStyle]
   );
 
   const gridWrapperStyle = useMemo(
