@@ -1,9 +1,8 @@
 # [1.1.0](https://github.com/melfore/konva-timeline/compare/v1.0.3...v1.1.0) (2023-08-31)
 
-
 ### Features
 
-* getting scrollbar size from offset height ([aee389d](https://github.com/melfore/konva-timeline/commit/aee389dd1a42b298a9295c7204857c68afc55480))
+- getting scrollbar size from offset height ([aee389d](https://github.com/melfore/konva-timeline/commit/aee389dd1a42b298a9295c7204857c68afc55480))
 
 ## [1.0.3](https://github.com/melfore/konva-timeline/compare/v1.0.2...v1.0.3) (2023-08-31)
 
