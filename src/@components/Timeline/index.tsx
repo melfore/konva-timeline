@@ -22,6 +22,7 @@ const DEFAULT_STAGE_SIZE: StageSize = { height: 0, width: 0 };
 const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
   const { hideResources, resolution, resourcesContentHeight, setDrawRange, timeBlocks } = useTimelineContext();
 
+  const [scrollOffsetSize, setScrollOffsetSize] = useState(0);
   const [size, setSize] = useState<StageSize>(DEFAULT_STAGE_SIZE);
   const stageRef = useRef<Konva.Stage>(null);
   const wrapper = useRef<HTMLDivElement>(null);
@@ -32,7 +33,9 @@ const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
     }
 
     logDebug("Timeline", "Resizing window...");
-    const { clientHeight: height, clientWidth: width } = wrapper.current;
+    const { clientHeight: height, clientWidth: width, offsetHeight } = wrapper.current;
+    const offsetSize = offsetHeight - height;
+    setScrollOffsetSize(offsetSize);
     setSize({ height, width });
   }, []);
 
@@ -106,13 +109,13 @@ const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
       backgroundColor: "white",
       boxShadow: "4px 4px 32px 1px #0000000f",
       left: 0,
-      paddingBottom: "16px",
+      paddingBottom: `${scrollOffsetSize}px`,
       position: "sticky",
       top: 0,
       width: RESOURCE_HEADER_WIDTH,
       zIndex: 1,
     }),
-    [timelineCommonStyle]
+    [scrollOffsetSize, timelineCommonStyle]
   );
 
   const gridStageWrapperStyle = useMemo(
