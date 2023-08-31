@@ -132,16 +132,18 @@ const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
     [fullTimelineWidth, timelineCommonStyle]
   );
 
+  const resourcesOffset = useMemo(() => (hideResources ? 0 : RESOURCE_HEADER_WIDTH + 1), [hideResources]);
+
   const gridWrapperStyle = useMemo(
     (): CSSProperties => ({
       ...timelineCommonStyle,
-      left: hideResources ? 0 : RESOURCE_HEADER_WIDTH + 1,
+      left: resourcesOffset,
       overflow: "auto",
       position: "absolute",
       top: 0,
-      width: hideResources ? "100%" : `calc(100% - ${RESOURCE_HEADER_WIDTH}px)`,
+      width: `calc(100% - ${resourcesOffset}px)`,
     }),
-    [hideResources, timelineCommonStyle]
+    [resourcesOffset, timelineCommonStyle]
   );
 
   return (
