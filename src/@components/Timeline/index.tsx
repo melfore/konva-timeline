@@ -22,7 +22,7 @@ const DEFAULT_STAGE_SIZE: StageSize = { height: 0, width: 0 };
 const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
   const { hideResources, resolution, resourcesContentHeight, setDrawRange, timeBlocks } = useTimelineContext();
 
-  const [scrollOffsetSize, setScrollOffsetSize] = useState(0);
+  const [scrollbarSize, setScrollbarSize] = useState(0);
   const [size, setSize] = useState<StageSize>(DEFAULT_STAGE_SIZE);
   const stageRef = useRef<Konva.Stage>(null);
   const wrapper = useRef<HTMLDivElement>(null);
@@ -33,10 +33,10 @@ const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
     }
 
     logDebug("Timeline", "Resizing window...");
-    const { clientHeight: height, clientWidth: width, offsetHeight } = wrapper.current;
-    const offsetSize = offsetHeight - height;
-    setScrollOffsetSize(offsetSize);
+    const { clientHeight: height, clientWidth: width, offsetHeight, offsetWidth } = wrapper.current;
+    const scrollbarSize = Math.max(offsetHeight - height, offsetWidth - width);
     setSize({ height, width });
+    setScrollbarSize(scrollbarSize);
   }, []);
 
   const onStageScroll = useCallback(() => {
@@ -83,7 +83,11 @@ const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
     return !externalColumnWidth || externalColumnWidth < COLUMN_WIDTH ? resolution.columnSize : externalColumnWidth;
   }, [externalColumnWidth, resolution]);
 
-  const stageWidth = useMemo(() => columnWidth * timeBlocks.length, [columnWidth, timeBlocks]);
+  const fullTimelineWidth = useMemo(() => columnWidth * timeBlocks.length, [columnWidth, timeBlocks]);
+
+  const stageHeight = useMemo(() => size.height, [size]);
+
+  const stageWidth = useMemo(() => scrollbarSize + size.width, [scrollbarSize, size]);
 
   const timelineCommonStyle = useMemo(
     (): CSSProperties => ({
@@ -108,23 +112,24 @@ const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
       ...timelineCommonStyle,
       backgroundColor: "white",
       boxShadow: "4px 4px 32px 1px #0000000f",
+      borderRight: "1px solid black",
       left: 0,
-      paddingBottom: `${scrollOffsetSize}px`,
+      paddingBottom: scrollbarSize,
       position: "sticky",
       top: 0,
       width: RESOURCE_HEADER_WIDTH,
       zIndex: 1,
     }),
-    [scrollOffsetSize, timelineCommonStyle]
+    [scrollbarSize, timelineCommonStyle]
   );
 
   const gridStageWrapperStyle = useMemo(
     (): CSSProperties => ({
       ...timelineCommonStyle,
       overflow: "hidden",
-      width: stageWidth,
+      width: fullTimelineWidth,
     }),
-    [stageWidth, timelineCommonStyle]
+    [fullTimelineWidth, timelineCommonStyle]
   );
 
   const gridWrapperStyle = useMemo(
@@ -143,15 +148,15 @@ const Timeline: FC<TimelineInput> = ({ columnWidth: externalColumnWidth }) => {
     <div style={timelineWrapperStyle}>
       {!hideResources && (
         <div style={resourcesStageWrapperStyle}>
-          <Stage height={size.height} width={RESOURCE_HEADER_WIDTH}>
+          <Stage height={stageHeight} width={RESOURCE_HEADER_WIDTH}>
             <ResourcesLayer />
           </Stage>
         </div>
       )}
       <div ref={wrapper} style={gridWrapperStyle}>
         <div style={gridStageWrapperStyle}>
-          <Stage ref={stageRef} height={size.height} width={size.width}>
-            <GridLayer columnWidth={columnWidth} height={size.height} width={stageWidth} />
+          <Stage ref={stageRef} height={stageHeight} width={stageWidth}>
+            <GridLayer columnWidth={columnWidth} height={stageHeight} width={fullTimelineWidth} />
             <TasksLayer />
           </Stage>
         </div>
