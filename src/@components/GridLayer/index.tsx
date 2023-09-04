@@ -55,6 +55,7 @@ const GridLayer: FC<GridLayerProps> = ({ columnWidth, height, width }) => {
             width={oneUnitAboveColumnWidth - 10}
           />
           <KonvaText
+            fill={themeColor}
             x={5 + unitAboveStartX}
             y={10}
             text={displayInterval(unitAboveInterval, unitAbove)}
@@ -65,7 +66,7 @@ const GridLayer: FC<GridLayerProps> = ({ columnWidth, height, width }) => {
         </KonvaGroup>
       );
     },
-    [height, oneUnitAboveDuration, oneUnitAboveColumnWidth, unitAbove, unitAboveIntervals]
+    [height, oneUnitAboveDuration, oneUnitAboveColumnWidth, themeColor, unitAbove, unitAboveIntervals]
   );
 
   return (
@@ -90,7 +91,12 @@ const GridLayer: FC<GridLayerProps> = ({ columnWidth, height, width }) => {
               {gridLabels(index)}
               <KonvaLine x={columnWidth * index} y={40} points={[0, 0, 0, height]} stroke="gray" strokeWidth={1} />
               <KonvaRect fill="transparent" x={columnWidth * index - 15} y={30} height={15} width={30} />
-              <KonvaText x={columnWidth * index - 15} y={32} text={displayInterval(column, resolution.unit)} />
+              <KonvaText
+                fill={themeColor}
+                x={columnWidth * index - 15}
+                y={32}
+                text={displayInterval(column, resolution.unit)}
+              />
             </KonvaGroup>
           );
         })}

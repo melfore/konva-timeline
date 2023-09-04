@@ -30,7 +30,7 @@ const ResourceHeader = ({ index, label }: ResourceHeaderProps) => {
   return (
     <KonvaGroup x={0} y={0}>
       <KonvaGroup x={RESOURCE_HEADER_TEXT_OFFSET} y={RESOURCE_HEADER_TEXT_OFFSET}>
-        <KonvaText text={label} y={textYCoordinate} />
+        <KonvaText fill={themeColor} text={label} y={textYCoordinate} />
       </KonvaGroup>
       <KonvaLine points={[0, 0, RESOURCE_HEADER_WIDTH, 0]} stroke={themeColor} y={yCoordinate} />
     </KonvaGroup>
