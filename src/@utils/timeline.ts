@@ -3,6 +3,8 @@ import { TaskData } from "./tasks";
 import { TimeRange } from "./time-range";
 import { Resolution } from "./time-resolution";
 
+type TimelineThemeMode = "dark" | "light";
+
 export type TimelineInput = {
   /**
    * Custom column width (defaults to 60px)
@@ -28,4 +30,8 @@ export type TimelineInput = {
    * List of resources to be displayed
    */
   resources: Resource[];
+  /**
+   * Theme color in use
+   */
+  theme?: TimelineThemeMode;
 };

@@ -19,7 +19,14 @@ interface StageSize {
 const DEFAULT_STAGE_SIZE: StageSize = { height: 0, width: 0 };
 
 const Timeline: FC<TimelineProps> = () => {
-  const { hideResources, columnWidth, resourcesContentHeight, setDrawRange, timeBlocks } = useTimelineContext();
+  const {
+    hideResources,
+    columnWidth,
+    resourcesContentHeight,
+    setDrawRange,
+    theme: { color: themeColor },
+    timeBlocks,
+  } = useTimelineContext();
 
   const [scrollbarSize, setScrollbarSize] = useState(0);
   const [size, setSize] = useState<StageSize>(DEFAULT_STAGE_SIZE);
@@ -94,20 +101,20 @@ const Timeline: FC<TimelineProps> = () => {
   const timelineWrapperStyle = useMemo(
     (): CSSProperties => ({
       ...timelineCommonStyle,
-      border: "1px solid black",
+      border: `1px solid ${themeColor}`,
       display: "inline-block",
       position: "relative",
       width: "100%",
     }),
-    [timelineCommonStyle]
+    [themeColor, timelineCommonStyle]
   );
 
   const resourcesStageWrapperStyle = useMemo(
     (): CSSProperties => ({
       ...timelineCommonStyle,
-      backgroundColor: "white",
+      backgroundColor: "transparent",
       boxShadow: "4px 4px 32px 1px #0000000f",
-      borderRight: "1px solid black",
+      borderRight: `1px solid ${themeColor}`,
       left: 0,
       paddingBottom: scrollbarSize,
       position: "sticky",
@@ -115,7 +122,7 @@ const Timeline: FC<TimelineProps> = () => {
       width: RESOURCE_HEADER_WIDTH,
       zIndex: 1,
     }),
-    [scrollbarSize, timelineCommonStyle]
+    [scrollbarSize, themeColor, timelineCommonStyle]
   );
 
   const gridStageWrapperStyle = useMemo(

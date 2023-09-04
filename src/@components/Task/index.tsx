@@ -28,7 +28,7 @@ type TaskProps = Pick<TaskData, "id" | "label"> &
     width: number;
   };
 
-const TASK_DEFAULT_FILL = "white";
+const TASK_DEFAULT_FILL = "transparent";
 const TASK_DEFAULT_STROKE = "black";
 
 const TASK_BORDER_RADIUS = 4;

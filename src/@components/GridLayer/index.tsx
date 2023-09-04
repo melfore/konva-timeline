@@ -11,7 +11,14 @@ interface GridLayerProps {
 }
 
 const GridLayer: FC<GridLayerProps> = ({ columnWidth, height, width }) => {
-  const { drawRange, interval, resolution, resources, timeBlocks } = useTimelineContext();
+  const {
+    drawRange,
+    interval,
+    resolution,
+    resources,
+    theme: { color: themeColor },
+    timeBlocks,
+  } = useTimelineContext();
 
   const { sizeInUnits, unit, unitAbove } = resolution;
 
@@ -40,7 +47,13 @@ const GridLayer: FC<GridLayerProps> = ({ columnWidth, height, width }) => {
 
       return (
         <KonvaGroup>
-          <KonvaRect fill="white" x={5 + unitAboveStartX} y={5} height={18} width={oneUnitAboveColumnWidth - 10} />
+          <KonvaRect
+            fill="transparent"
+            x={5 + unitAboveStartX}
+            y={5}
+            height={18}
+            width={oneUnitAboveColumnWidth - 10}
+          />
           <KonvaText
             x={5 + unitAboveStartX}
             y={10}
@@ -61,7 +74,7 @@ const GridLayer: FC<GridLayerProps> = ({ columnWidth, height, width }) => {
         {resources.map(({ id }, index) => {
           return (
             <KonvaGroup key={`heading-${id}`}>
-              <KonvaLine x={0} y={50 * (index + 1)} points={[0, 0, width, 0]} stroke="black" />
+              <KonvaLine x={0} y={50 * (index + 1)} points={[0, 0, width, 0]} stroke={themeColor} />
             </KonvaGroup>
           );
         })}
@@ -76,7 +89,7 @@ const GridLayer: FC<GridLayerProps> = ({ columnWidth, height, width }) => {
             <KonvaGroup key={`timeslot-${index}`}>
               {gridLabels(index)}
               <KonvaLine x={columnWidth * index} y={40} points={[0, 0, 0, height]} stroke="gray" strokeWidth={1} />
-              <KonvaRect fill="white" x={columnWidth * index - 15} y={30} height={15} width={30} />
+              <KonvaRect fill="transparent" x={columnWidth * index - 15} y={30} height={15} width={30} />
               <KonvaText x={columnWidth * index - 15} y={32} text={displayInterval(column, resolution.unit)} />
             </KonvaGroup>
           );
