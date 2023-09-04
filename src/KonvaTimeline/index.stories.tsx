@@ -7,7 +7,11 @@ const meta = {
   title: "Main/KonvaTimeline",
   component: KonvaTimeline,
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    onTaskClick: {
+      type: "function",
+    },
+  },
 } satisfies Meta<typeof KonvaTimeline>;
 
 export default meta;
@@ -26,5 +30,26 @@ export const Primary: Story = {
     resources,
     tasks,
     resolution: "1hrs",
+  },
+};
+
+export const CustomColumnWidth: Story = {
+  args: {
+    ...Primary.args,
+    columnWidth: 120,
+  },
+};
+
+export const CustomResolution: Story = {
+  args: {
+    ...Primary.args,
+    resolution: "10min",
+  },
+};
+
+export const HiddenResources: Story = {
+  args: {
+    ...Primary.args,
+    hideResources: true,
   },
 };

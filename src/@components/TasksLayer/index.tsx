@@ -26,6 +26,7 @@ const TasksLayer: FC<TasksLayerProps> = () => {
     columnWidth,
     drawRange,
     interval: { start: intervalStart, end: intervalEnd },
+    onTaskClick: externalOnTaskClick,
     resolution,
     resources,
     tasks,
@@ -43,14 +44,13 @@ const TasksLayer: FC<TasksLayerProps> = () => {
   const onTaskClick = useCallback(
     (taskId: string, point: KonvaPoint) => {
       const task = getTaskById(taskId);
-      if (!task) {
+      if (!task || !externalOnTaskClick) {
         return;
       }
 
-      // TODO#lb: add real implementation
-      alert(`You clicked on task '${task.label}'. Point x: ${point.x}, y: ${point.y}`);
+      externalOnTaskClick(task);
     },
-    [getTaskById]
+    [externalOnTaskClick, getTaskById]
   );
 
   const onTaskLeave = useCallback(() => setTaskTooltip(null), []);

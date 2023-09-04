@@ -64,7 +64,11 @@ const TasksLayerInternalDecorator = ({ storyFn }: any) => {
 
 export const TasksLayerDecorator = (storyFn: any) => {
   return (
-    <TimelineProvider {...STORY_DATA} resolution="1hrs">
+    <TimelineProvider
+      {...STORY_DATA}
+      onTaskClick={(task) => alert(`OnTaskClick event handler - TaskId: ${task.id}`)}
+      resolution="1hrs"
+    >
       <TasksLayerInternalDecorator storyFn={storyFn} />
     </TimelineProvider>
   );

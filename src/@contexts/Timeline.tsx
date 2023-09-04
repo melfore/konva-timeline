@@ -3,7 +3,7 @@ import { Interval } from "luxon";
 
 import { logDebug, logWarn } from "../@utils/logger";
 import { RESOURCE_HEADER, RESOURCE_HEADER_HEIGHT } from "../@utils/resources";
-import { filterOutOfInterval } from "../@utils/tasks";
+import { filterOutOfInterval, TaskData } from "../@utils/tasks";
 import { TimeRange, toInterval } from "../@utils/time-range";
 import { DEFAULT_COLUMN_WIDTH, getResolutionData, Resolution, ResolutionData } from "../@utils/time-resolution";
 import { TimelineInput } from "../@utils/timeline";
@@ -14,8 +14,21 @@ declare global {
   }
 }
 
+type TimelineThemeMode = "dark" | "light";
+
 export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
+  /**
+   * Enables debug logging in browser console
+   */
   debug?: boolean;
+  /**
+   * Event handler for task click
+   */
+  onTaskClick?: (task: TaskData) => void;
+  /**
+   * Theme color in use
+   */
+  theme?: TimelineThemeMode;
 };
 
 type TimelineTheme = {
@@ -25,6 +38,7 @@ type TimelineTheme = {
 type TimelineContextType = Required<Pick<TimelineInput, "columnWidth" | "hideResources" | "resources" | "tasks">> & {
   drawRange: TimeRange;
   interval: Interval;
+  onTaskClick?: (task: TaskData) => void;
   resolution: ResolutionData;
   resolutionKey: Resolution;
   resourcesContentHeight: number;
@@ -43,6 +57,7 @@ export const TimelineProvider = ({
   columnWidth: externalColumnWidth = DEFAULT_COLUMN_WIDTH,
   debug = false,
   hideResources = false,
+  onTaskClick,
   tasks: externalTasks,
   range,
   resolution: externalResolution,
@@ -117,6 +132,7 @@ export const TimelineProvider = ({
         drawRange,
         hideResources,
         interval,
+        onTaskClick,
         resolution,
         resolutionKey,
         resources,
