@@ -7,7 +7,11 @@ const meta = {
   title: "Scenario/Monthly Report",
   component: KonvaTimeline,
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    onTaskDrag: {
+      type: "function",
+    },
+  },
 } satisfies Meta<typeof KonvaTimeline>;
 
 export default meta;

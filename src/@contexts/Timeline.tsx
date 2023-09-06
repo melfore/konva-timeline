@@ -26,6 +26,10 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
    */
   onTaskClick?: (task: TaskData) => void;
   /**
+   * Event handler for task click
+   */
+  onTaskDrag?: (task: TaskData) => void;
+  /**
    * Theme color in use
    */
   theme?: TimelineThemeMode;
@@ -39,6 +43,7 @@ type TimelineContextType = Required<Pick<TimelineInput, "columnWidth" | "hideRes
   drawRange: TimeRange;
   interval: Interval;
   onTaskClick?: (task: TaskData) => void;
+  onTaskDrag?: (task: TaskData) => void;
   resolution: ResolutionData;
   resolutionKey: Resolution;
   resourcesContentHeight: number;
@@ -58,6 +63,7 @@ export const TimelineProvider = ({
   debug = false,
   hideResources = false,
   onTaskClick,
+  onTaskDrag,
   tasks: externalTasks,
   range,
   resolution: externalResolution,
@@ -133,6 +139,7 @@ export const TimelineProvider = ({
         hideResources,
         interval,
         onTaskClick,
+        onTaskDrag,
         resolution,
         resolutionKey,
         resources,

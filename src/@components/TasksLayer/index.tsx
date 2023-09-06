@@ -26,7 +26,6 @@ const TasksLayer: FC<TasksLayerProps> = () => {
     columnWidth,
     drawRange,
     interval: { start: intervalStart, end: intervalEnd },
-    onTaskClick: externalOnTaskClick,
     resolution,
     resources,
     tasks,
@@ -40,18 +39,6 @@ const TasksLayer: FC<TasksLayerProps> = () => {
   );
 
   const getTaskById = useCallback((taskId: string) => tasks.find(({ id }) => taskId === id), [tasks]);
-
-  const onTaskClick = useCallback(
-    (taskId: string, point: KonvaPoint) => {
-      const task = getTaskById(taskId);
-      if (!task || !externalOnTaskClick) {
-        return;
-      }
-
-      externalOnTaskClick(task);
-    },
-    [externalOnTaskClick, getTaskById]
-  );
 
   const onTaskLeave = useCallback(() => setTaskTooltip(null), []);
 
@@ -98,7 +85,8 @@ const TasksLayer: FC<TasksLayerProps> = () => {
 
   return (
     <Layer>
-      {tasks.map(({ id, label, resourceId, time }, index) => {
+      {tasks.map((taskData, index) => {
+        const { resourceId, time } = taskData;
         const resourceIndex = getResourceById(resourceId);
         if (resourceIndex < 0) {
           return null;
@@ -115,10 +103,8 @@ const TasksLayer: FC<TasksLayerProps> = () => {
         return (
           <Task
             key={`task-${index}`}
-            id={id}
+            data={taskData}
             fill={resourceColor}
-            label={label}
-            onClick={onTaskClick}
             onLeave={onTaskLeave}
             onOver={onTaskOver}
             x={xCoordinate}

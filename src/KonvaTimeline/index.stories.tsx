@@ -11,6 +11,9 @@ const meta = {
     onTaskClick: {
       type: "function",
     },
+    onTaskDrag: {
+      type: "function",
+    },
   },
 } satisfies Meta<typeof KonvaTimeline>;
 
