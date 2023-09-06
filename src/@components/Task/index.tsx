@@ -1,19 +1,20 @@
-import React, { memo, useCallback } from "react";
+import React, { memo, useCallback, useMemo, useState } from "react";
 import { Rect } from "react-konva";
 import { KonvaEventObject } from "konva/lib/Node";
 
+import { useTimelineContext } from "../../@contexts/Timeline";
 import { KonvaDrawable, KonvaPoint } from "../../@utils/konva";
+import { RESOURCE_HEADER_HEIGHT, RESOURCE_HEADER_OFFSET } from "../../@utils/resources";
 import { TaskData } from "../../@utils/tasks";
 
 type TaskMouseEventHandler = (taskId: string, point: KonvaPoint) => void;
 
-type TaskProps = Pick<TaskData, "id" | "label"> &
-  KonvaDrawable &
+type TaskProps = KonvaDrawable &
   KonvaPoint & {
     /**
-     * On mouse click event handler
+     * Task data (id, label, resourceId, time)
      */
-    onClick: TaskMouseEventHandler;
+    data: TaskData;
     /**
      * On mouse leave event handler
      */
@@ -28,7 +29,7 @@ type TaskProps = Pick<TaskData, "id" | "label"> &
     width: number;
   };
 
-const TASK_DEFAULT_FILL = "white";
+const TASK_DEFAULT_FILL = "transparent";
 const TASK_DEFAULT_STROKE = "black";
 
 const TASK_BORDER_RADIUS = 4;
@@ -46,9 +47,8 @@ const TASK_HEIGHT = 40;
  * The playground has a simulated canvas with height: 200px and width: 100%
  */
 const Task = ({
+  data,
   fill = TASK_DEFAULT_FILL,
-  id,
-  onClick,
   onLeave,
   onOver,
   stroke = TASK_DEFAULT_STROKE,
@@ -56,6 +56,51 @@ const Task = ({
   y,
   width,
 }: TaskProps) => {
+  const {
+    columnWidth,
+    interval,
+    onTaskClick,
+    onTaskDrag,
+    resolution: { sizeInUnits, unit },
+    resources,
+  } = useTimelineContext();
+
+  const { id: taskId } = data;
+
+  const [dragging, setDragging] = useState(false);
+
+  const getBoundedCoordinates = useCallback((xCoordinate: number, resourceIndex: number): KonvaPoint => {
+    const boundedX = xCoordinate < 0 ? 0 : xCoordinate;
+    const boundedY = resourceIndex * RESOURCE_HEADER_HEIGHT + RESOURCE_HEADER_OFFSET;
+
+    return { x: boundedX, y: boundedY };
+  }, []);
+
+  const getDragPoint = useCallback((e: KonvaEventObject<DragEvent>): KonvaPoint => {
+    const { target } = e;
+    const dragX = target.x();
+    const dragY = target.y();
+
+    return { x: dragX, y: dragY };
+  }, []);
+
+  const getResourceIndexFromYCoordinate = useCallback(
+    (yCoordinate: number) => {
+      const rawIndex = Math.floor(yCoordinate / RESOURCE_HEADER_HEIGHT);
+      if (rawIndex < 1) {
+        return 1;
+      }
+
+      const lastResourceIndex = resources.length - 1;
+      if (rawIndex > lastResourceIndex) {
+        return lastResourceIndex;
+      }
+
+      return rawIndex;
+    },
+    [resources]
+  );
+
   const onTaskMouseEvent = useCallback(
     (e: KonvaEventObject<MouseEvent>, callback: TaskMouseEventHandler) => {
       const stage = e.target.getStage();
@@ -68,14 +113,14 @@ const Task = ({
         return;
       }
 
-      callback(id, point);
+      callback(taskId, point);
     },
-    [id]
+    [taskId]
   );
 
-  const onTaskClick = useCallback(
-    (e: KonvaEventObject<MouseEvent>) => onTaskMouseEvent(e, onClick),
-    [onClick, onTaskMouseEvent]
+  const onClick = useCallback(
+    (e: KonvaEventObject<MouseEvent>) => onTaskClick && onTaskClick(data),
+    [data, onTaskClick]
   );
 
   const onTaskLeave = useCallback(
@@ -88,16 +133,60 @@ const Task = ({
     [onOver, onTaskMouseEvent]
   );
 
+  const onDragStart = useCallback((e: KonvaEventObject<DragEvent>) => setDragging(true), []);
+
+  const onDragMove = useCallback(
+    (e: KonvaEventObject<DragEvent>) => {
+      const { x, y } = getDragPoint(e);
+      const resourceIndex = getResourceIndexFromYCoordinate(y);
+      const point = getBoundedCoordinates(x, resourceIndex);
+      e.target.setPosition(point);
+      onOver(taskId, point);
+    },
+    [getBoundedCoordinates, getDragPoint, getResourceIndexFromYCoordinate, onOver, taskId]
+  );
+
+  const onDragEnd = useCallback(
+    (e: KonvaEventObject<DragEvent>) => {
+      const { x, y } = getDragPoint(e);
+      const timeOffset = (x * sizeInUnits) / columnWidth;
+      const newMillis = interval.start!.plus({ [unit]: timeOffset }).toMillis();
+      const resourceIndex = getResourceIndexFromYCoordinate(y);
+      const resourceId = `${resourceIndex}`;
+      console.log(`New Start: ${x} /  ${x} / ${timeOffset} / ${newMillis}`);
+      setDragging(false);
+      onTaskDrag && onTaskDrag({ ...data, resourceId, time: { end: newMillis + width, start: newMillis } });
+    },
+    [
+      columnWidth,
+      data,
+      interval.start,
+      onTaskDrag,
+      getDragPoint,
+      getResourceIndexFromYCoordinate,
+      sizeInUnits,
+      unit,
+      width,
+    ]
+  );
+
+  const opacity = useMemo(() => (dragging ? 0.5 : 1), [dragging]);
+
   return (
     <Rect
-      id={id}
+      id={taskId}
       cornerRadius={TASK_BORDER_RADIUS}
+      draggable={!!onTaskDrag}
       fill={fill}
       height={TASK_HEIGHT}
-      onClick={onTaskClick}
+      onClick={onClick}
+      onDragStart={onDragStart}
+      onDragMove={onDragMove}
+      onDragEnd={onDragEnd}
       onMouseLeave={onTaskLeave}
       onMouseMove={onTaskOver}
       onMouseOver={onTaskOver}
+      opacity={opacity}
       stroke={stroke}
       x={x}
       y={y}

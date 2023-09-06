@@ -1,5 +1,6 @@
 import React, { memo, useMemo } from "react";
 
+import { useTimelineContext } from "../../@contexts/Timeline";
 import {
   Resource,
   RESOURCE_HEADER_HEIGHT,
@@ -18,6 +19,10 @@ interface ResourceHeaderProps extends Resource {
  * The playground has a simulated canvas with height: 200px and width: 100%
  */
 const ResourceHeader = ({ index, label }: ResourceHeaderProps) => {
+  const {
+    theme: { color: themeColor },
+  } = useTimelineContext();
+
   const yCoordinate = useMemo(() => RESOURCE_HEADER_HEIGHT * (index + 1), [index]);
 
   const textYCoordinate = useMemo(() => RESOURCE_HEADER_HEIGHT * index, [index]);
@@ -25,9 +30,9 @@ const ResourceHeader = ({ index, label }: ResourceHeaderProps) => {
   return (
     <KonvaGroup x={0} y={0}>
       <KonvaGroup x={RESOURCE_HEADER_TEXT_OFFSET} y={RESOURCE_HEADER_TEXT_OFFSET}>
-        <KonvaText text={label} y={textYCoordinate} />
+        <KonvaText fill={themeColor} text={label} y={textYCoordinate} />
       </KonvaGroup>
-      <KonvaLine points={[0, 0, RESOURCE_HEADER_WIDTH, 0]} stroke="black" y={yCoordinate} />
+      <KonvaLine points={[0, 0, RESOURCE_HEADER_WIDTH, 0]} stroke={themeColor} y={yCoordinate} />
     </KonvaGroup>
   );
 };

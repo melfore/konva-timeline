@@ -7,13 +7,20 @@ const meta = {
   title: "Main/KonvaTimeline",
   component: KonvaTimeline,
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    onTaskClick: {
+      type: "function",
+    },
+    onTaskDrag: {
+      type: "function",
+    },
+  },
 } satisfies Meta<typeof KonvaTimeline>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const primaryStoryData = generateStoryData({
+const { range, resources, tasks } = generateStoryData({
   averageTaskDurationInMinutes: 200,
   resourcesCount: 3,
   tasksCount: 5,
@@ -22,7 +29,30 @@ const primaryStoryData = generateStoryData({
 
 export const Primary: Story = {
   args: {
-    ...primaryStoryData,
+    range,
+    resources,
+    tasks,
     resolution: "1hrs",
+  },
+};
+
+export const CustomColumnWidth: Story = {
+  args: {
+    ...Primary.args,
+    columnWidth: 120,
+  },
+};
+
+export const CustomResolution: Story = {
+  args: {
+    ...Primary.args,
+    resolution: "10min",
+  },
+};
+
+export const HiddenResources: Story = {
+  args: {
+    ...Primary.args,
+    hideResources: true,
   },
 };

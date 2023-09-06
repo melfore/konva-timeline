@@ -23,6 +23,7 @@ const TASK_PLACEMENT_OFFSET = 5;
  */
 const TasksLayer: FC<TasksLayerProps> = () => {
   const {
+    columnWidth,
     drawRange,
     interval: { start: intervalStart, end: intervalEnd },
     resolution,
@@ -38,19 +39,6 @@ const TasksLayer: FC<TasksLayerProps> = () => {
   );
 
   const getTaskById = useCallback((taskId: string) => tasks.find(({ id }) => taskId === id), [tasks]);
-
-  const onTaskClick = useCallback(
-    (taskId: string, point: KonvaPoint) => {
-      const task = getTaskById(taskId);
-      if (!task) {
-        return;
-      }
-
-      // TODO#lb: add real implementation
-      alert(`You clicked on task '${task.label}'. Point x: ${point.x}, y: ${point.y}`);
-    },
-    [getTaskById]
-  );
 
   const onTaskLeave = useCallback(() => setTaskTooltip(null), []);
 
@@ -68,8 +56,8 @@ const TasksLayer: FC<TasksLayerProps> = () => {
   );
 
   const getXCoordinate = useCallback(
-    (offset: number) => (offset * resolution.columnSize) / resolution.sizeInUnits,
-    [resolution.columnSize, resolution.sizeInUnits]
+    (offset: number) => (offset * columnWidth) / resolution.sizeInUnits,
+    [columnWidth, resolution.sizeInUnits]
   );
 
   const getTaskXCoordinate = useCallback(
@@ -97,7 +85,8 @@ const TasksLayer: FC<TasksLayerProps> = () => {
 
   return (
     <Layer>
-      {tasks.map(({ id, label, resourceId, time }, index) => {
+      {tasks.map((taskData, index) => {
+        const { resourceId, time } = taskData;
         const resourceIndex = getResourceById(resourceId);
         if (resourceIndex < 0) {
           return null;
@@ -114,10 +103,8 @@ const TasksLayer: FC<TasksLayerProps> = () => {
         return (
           <Task
             key={`task-${index}`}
-            id={id}
+            data={taskData}
             fill={resourceColor}
-            label={label}
-            onClick={onTaskClick}
             onLeave={onTaskLeave}
             onOver={onTaskOver}
             x={xCoordinate}

@@ -43,25 +43,4 @@ const TaskTooltip: FC<TaskTooltipProps> = ({ task: { label: taskLabel }, x, y })
   );
 };
 
-// return taskTooltipContent ? (
-//   <Html
-//     transform={false}
-//     divProps={{
-//       style: {
-//         border: "1px solid black",
-//         backgroundColor: "white",
-//         padding: "16px",
-//         position: "fixed",
-//         top: 200,
-//         left: 200,
-//         zIndex: 100,
-//       },
-//     }}
-//   >
-//     {taskTooltipContent(taskTooltip.task)}
-//   </Html>
-// ) : (
-//   <TaskTooltip {...taskTooltip} />
-// );
-
 export default TaskTooltip;

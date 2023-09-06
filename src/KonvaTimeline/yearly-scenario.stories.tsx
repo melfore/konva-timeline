@@ -4,28 +4,18 @@ import { generateStoryData } from "./stories-data";
 import KonvaTimeline from ".";
 
 const meta = {
-  title: "Main/KonvaTimeline [Perfomances]",
+  title: "Scenario/Yearly Report",
   component: KonvaTimeline,
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    onTaskDrag: {
+      type: "function",
+    },
+  },
 } satisfies Meta<typeof KonvaTimeline>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-const monthlyStoryData = generateStoryData({
-  averageTaskDurationInMinutes: 10,
-  resourcesCount: 16,
-  tasksCount: 5000,
-  timeRangeInDays: 60,
-});
-
-export const MonthlyReport: Story = {
-  args: {
-    ...monthlyStoryData,
-    resolution: "1min",
-  },
-};
 
 const yearlyStoryData = generateStoryData({
   averageTaskDurationInMinutes: 600,

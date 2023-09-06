@@ -2,10 +2,10 @@ import React, { createContext, PropsWithChildren, useContext, useEffect, useMemo
 import { Interval } from "luxon";
 
 import { logDebug, logWarn } from "../@utils/logger";
-import { Resource, RESOURCE_HEADER, RESOURCE_HEADER_HEIGHT } from "../@utils/resources";
+import { RESOURCE_HEADER, RESOURCE_HEADER_HEIGHT } from "../@utils/resources";
 import { filterOutOfInterval, TaskData } from "../@utils/tasks";
 import { TimeRange, toInterval } from "../@utils/time-range";
-import { getResolutionData, Resolution, ResolutionData } from "../@utils/time-resolution";
+import { DEFAULT_COLUMN_WIDTH, getResolutionData, Resolution, ResolutionData } from "../@utils/time-resolution";
 import { TimelineInput } from "../@utils/timeline";
 
 declare global {
@@ -14,24 +14,43 @@ declare global {
   }
 }
 
-type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
+type TimelineThemeMode = "dark" | "light";
+
+export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
+  /**
+   * Enables debug logging in browser console
+   */
   debug?: boolean;
-  // taskTooltipContent?: (task: any) => React.ReactNode;
+  /**
+   * Event handler for task click
+   */
+  onTaskClick?: (task: TaskData) => void;
+  /**
+   * Event handler for task click
+   */
+  onTaskDrag?: (task: TaskData) => void;
+  /**
+   * Theme color in use
+   */
+  theme?: TimelineThemeMode;
 };
 
-type TimelineContextType = {
+type TimelineTheme = {
+  color: string;
+};
+
+type TimelineContextType = Required<Pick<TimelineInput, "columnWidth" | "hideResources" | "resources" | "tasks">> & {
   drawRange: TimeRange;
-  hideResources?: boolean;
   interval: Interval;
+  onTaskClick?: (task: TaskData) => void;
+  onTaskDrag?: (task: TaskData) => void;
   resolution: ResolutionData;
   resolutionKey: Resolution;
-  resources: Resource[];
   resourcesContentHeight: number;
   setDrawRange: (range: TimeRange) => void;
   setResolutionKey: (resolution: Resolution) => void;
-  tasks: TaskData[];
-  // taskTooltipContent?: (task: any) => React.ReactNode;
   timeBlocks: Interval[];
+  theme: TimelineTheme;
 };
 
 const TimelineContext = createContext<TimelineContextType | undefined>(undefined);
@@ -40,13 +59,16 @@ const DEFAULT_DRAW_RANGE: TimeRange = { start: 0, end: 0 };
 
 export const TimelineProvider = ({
   children,
+  columnWidth: externalColumnWidth = DEFAULT_COLUMN_WIDTH,
   debug = false,
   hideResources = false,
+  onTaskClick,
+  onTaskDrag,
   tasks: externalTasks,
-  // taskTooltipContent,
   range,
   resolution: externalResolution,
   resources: externalResources,
+  theme: externalTheme = "light",
 }: TimelineProviderProps) => {
   const [drawRange, setDrawRange] = useState(DEFAULT_DRAW_RANGE);
   const [resolutionKey, setResolutionKey] = useState(externalResolution);
@@ -76,6 +98,13 @@ export const TimelineProvider = ({
     return getResolutionData(resolutionKey);
   }, [resolutionKey]);
 
+  const columnWidth = useMemo(() => {
+    logDebug("TimelineProvider", "Calculating columnWidth...");
+    return !externalColumnWidth || externalColumnWidth < DEFAULT_COLUMN_WIDTH
+      ? resolution.columnSize
+      : externalColumnWidth;
+  }, [externalColumnWidth, resolution]);
+
   const resources = useMemo(() => {
     logDebug("TimelineProvider", "Preparing resources...");
     return [RESOURCE_HEADER, ...externalResources];
@@ -96,12 +125,21 @@ export const TimelineProvider = ({
     return interval.splitBy({ [resolution.unit]: resolution.sizeInUnits });
   }, [interval, resolution]);
 
+  const theme = useMemo((): TimelineTheme => {
+    return {
+      color: externalTheme === "dark" ? "white" : "black",
+    };
+  }, [externalTheme]);
+
   return (
     <TimelineContext.Provider
       value={{
+        columnWidth,
         drawRange,
         hideResources,
         interval,
+        onTaskClick,
+        onTaskDrag,
         resolution,
         resolutionKey,
         resources,
@@ -109,7 +147,7 @@ export const TimelineProvider = ({
         setDrawRange,
         setResolutionKey,
         tasks,
-        // taskTooltipContent,
+        theme,
         timeBlocks,
       }}
     >
