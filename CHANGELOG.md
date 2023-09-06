@@ -1,3 +1,11 @@
+# [1.3.0](https://github.com/melfore/konva-timeline/compare/v1.2.0...v1.3.0) (2023-09-06)
+
+
+### Features
+
+* added task drag & drop support ([9599335](https://github.com/melfore/konva-timeline/commit/95993359658362c681b5ae331e274ee3017f3eea))
+* added task onClick handler ([fec12d1](https://github.com/melfore/konva-timeline/commit/fec12d1cc986124e4ae2931afb352b7df5d6c134))
+
 # [1.2.0](https://github.com/melfore/konva-timeline/compare/v1.1.0...v1.2.0) (2023-08-31)
 
 ### Features
