@@ -11,7 +11,8 @@
     "pre:commit": "npm run clean:code && npm run build",
     "prepare": "husky install",
     "start": "storybook dev -p 6006",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "test-storybook --coverage --coverageDirectory coverage/storybook --ci --verbose",
+    "test:coverage": "npx nyc report --reporter=lcov -t coverage/storybook --report-dir coverage/storybook",
     "semantic-release": "semantic-release"
   },
   "repository": {
@@ -43,6 +44,7 @@
     "@semantic-release/github": "^9.0.4",
     "@semantic-release/npm": "^10.0.5",
     "@semantic-release/release-notes-generator": "^11.0.4",
+    "@storybook/addon-coverage": "^0.0.9",
     "@storybook/addon-essentials": "^7.4.0",
     "@storybook/addon-interactions": "^7.4.0",
     "@storybook/addon-links": "^7.4.0",
@@ -50,6 +52,7 @@
     "@storybook/blocks": "^7.4.0",
     "@storybook/react": "^7.4.0",
     "@storybook/react-webpack5": "^7.4.0",
+    "@storybook/test-runner": "^0.13.0",
     "@storybook/testing-library": "^0.2.0",
     "@types/luxon": "^3.3.0",
     "@types/react": "^18.2.11",
