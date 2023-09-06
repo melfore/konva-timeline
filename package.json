@@ -66,6 +66,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-storybook": "^0.6.13",
+    "git-cz": "^4.9.0",
     "husky": "^8.0.0",
     "konva": "^9.2.0",
     "luxon": "^3.3.0",
@@ -81,7 +82,7 @@
   },
   "config": {
     "commitizen": {
-      "path": "cz-conventional-changelog"
+      "path": "git-cz"
     }
   }
 }
