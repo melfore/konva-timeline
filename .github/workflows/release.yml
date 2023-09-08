@@ -65,9 +65,9 @@ jobs:
       - name: Test runner
         run: |
           npx playwright install --with-deps
-          npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue"
-          npx http-server docs --port 6006 --silent
-          npx wait-on tcp:6006 && npm test
+          npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
+            "npx http-server docs --port 6006 --silent" \
+            "npx wait-on tcp:6006 && npm test"
 
       - name: Build
         run: npm run build
