@@ -36,11 +36,18 @@ export const TaskDecorator = (storyFn: any) => {
   }, []);
 
   return (
-    <div ref={wrapperRef}>
-      <Stage height={200} width={width}>
-        <Layer>{storyFn()}</Layer>
-      </Stage>
-    </div>
+    <TimelineProvider
+      {...STORY_DATA}
+      onTaskClick={(task) => alert(`OnTaskClick event handler - TaskId: ${task.id}`)}
+      onTaskDrag={(task) => alert(`OnTaskDrag event handler - TaskId: ${task.id}`)}
+      resolution="1hrs"
+    >
+      <div ref={wrapperRef}>
+        <Stage height={200} width={width}>
+          <Layer>{storyFn()}</Layer>
+        </Stage>
+      </div>
+    </TimelineProvider>
   );
 };
 
@@ -67,6 +74,7 @@ export const TasksLayerDecorator = (storyFn: any) => {
     <TimelineProvider
       {...STORY_DATA}
       onTaskClick={(task) => alert(`OnTaskClick event handler - TaskId: ${task.id}`)}
+      onTaskDrag={(task) => alert(`OnTaskDrag event handler - TaskId: ${task.id}`)}
       resolution="1hrs"
     >
       <TasksLayerInternalDecorator storyFn={storyFn} />
