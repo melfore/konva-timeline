@@ -38,11 +38,6 @@ jobs:
           git config --local user.name "${{ secrets.GIT_USER_NAME }}"
           git pull
 
-      # - name: Unit Tests
-      #   run: npm run test:coverage
-      #   env:
-      #     CI: true
-
       - name: Run ESLint and Prettier
         id: code-format
         run: |
@@ -66,6 +61,13 @@ jobs:
         if: steps.generate-docs.outputs.generated-docs > 0
         run: |
           git commit -m "docs: ✏️ Updated StoryBook" -a
+
+      - name: Test runner
+        run: |
+          npx playwright install --with-deps
+          npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue"
+          npx http-server docs --port 6006 --silent
+          npx wait-on tcp:6006 && npm test
 
       - name: Build
         run: npm run build
