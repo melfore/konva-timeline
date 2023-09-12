@@ -29,6 +29,7 @@ const { range, resources, tasks } = generateStoryData({
 
 export const Primary: Story = {
   args: {
+    dragResolution: "5min",
     range,
     resources,
     tasks,
