@@ -1,6 +1,7 @@
 import React, { memo, useCallback, useMemo, useState } from "react";
 import { Rect } from "react-konva";
 import { KonvaEventObject } from "konva/lib/Node";
+import { DateTime, Duration } from "luxon";
 
 import { useTimelineContext } from "../../@contexts/Timeline";
 import { KonvaDrawable, KonvaPoint } from "../../@utils/konva";
@@ -58,6 +59,7 @@ const Task = ({
 }: TaskProps) => {
   const {
     columnWidth,
+    dragResolution: { sizeInUnits: dragSizeInUnits, unit: dragUnit },
     interval,
     onTaskClick,
     onTaskDrag,
@@ -68,6 +70,11 @@ const Task = ({
   const { id: taskId } = data;
 
   const [dragging, setDragging] = useState(false);
+
+  const dragSnapInPX = useMemo(() => {
+    const dragSnapInResolutionUnit = Duration.fromObject({ [dragUnit]: dragSizeInUnits }).as(unit);
+    return Math.floor(columnWidth * dragSnapInResolutionUnit);
+  }, [columnWidth, dragUnit, dragSizeInUnits, unit]);
 
   const getBoundedCoordinates = useCallback((xCoordinate: number, resourceIndex: number): KonvaPoint => {
     const boundedX = xCoordinate < 0 ? 0 : xCoordinate;
@@ -139,23 +146,36 @@ const Task = ({
     (e: KonvaEventObject<DragEvent>) => {
       const { x, y } = getDragPoint(e);
       const resourceIndex = getResourceIndexFromYCoordinate(y);
-      const point = getBoundedCoordinates(x, resourceIndex);
+      const dragFinalX = Math.floor(x / dragSnapInPX) * dragSnapInPX;
+      const point = getBoundedCoordinates(dragFinalX, resourceIndex);
       e.target.setPosition(point);
       onOver(taskId, point);
     },
-    [getBoundedCoordinates, getDragPoint, getResourceIndexFromYCoordinate, onOver, taskId]
+    [dragSnapInPX, getBoundedCoordinates, getDragPoint, getResourceIndexFromYCoordinate, onOver, taskId]
   );
 
   const onDragEnd = useCallback(
     (e: KonvaEventObject<DragEvent>) => {
       const { x, y } = getDragPoint(e);
       const timeOffset = (x * sizeInUnits) / columnWidth;
-      const newMillis = interval.start!.plus({ [unit]: timeOffset }).toMillis();
+      const newStartInMillis = interval.start!.plus({ [unit]: timeOffset }).toMillis();
+      const newEndInMillis =
+        newStartInMillis + Duration.fromObject({ [unit]: (width * sizeInUnits) / columnWidth }).toMillis();
       const resourceIndex = getResourceIndexFromYCoordinate(y);
       const resourceId = `${resourceIndex}`;
-      console.log(`New Start: ${x} /  ${x} / ${timeOffset} / ${newMillis}`);
+      console.log(`New Start: ${x} /  ${x} / ${timeOffset} / ${newStartInMillis}`);
+      console.log(`StartTime: ${DateTime.fromMillis(newStartInMillis).toISO()}`);
+      console.log(`End: ${DateTime.fromMillis(newEndInMillis).toISO()}`);
       setDragging(false);
-      onTaskDrag && onTaskDrag({ ...data, resourceId, time: { end: newMillis + width, start: newMillis } });
+      onTaskDrag &&
+        onTaskDrag({
+          ...data,
+          resourceId,
+          time: {
+            end: newEndInMillis,
+            start: newStartInMillis,
+          },
+        });
     },
     [
       columnWidth,
