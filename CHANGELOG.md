@@ -1,3 +1,11 @@
+# [1.4.0](https://github.com/melfore/konva-timeline/compare/v1.3.2...v1.4.0) (2023-09-12)
+
+
+### Features
+
+* 🎸 [Task] Added drag snap feature ([6223e77](https://github.com/melfore/konva-timeline/commit/6223e7757bcd4885e3ad72aee7445ebd33d2e97b)), closes [#46](https://github.com/melfore/konva-timeline/issues/46)
+* 🎸 [Timeline] Added dragResolution property ([4072e0b](https://github.com/melfore/konva-timeline/commit/4072e0b8ca067d79f5417382fe537842ad36122f)), closes [#46](https://github.com/melfore/konva-timeline/issues/46)
+
 ## [1.3.2](https://github.com/melfore/konva-timeline/compare/v1.3.1...v1.3.2) (2023-09-08)
 
 ## [1.3.1](https://github.com/melfore/konva-timeline/compare/v1.3.0...v1.3.1) (2023-09-06)
