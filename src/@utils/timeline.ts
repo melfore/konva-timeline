@@ -9,6 +9,10 @@ export type TimelineInput = {
    */
   columnWidth?: number;
   /**
+   * Drag and drop resolution (if not passed, defaults to resolution)
+   */
+  dragResolution?: Resolution;
+  /**
    * Flag to hide resource column (defaults to false)
    */
   hideResources?: boolean;
