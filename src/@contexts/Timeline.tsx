@@ -40,6 +40,7 @@ type TimelineTheme = {
 };
 
 type TimelineContextType = Required<Pick<TimelineInput, "columnWidth" | "hideResources" | "resources" | "tasks">> & {
+  dragResolution: ResolutionData;
   drawRange: TimeRange;
   interval: Interval;
   onTaskClick?: (task: TaskData) => void;
@@ -61,6 +62,7 @@ export const TimelineProvider = ({
   children,
   columnWidth: externalColumnWidth = DEFAULT_COLUMN_WIDTH,
   debug = false,
+  dragResolution: externalDragResolution,
   hideResources = false,
   onTaskClick,
   onTaskDrag,
@@ -97,6 +99,11 @@ export const TimelineProvider = ({
     logDebug("TimelineProvider", "Calculating resolution...");
     return getResolutionData(resolutionKey);
   }, [resolutionKey]);
+
+  const dragResolution = useMemo(() => {
+    logDebug("TimelineProvider", "Calculating drag resolution...");
+    return getResolutionData(externalDragResolution || resolutionKey);
+  }, [externalDragResolution, resolutionKey]);
 
   const columnWidth = useMemo(() => {
     logDebug("TimelineProvider", "Calculating columnWidth...");
@@ -135,6 +142,7 @@ export const TimelineProvider = ({
     <TimelineContext.Provider
       value={{
         columnWidth,
+        dragResolution,
         drawRange,
         hideResources,
         interval,
