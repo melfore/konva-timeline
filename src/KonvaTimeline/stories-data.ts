@@ -9,7 +9,7 @@ interface StoryDataInput {
   averageTaskDurationInMinutes: number;
 }
 
-interface StoryData {
+export interface StoryData {
   resources: Resource[];
   tasks: TaskData[];
   range: TimeRange;
