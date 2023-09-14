@@ -20,7 +20,9 @@ This library has the following required peerDependencies:
 "react-konva": ">= 18.2.9 < 19"
 ```
 
-Run:
+### ⚠️ Installing with npm < 7
+
+If installing with versions of npm < 7, you have to manually install them.
 
 ```
 npm i konva luxon react react-dom react-konva
