@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "allowJs": true,
     "declaration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -11,5 +12,6 @@
     "strict": true,
     "target": "ES2016"
   },
+  "include": ["src"],
   "exclude": ["dist", "node_modules", "src/**/*.test.tsx", "src/**/*.stories.tsx"]
 }
