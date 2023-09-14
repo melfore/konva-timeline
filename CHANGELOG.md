@@ -1,3 +1,5 @@
+## [1.4.3](https://github.com/melfore/konva-timeline/compare/v1.4.2...v1.4.3) (2023-09-14)
+
 ## [1.4.2](https://github.com/melfore/konva-timeline/compare/v1.4.1...v1.4.2) (2023-09-14)
 
 ## [1.4.1](https://github.com/melfore/konva-timeline/compare/v1.4.0...v1.4.1) (2023-09-13)
