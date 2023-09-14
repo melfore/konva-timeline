@@ -163,9 +163,9 @@ const Task = ({
         newStartInMillis + Duration.fromObject({ [unit]: (width * sizeInUnits) / columnWidth }).toMillis();
       const resourceIndex = getResourceIndexFromYCoordinate(y);
       const resourceId = `${resourceIndex}`;
-      console.log(`New Start: ${x} /  ${x} / ${timeOffset} / ${newStartInMillis}`);
-      console.log(`StartTime: ${DateTime.fromMillis(newStartInMillis).toISO()}`);
-      console.log(`End: ${DateTime.fromMillis(newEndInMillis).toISO()}`);
+      // console.log(`New Start: ${x} /  ${x} / ${timeOffset} / ${newStartInMillis}`);
+      // console.log(`StartTime: ${DateTime.fromMillis(newStartInMillis).toISO()}`);
+      // console.log(`End: ${DateTime.fromMillis(newEndInMillis).toISO()}`);
       setDragging(false);
       onTaskDrag &&
         onTaskDrag({
