@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useMemo, useState } from "react";
 import { Rect } from "react-konva";
 import { KonvaEventObject } from "konva/lib/Node";
-import { DateTime, Duration } from "luxon";
+import { Duration } from "luxon";
 
 import { useTimelineContext } from "../../@contexts/Timeline";
 import { KonvaDrawable, KonvaPoint } from "../../@utils/konva";
@@ -146,7 +146,7 @@ const Task = ({
     (e: KonvaEventObject<DragEvent>) => {
       const { x, y } = getDragPoint(e);
       const resourceIndex = getResourceIndexFromYCoordinate(y);
-      const dragFinalX = Math.floor(x / dragSnapInPX) * dragSnapInPX;
+      const dragFinalX = Math.ceil(x / dragSnapInPX) * dragSnapInPX;
       const point = getBoundedCoordinates(dragFinalX, resourceIndex);
       e.target.setPosition(point);
       onOver(taskId, point);
