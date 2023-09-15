@@ -1,10 +1,11 @@
 import React, { memo, useCallback, useMemo, useState } from "react";
 import { Rect } from "react-konva";
 import { KonvaEventObject } from "konva/lib/Node";
-import { Duration } from "luxon";
+import { DateTime, Duration } from "luxon";
 
 import { useTimelineContext } from "../../@contexts/Timeline";
 import { KonvaDrawable, KonvaPoint } from "../../@utils/konva";
+import { logDebug } from "../../@utils/logger";
 import { RESOURCE_HEADER_HEIGHT, RESOURCE_HEADER_OFFSET } from "../../@utils/resources";
 import { TaskData } from "../../@utils/tasks";
 
@@ -163,9 +164,9 @@ const Task = ({
         newStartInMillis + Duration.fromObject({ [unit]: (width * sizeInUnits) / columnWidth }).toMillis();
       const resourceIndex = getResourceIndexFromYCoordinate(y);
       const resourceId = `${resourceIndex}`;
-      // console.log(`New Start: ${x} /  ${x} / ${timeOffset} / ${newStartInMillis}`);
-      // console.log(`StartTime: ${DateTime.fromMillis(newStartInMillis).toISO()}`);
-      // console.log(`End: ${DateTime.fromMillis(newEndInMillis).toISO()}`);
+      logDebug("Task", `New Start: ${x} /  ${x} / ${timeOffset} / ${newStartInMillis}`);
+      logDebug("Task", `StartTime: ${DateTime.fromMillis(newStartInMillis).toISO()}`);
+      logDebug("Task", `End: ${DateTime.fromMillis(newEndInMillis).toISO()}`);
       setDragging(false);
       onTaskDrag &&
         onTaskDrag({
