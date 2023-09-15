@@ -5,6 +5,7 @@ import { DateTime, Duration } from "luxon";
 
 import { useTimelineContext } from "../../@contexts/Timeline";
 import { KonvaDrawable, KonvaPoint } from "../../@utils/konva";
+import { logDebug } from "../../@utils/logger";
 import { RESOURCE_HEADER_HEIGHT, RESOURCE_HEADER_OFFSET } from "../../@utils/resources";
 import { TaskData } from "../../@utils/tasks";
 
@@ -146,7 +147,7 @@ const Task = ({
     (e: KonvaEventObject<DragEvent>) => {
       const { x, y } = getDragPoint(e);
       const resourceIndex = getResourceIndexFromYCoordinate(y);
-      const dragFinalX = Math.floor(x / dragSnapInPX) * dragSnapInPX;
+      const dragFinalX = Math.ceil(x / dragSnapInPX) * dragSnapInPX;
       const point = getBoundedCoordinates(dragFinalX, resourceIndex);
       e.target.setPosition(point);
       onOver(taskId, point);
@@ -163,9 +164,9 @@ const Task = ({
         newStartInMillis + Duration.fromObject({ [unit]: (width * sizeInUnits) / columnWidth }).toMillis();
       const resourceIndex = getResourceIndexFromYCoordinate(y);
       const resourceId = `${resourceIndex}`;
-      // console.log(`New Start: ${x} /  ${x} / ${timeOffset} / ${newStartInMillis}`);
-      // console.log(`StartTime: ${DateTime.fromMillis(newStartInMillis).toISO()}`);
-      // console.log(`End: ${DateTime.fromMillis(newEndInMillis).toISO()}`);
+      logDebug("Task", `New Start: ${x} /  ${x} / ${timeOffset} / ${newStartInMillis}`);
+      logDebug("Task", `StartTime: ${DateTime.fromMillis(newStartInMillis).toISO()}`);
+      logDebug("Task", `End: ${DateTime.fromMillis(newEndInMillis).toISO()}`);
       setDragging(false);
       onTaskDrag &&
         onTaskDrag({
