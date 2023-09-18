@@ -1,8 +1,8 @@
 import React, { FC, useCallback, useMemo } from "react";
 
+import { KonvaGroup, KonvaLayer, KonvaLine, KonvaRect, KonvaText } from "../../@components/@konva";
 import { useTimelineContext } from "../../@contexts/Timeline";
 import { displayInterval } from "../../@utils/time-resolution";
-import { KonvaGroup, KonvaLayer, KonvaLine, KonvaRect, KonvaText } from "../@konva";
 
 interface GridLayerProps {
   columnWidth: number;
@@ -82,7 +82,7 @@ const GridLayer: FC<GridLayerProps> = ({ columnWidth, height, width }) => {
         <KonvaLine points={[0, 0, 0, height]} stroke="blue" />
         {timeBlocks.map((column, index) => {
           const xPos = columnWidth * index;
-          if (xPos < drawRange.start * -2 || xPos > drawRange.end * 2) {
+          if (xPos < drawRange.start * -1.05 || xPos > drawRange.end * 1.05) {
             return null;
           }
 
