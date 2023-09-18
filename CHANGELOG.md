@@ -1,9 +1,8 @@
 ## [1.4.6](https://github.com/melfore/konva-timeline/compare/v1.4.5...v1.4.6) (2023-09-15)
 
-
 ### Bug Fixes
 
-* 🐛 [Task] Initial drag and drop snap rounding ([f86ddd0](https://github.com/melfore/konva-timeline/commit/f86ddd09de743a62d7e6bf040a5a58cd9e2e3554)), closes [#69](https://github.com/melfore/konva-timeline/issues/69)
+- 🐛 [Task] Initial drag and drop snap rounding ([f86ddd0](https://github.com/melfore/konva-timeline/commit/f86ddd09de743a62d7e6bf040a5a58cd9e2e3554)), closes [#69](https://github.com/melfore/konva-timeline/issues/69)
 
 ## [1.4.5](https://github.com/melfore/konva-timeline/compare/v1.4.4...v1.4.5) (2023-09-14)
 
