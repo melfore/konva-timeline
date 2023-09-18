@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/melfore/konva-timeline/compare/v1.4.6...v1.5.0) (2023-09-18)
+
+
+### Features
+
+* 🎸 [Grid] Display 5% grid before / after ([b8c021c](https://github.com/melfore/konva-timeline/commit/b8c021cf57d30a959a56804e5c7b7981bb67f31e))
+
 ## [1.4.6](https://github.com/melfore/konva-timeline/compare/v1.4.5...v1.4.6) (2023-09-15)
 
 ### Bug Fixes
