@@ -88,7 +88,7 @@ const GridLayer: FC<GridLayerProps> = ({ columnWidth, height, width }) => {
           const xPos = columnWidth * (index + blocksOffset);
           return (
             <KonvaGroup key={`timeslot-${index}`}>
-              {gridLabels(index)}
+              {gridLabels(index + blocksOffset)}
               <KonvaLine x={xPos} y={40} points={[0, 0, 0, height]} stroke="gray" strokeWidth={1} />
               <KonvaRect fill="transparent" x={xPos - 15} y={30} height={15} width={30} />
               <KonvaText fill={themeColor} x={xPos - 15} y={32} text={displayInterval(column, resolution.unit)} />
