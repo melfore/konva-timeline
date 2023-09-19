@@ -1,5 +1,5 @@
 import React, { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
-import { Interval } from "luxon";
+import { DateTime, Interval } from "luxon";
 
 import { logDebug, logWarn } from "../@utils/logger";
 import { RESOURCE_HEADER, RESOURCE_HEADER_HEIGHT } from "../@utils/resources";
@@ -40,6 +40,7 @@ type TimelineTheme = {
 };
 
 type TimelineContextType = Required<Pick<TimelineInput, "columnWidth" | "hideResources" | "resources" | "tasks">> & {
+  blocksOffset: number;
   dragResolution: ResolutionData;
   drawRange: TimeRange;
   interval: Interval;
@@ -50,13 +51,16 @@ type TimelineContextType = Required<Pick<TimelineInput, "columnWidth" | "hideRes
   resourcesContentHeight: number;
   setDrawRange: (range: TimeRange) => void;
   setResolutionKey: (resolution: Resolution) => void;
-  timeBlocks: Interval[];
   theme: TimelineTheme;
+  timeBlocks: Interval[];
+  visibleTimeBlocks: Interval[];
 };
 
 const TimelineContext = createContext<TimelineContextType | undefined>(undefined);
 
 const DEFAULT_DRAW_RANGE: TimeRange = { start: 0, end: 0 };
+
+const TIME_BLOCKS_PRELOAD = 5;
 
 export const TimelineProvider = ({
   children,
@@ -122,15 +126,45 @@ export const TimelineProvider = ({
     return RESOURCE_HEADER_HEIGHT * resources.length;
   }, [resources]);
 
-  const tasks = useMemo(() => {
-    logDebug("TimelineProvider", "Preparing tasks...");
-    return filterOutOfInterval(externalTasks, interval);
-  }, [externalTasks, interval]);
-
   const timeBlocks = useMemo(() => {
     logDebug("TimelineProvider", "Calculating time blocks...");
     return interval.splitBy({ [resolution.unit]: resolution.sizeInUnits });
   }, [interval, resolution]);
+
+  const timeblocksOffset = useMemo(() => Math.floor(drawRange.start / columnWidth), [drawRange, columnWidth]);
+
+  const visibleTimeBlocks = useMemo(() => {
+    const rangeLength = drawRange.end - drawRange.start;
+    if (rangeLength <= 0) {
+      return [];
+    }
+
+    let startIndex = timeblocksOffset;
+    if (startIndex > TIME_BLOCKS_PRELOAD) {
+      startIndex = timeblocksOffset - TIME_BLOCKS_PRELOAD;
+    }
+
+    let endIndex = Math.ceil(drawRange.end / columnWidth);
+    if (endIndex < timeBlocks.length - TIME_BLOCKS_PRELOAD) {
+      endIndex = endIndex + TIME_BLOCKS_PRELOAD;
+    }
+
+    return [...timeBlocks].slice(timeblocksOffset, endIndex);
+  }, [timeblocksOffset, columnWidth, drawRange, timeBlocks]);
+
+  const tasks = useMemo(() => {
+    logDebug("TimelineProvider", "Preparing tasks...");
+    if (!visibleTimeBlocks || !visibleTimeBlocks.length) {
+      return [];
+    }
+
+    const interval = Interval.fromDateTimes(
+      DateTime.fromMillis(visibleTimeBlocks[0].start!.toMillis()),
+      DateTime.fromMillis(visibleTimeBlocks[visibleTimeBlocks.length - 1].start!.toMillis())
+    );
+
+    return filterOutOfInterval(externalTasks, interval);
+  }, [externalTasks, visibleTimeBlocks]);
 
   const theme = useMemo((): TimelineTheme => {
     return {
@@ -157,6 +191,8 @@ export const TimelineProvider = ({
         tasks,
         theme,
         timeBlocks,
+        visibleTimeBlocks,
+        blocksOffset: timeblocksOffset,
       }}
     >
       {children}

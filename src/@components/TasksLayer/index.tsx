@@ -83,6 +83,10 @@ const TasksLayer: FC<TasksLayerProps> = () => {
     return null;
   }
 
+  if (drawRange.end - drawRange.start <= 0) {
+    return null;
+  }
+
   return (
     <Layer>
       {tasks.map((taskData, index) => {
@@ -102,7 +106,7 @@ const TasksLayer: FC<TasksLayerProps> = () => {
 
         return (
           <Task
-            key={`task-${index}`}
+            key={`task-${taskData.id}`}
             data={taskData}
             fill={resourceColor}
             onLeave={onTaskLeave}

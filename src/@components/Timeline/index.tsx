@@ -160,7 +160,7 @@ const Timeline: FC<TimelineProps> = () => {
       <div ref={wrapper} style={gridWrapperStyle}>
         <div style={gridStageWrapperStyle}>
           <Stage ref={stageRef} height={stageHeight} width={stageWidth}>
-            <GridLayer columnWidth={columnWidth} height={stageHeight} width={fullTimelineWidth} />
+            <GridLayer columnWidth={columnWidth} height={stageHeight} width={stageWidth} />
             <TasksLayer />
           </Stage>
         </div>

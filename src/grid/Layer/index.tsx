@@ -12,12 +12,13 @@ interface GridLayerProps {
 
 const GridLayer: FC<GridLayerProps> = ({ columnWidth, height, width }) => {
   const {
+    blocksOffset,
     drawRange,
     interval,
     resolution,
     resources,
     theme: { color: themeColor },
-    timeBlocks,
+    visibleTimeBlocks,
   } = useTimelineContext();
 
   const { sizeInUnits, unit, unitAbove } = resolution;
@@ -75,34 +76,30 @@ const GridLayer: FC<GridLayerProps> = ({ columnWidth, height, width }) => {
         {resources.map(({ id }, index) => {
           return (
             <KonvaGroup key={`heading-${id}`}>
-              <KonvaLine x={0} y={50 * (index + 1)} points={[0, 0, width, 0]} stroke={themeColor} />
-            </KonvaGroup>
-          );
-        })}
-        <KonvaLine points={[0, 0, 0, height]} stroke="blue" />
-        {timeBlocks.map((column, index) => {
-          const xPos = columnWidth * index;
-          if (xPos < drawRange.start * -1.05 || xPos > drawRange.end * 1.05) {
-            return null;
-          }
-
-          return (
-            <KonvaGroup key={`timeslot-${index}`}>
-              {gridLabels(index)}
-              <KonvaLine x={columnWidth * index} y={40} points={[0, 0, 0, height]} stroke="gray" strokeWidth={1} />
-              <KonvaRect fill="transparent" x={columnWidth * index - 15} y={30} height={15} width={30} />
-              <KonvaText
-                fill={themeColor}
-                x={columnWidth * index - 15}
-                y={32}
-                text={displayInterval(column, resolution.unit)}
+              <KonvaLine
+                points={[drawRange.start, 50 * (index + 1), drawRange.end, 50 * (index + 1)]}
+                stroke={themeColor}
               />
             </KonvaGroup>
           );
         })}
+        <KonvaLine points={[0, 0, 0, height]} stroke="blue" />
+        {visibleTimeBlocks.map((column, index) => {
+          const xPos = columnWidth * (index + blocksOffset);
+          return (
+            <KonvaGroup key={`timeslot-${index}`}>
+              {gridLabels(index + blocksOffset)}
+              <KonvaLine x={xPos} y={40} points={[0, 0, 0, height]} stroke="gray" strokeWidth={1} />
+              <KonvaRect fill="transparent" x={xPos - 15} y={30} height={15} width={30} />
+              <KonvaText fill={themeColor} x={xPos - 15} y={32} text={displayInterval(column, resolution.unit)} />
+            </KonvaGroup>
+          );
+        })}
+        {/*
         <KonvaGroup key={`timeslot-last`}>
-          <KonvaLine x={columnWidth * timeBlocks.length} y={0} points={[0, 0, 0, height]} stroke="gray" />
+          <KonvaLine x={columnWidth * visibleTimeBlocks.length} y={0} points={[0, 0, 0, height]} stroke="gray" />
         </KonvaGroup>
+        */}
       </KonvaGroup>
     </KonvaLayer>
   );
