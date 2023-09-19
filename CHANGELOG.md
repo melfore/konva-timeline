@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/melfore/konva-timeline/compare/v1.5.0...v1.5.1) (2023-09-19)
+
+
+### Bug Fixes
+
+* 🐛 [Timeline] Calculating visibile timeBlocks in ctx ([d149233](https://github.com/melfore/konva-timeline/commit/d14923362835a95df5352435ecbd2229dbcca0cf))
+
 # [1.5.0](https://github.com/melfore/konva-timeline/compare/v1.4.6...v1.5.0) (2023-09-18)
 
 ### Features
