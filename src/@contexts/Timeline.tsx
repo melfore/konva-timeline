@@ -132,6 +132,23 @@ export const TimelineProvider = ({
     return interval.splitBy({ [resolution.unit]: resolution.sizeInUnits });
   }, [interval, resolution]);
 
+  const visibleTimeBlocks = useMemo(() => {
+    const rangeLength = drawRange.end - drawRange.start;
+    if (rangeLength <= 0) {
+      return [];
+    }
+
+    return [...timeBlocks].filter((col, index) => {
+      console.log("=> TimeBlockVisible", index);
+      const xPos = columnWidth * index;
+      if (xPos < drawRange.start * -1.05 || xPos > drawRange.end * 1.05) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [columnWidth, drawRange, timeBlocks]);
+
   const theme = useMemo((): TimelineTheme => {
     return {
       color: externalTheme === "dark" ? "white" : "black",
@@ -156,7 +173,7 @@ export const TimelineProvider = ({
         setResolutionKey,
         tasks,
         theme,
-        timeBlocks,
+        timeBlocks: visibleTimeBlocks,
       }}
     >
       {children}

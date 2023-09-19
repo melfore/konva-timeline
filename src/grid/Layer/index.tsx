@@ -12,7 +12,6 @@ interface GridLayerProps {
 
 const GridLayer: FC<GridLayerProps> = ({ columnWidth, height, width }) => {
   const {
-    drawRange,
     interval,
     resolution,
     resources,
@@ -69,6 +68,8 @@ const GridLayer: FC<GridLayerProps> = ({ columnWidth, height, width }) => {
     [height, oneUnitAboveDuration, oneUnitAboveColumnWidth, themeColor, unitAbove, unitAboveIntervals]
   );
 
+  console.log("==> TimeBlocks <==");
+
   return (
     <KonvaLayer>
       <KonvaGroup>
@@ -81,11 +82,7 @@ const GridLayer: FC<GridLayerProps> = ({ columnWidth, height, width }) => {
         })}
         <KonvaLine points={[0, 0, 0, height]} stroke="blue" />
         {timeBlocks.map((column, index) => {
-          const xPos = columnWidth * index;
-          if (xPos < drawRange.start * -1.05 || xPos > drawRange.end * 1.05) {
-            return null;
-          }
-
+          console.log("=> TimeBlock", index);
           return (
             <KonvaGroup key={`timeslot-${index}`}>
               {gridLabels(index)}
