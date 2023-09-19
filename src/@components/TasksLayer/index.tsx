@@ -4,14 +4,11 @@ import { DateTime } from "luxon";
 
 import { useTimelineContext } from "../../@contexts/Timeline";
 import { KonvaPoint } from "../../@utils/konva";
-import { RESOURCE_HEADER_HEIGHT } from "../../@utils/resources";
 import { TimeRange } from "../../@utils/time-range";
 import Task from "../Task";
 import TaskTooltip, { TaskTooltipProps } from "../TaskTooltip";
 
 interface TasksLayerProps {}
-
-const TASK_PLACEMENT_OFFSET = 5;
 
 /**
  * This component renders a set of tasks as a Konva Layer.
@@ -28,6 +25,7 @@ const TasksLayer: FC<TasksLayerProps> = () => {
     interval: { start: intervalStart, end: intervalEnd },
     resolution,
     resources,
+    rowHeight,
     tasks,
   } = useTimelineContext();
 
@@ -98,7 +96,7 @@ const TasksLayer: FC<TasksLayerProps> = () => {
 
         const { color: resourceColor } = resources[resourceIndex];
         const xCoordinate = getTaskXCoordinate(time.start);
-        const yCoordinate = RESOURCE_HEADER_HEIGHT * resourceIndex + TASK_PLACEMENT_OFFSET;
+        const yCoordinate = rowHeight * resourceIndex + rowHeight * 0.1;
         const width = getTaskWidth(time);
         if (xCoordinate > drawRange.end || xCoordinate + width < drawRange.start) {
           return null;

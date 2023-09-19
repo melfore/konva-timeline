@@ -51,6 +51,13 @@ export const CustomResolution: Story = {
   },
 };
 
+export const CustomRowHeight: Story = {
+  args: {
+    ...Primary.args,
+    rowHeight: 30,
+  },
+};
+
 export const HiddenResources: Story = {
   args: {
     ...Primary.args,

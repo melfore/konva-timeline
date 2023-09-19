@@ -25,6 +25,10 @@ export type TimelineInput = {
    */
   resolution: Resolution;
   /**
+   * Custom row height (defaults to 50px)
+   */
+  rowHeight?: number;
+  /**
    * List of tasks to be displayed
    */
   tasks: TaskData[];

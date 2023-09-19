@@ -6,7 +6,6 @@ import { DateTime, Duration } from "luxon";
 import { useTimelineContext } from "../../@contexts/Timeline";
 import { KonvaDrawable, KonvaPoint } from "../../@utils/konva";
 import { logDebug } from "../../@utils/logger";
-import { RESOURCE_HEADER_HEIGHT, RESOURCE_HEADER_OFFSET } from "../../@utils/resources";
 import { TaskData } from "../../@utils/tasks";
 import { KonvaText } from "../@konva";
 
@@ -68,6 +67,7 @@ const Task = ({
     onTaskDrag,
     resolution: { sizeInUnits, unit },
     resources,
+    rowHeight,
   } = useTimelineContext();
 
   const { id: taskId } = data;
@@ -79,12 +79,15 @@ const Task = ({
     return Math.floor(columnWidth * dragSnapInResolutionUnit);
   }, [columnWidth, dragUnit, dragSizeInUnits, unit]);
 
-  const getBoundedCoordinates = useCallback((xCoordinate: number, resourceIndex: number): KonvaPoint => {
-    const boundedX = xCoordinate < 0 ? 0 : xCoordinate;
-    const boundedY = resourceIndex * RESOURCE_HEADER_HEIGHT + RESOURCE_HEADER_OFFSET;
+  const getBoundedCoordinates = useCallback(
+    (xCoordinate: number, resourceIndex: number): KonvaPoint => {
+      const boundedX = xCoordinate < 0 ? 0 : xCoordinate;
+      const boundedY = resourceIndex * rowHeight + rowHeight * 0.1;
 
-    return { x: boundedX, y: boundedY };
-  }, []);
+      return { x: boundedX, y: boundedY };
+    },
+    [rowHeight]
+  );
 
   const getDragPoint = useCallback((e: KonvaEventObject<DragEvent>): KonvaPoint => {
     const { target } = e;
@@ -96,7 +99,7 @@ const Task = ({
 
   const getResourceIndexFromYCoordinate = useCallback(
     (yCoordinate: number) => {
-      const rawIndex = Math.floor(yCoordinate / RESOURCE_HEADER_HEIGHT);
+      const rawIndex = Math.floor(yCoordinate / rowHeight);
       if (rawIndex < 1) {
         return 1;
       }
@@ -108,7 +111,7 @@ const Task = ({
 
       return rawIndex;
     },
-    [resources]
+    [resources, rowHeight]
   );
 
   const onTaskMouseEvent = useCallback(
@@ -195,6 +198,8 @@ const Task = ({
 
   const opacity = useMemo(() => (dragging ? 0.5 : 1), [dragging]);
 
+  const taskHeight = useMemo(() => rowHeight * 0.8, [rowHeight]);
+
   const textSizes = useMemo(() => TASK_HEIGHT / 3, []);
 
   return (
@@ -214,7 +219,7 @@ const Task = ({
         id={taskId}
         cornerRadius={TASK_BORDER_RADIUS}
         fill={fill}
-        height={TASK_HEIGHT}
+        height={taskHeight}
         opacity={opacity}
         stroke={stroke}
         width={width}

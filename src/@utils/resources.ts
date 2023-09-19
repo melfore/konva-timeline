@@ -14,8 +14,7 @@ export interface Resource {
 }
 
 export const RESOURCE_HEADER_HEIGHT = 50;
-export const RESOURCE_HEADER_OFFSET = 5;
-export const RESOURCE_HEADER_TEXT_OFFSET = 20;
+
 export const RESOURCE_HEADER_WIDTH = 200;
 
 export const RESOURCE_HEADER: Resource = {
