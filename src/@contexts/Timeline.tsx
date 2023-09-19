@@ -40,6 +40,7 @@ type TimelineTheme = {
 };
 
 type TimelineContextType = Required<Pick<TimelineInput, "columnWidth" | "hideResources" | "resources" | "tasks">> & {
+  blocksOffset: number;
   dragResolution: ResolutionData;
   drawRange: TimeRange;
   interval: Interval;
@@ -50,13 +51,16 @@ type TimelineContextType = Required<Pick<TimelineInput, "columnWidth" | "hideRes
   resourcesContentHeight: number;
   setDrawRange: (range: TimeRange) => void;
   setResolutionKey: (resolution: Resolution) => void;
-  timeBlocks: Interval[];
   theme: TimelineTheme;
+  timeBlocks: Interval[];
+  visibleTimeBlocks: Interval[];
 };
 
 const TimelineContext = createContext<TimelineContextType | undefined>(undefined);
 
 const DEFAULT_DRAW_RANGE: TimeRange = { start: 0, end: 0 };
+
+const TIME_BLOCKS_PRELOAD = 20;
 
 export const TimelineProvider = ({
   children,
@@ -132,22 +136,26 @@ export const TimelineProvider = ({
     return interval.splitBy({ [resolution.unit]: resolution.sizeInUnits });
   }, [interval, resolution]);
 
+  const timeblocksOffset = useMemo(() => Math.floor(drawRange.start / columnWidth), [drawRange, columnWidth]);
+
   const visibleTimeBlocks = useMemo(() => {
     const rangeLength = drawRange.end - drawRange.start;
     if (rangeLength <= 0) {
       return [];
     }
 
-    return [...timeBlocks].filter((col, index) => {
-      console.log("=> TimeBlockVisible", index);
-      const xPos = columnWidth * index;
-      if (xPos < drawRange.start * -1.05 || xPos > drawRange.end * 1.05) {
-        return false;
-      }
+    let startIndex = timeblocksOffset;
+    if (startIndex > TIME_BLOCKS_PRELOAD) {
+      startIndex = timeblocksOffset - TIME_BLOCKS_PRELOAD;
+    }
 
-      return true;
-    });
-  }, [columnWidth, drawRange, timeBlocks]);
+    let endIndex = Math.ceil(drawRange.end / columnWidth);
+    if (endIndex < timeBlocks.length - TIME_BLOCKS_PRELOAD) {
+      endIndex = endIndex + TIME_BLOCKS_PRELOAD;
+    }
+
+    return [...timeBlocks].slice(timeblocksOffset, endIndex);
+  }, [timeblocksOffset, columnWidth, drawRange, timeBlocks]);
 
   const theme = useMemo((): TimelineTheme => {
     return {
@@ -173,7 +181,9 @@ export const TimelineProvider = ({
         setResolutionKey,
         tasks,
         theme,
-        timeBlocks: visibleTimeBlocks,
+        timeBlocks,
+        visibleTimeBlocks,
+        blocksOffset: timeblocksOffset,
       }}
     >
       {children}
