@@ -39,7 +39,9 @@ type TimelineTheme = {
   color: string;
 };
 
-type TimelineContextType = Required<Pick<TimelineInput, "columnWidth" | "hideResources" | "resources" | "tasks">> & {
+type TimelineContextType = Required<
+  Pick<TimelineInput, "columnWidth" | "displayTasksLabel" | "hideResources" | "resources" | "tasks">
+> & {
   blocksOffset: number;
   dragResolution: ResolutionData;
   drawRange: TimeRange;
@@ -65,6 +67,7 @@ export const TimelineProvider = ({
   children,
   columnWidth: externalColumnWidth = DEFAULT_COLUMN_WIDTH,
   debug = false,
+  displayTasksLabel = false,
   dragResolution: externalDragResolution,
   hideResources = false,
   onTaskClick,
@@ -192,6 +195,7 @@ export const TimelineProvider = ({
     <TimelineContext.Provider
       value={{
         columnWidth,
+        displayTasksLabel,
         dragResolution,
         drawRange,
         hideResources,

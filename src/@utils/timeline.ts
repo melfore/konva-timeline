@@ -9,6 +9,10 @@ export type TimelineInput = {
    */
   columnWidth?: number;
   /**
+   * Enables tasks label display
+   */
+  displayTasksLabel?: boolean;
+  /**
    * Drag and drop resolution (if not passed, defaults to resolution)
    */
   dragResolution?: Resolution;

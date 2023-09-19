@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useMemo, useState } from "react";
-import { Rect } from "react-konva";
+import { Group, Rect } from "react-konva";
 import { KonvaEventObject } from "konva/lib/Node";
 import { DateTime, Duration } from "luxon";
 
@@ -8,6 +8,7 @@ import { KonvaDrawable, KonvaPoint } from "../../@utils/konva";
 import { logDebug } from "../../@utils/logger";
 import { RESOURCE_HEADER_HEIGHT, RESOURCE_HEADER_OFFSET } from "../../@utils/resources";
 import { TaskData } from "../../@utils/tasks";
+import { KonvaText } from "../@konva";
 
 type TaskMouseEventHandler = (taskId: string, point: KonvaPoint) => void;
 
@@ -60,6 +61,7 @@ const Task = ({
 }: TaskProps) => {
   const {
     columnWidth,
+    displayTasksLabel,
     dragResolution: { sizeInUnits: dragSizeInUnits, unit: dragUnit },
     interval,
     onTaskClick,
@@ -193,26 +195,42 @@ const Task = ({
 
   const opacity = useMemo(() => (dragging ? 0.5 : 1), [dragging]);
 
+  const textSizes = useMemo(() => TASK_HEIGHT / 3, []);
+
   return (
-    <Rect
-      id={taskId}
-      cornerRadius={TASK_BORDER_RADIUS}
+    <Group
+      x={x}
+      y={y}
       draggable={!!onTaskDrag}
-      fill={fill}
-      height={TASK_HEIGHT}
       onClick={onClick}
-      onDragStart={onDragStart}
-      onDragMove={onDragMove}
       onDragEnd={onDragEnd}
+      onDragMove={onDragMove}
+      onDragStart={onDragStart}
       onMouseLeave={onTaskLeave}
       onMouseMove={onTaskOver}
       onMouseOver={onTaskOver}
-      opacity={opacity}
-      stroke={stroke}
-      x={x}
-      y={y}
-      width={width}
-    />
+    >
+      <Rect
+        id={taskId}
+        cornerRadius={TASK_BORDER_RADIUS}
+        fill={fill}
+        height={TASK_HEIGHT}
+        opacity={opacity}
+        stroke={stroke}
+        width={width}
+      />
+      {displayTasksLabel && (
+        <KonvaText
+          ellipsis
+          fontSize={textSizes}
+          text={data.label}
+          width={width - textSizes * 2}
+          wrap="none"
+          x={textSizes}
+          y={textSizes}
+        />
+      )}
+    </Group>
   );
 };
 
