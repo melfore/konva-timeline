@@ -1,3 +1,11 @@
+# [1.6.0](https://github.com/melfore/konva-timeline/compare/v1.5.2...v1.6.0) (2023-09-19)
+
+
+### Features
+
+* 🎸 [Grid] Allow resize of rows ([f051ae7](https://github.com/melfore/konva-timeline/commit/f051ae7ee6073d64bb52955fe1536c08a6a279aa)), closes [#57](https://github.com/melfore/konva-timeline/issues/57)
+* 🎸 [Task] Display label based on prop ([a462068](https://github.com/melfore/konva-timeline/commit/a46206800770229578eb0d0536a76fc164617165)), closes [#59](https://github.com/melfore/konva-timeline/issues/59)
+
 ## [1.5.2](https://github.com/melfore/konva-timeline/compare/v1.5.1...v1.5.2) (2023-09-19)
 
 ## [1.5.1](https://github.com/melfore/konva-timeline/compare/v1.5.0...v1.5.1) (2023-09-19)
