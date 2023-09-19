@@ -1,5 +1,5 @@
 import React, { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
-import { Interval } from "luxon";
+import { DateTime, Interval } from "luxon";
 
 import { logDebug, logWarn } from "../@utils/logger";
 import { RESOURCE_HEADER, RESOURCE_HEADER_HEIGHT } from "../@utils/resources";
@@ -60,7 +60,7 @@ const TimelineContext = createContext<TimelineContextType | undefined>(undefined
 
 const DEFAULT_DRAW_RANGE: TimeRange = { start: 0, end: 0 };
 
-const TIME_BLOCKS_PRELOAD = 20;
+const TIME_BLOCKS_PRELOAD = 5;
 
 export const TimelineProvider = ({
   children,
@@ -126,11 +126,6 @@ export const TimelineProvider = ({
     return RESOURCE_HEADER_HEIGHT * resources.length;
   }, [resources]);
 
-  const tasks = useMemo(() => {
-    logDebug("TimelineProvider", "Preparing tasks...");
-    return filterOutOfInterval(externalTasks, interval);
-  }, [externalTasks, interval]);
-
   const timeBlocks = useMemo(() => {
     logDebug("TimelineProvider", "Calculating time blocks...");
     return interval.splitBy({ [resolution.unit]: resolution.sizeInUnits });
@@ -156,6 +151,20 @@ export const TimelineProvider = ({
 
     return [...timeBlocks].slice(timeblocksOffset, endIndex);
   }, [timeblocksOffset, columnWidth, drawRange, timeBlocks]);
+
+  const tasks = useMemo(() => {
+    logDebug("TimelineProvider", "Preparing tasks...");
+    if (!visibleTimeBlocks || !visibleTimeBlocks.length) {
+      return [];
+    }
+
+    const interval = Interval.fromDateTimes(
+      DateTime.fromMillis(visibleTimeBlocks[0].start!.toMillis()),
+      DateTime.fromMillis(visibleTimeBlocks[visibleTimeBlocks.length - 1].start!.toMillis())
+    );
+
+    return filterOutOfInterval(externalTasks, interval);
+  }, [externalTasks, visibleTimeBlocks]);
 
   const theme = useMemo((): TimelineTheme => {
     return {
