@@ -39,7 +39,9 @@ type TimelineTheme = {
   color: string;
 };
 
-type TimelineContextType = Required<Pick<TimelineInput, "columnWidth" | "hideResources" | "resources" | "tasks">> & {
+type TimelineContextType = Required<
+  Pick<TimelineInput, "columnWidth" | "displayTasksLabel" | "hideResources" | "resources" | "rowHeight" | "tasks">
+> & {
   blocksOffset: number;
   dragResolution: ResolutionData;
   drawRange: TimeRange;
@@ -65,6 +67,7 @@ export const TimelineProvider = ({
   children,
   columnWidth: externalColumnWidth = DEFAULT_COLUMN_WIDTH,
   debug = false,
+  displayTasksLabel = false,
   dragResolution: externalDragResolution,
   hideResources = false,
   onTaskClick,
@@ -73,6 +76,7 @@ export const TimelineProvider = ({
   range,
   resolution: externalResolution,
   resources: externalResources,
+  rowHeight: externalRowHeight = RESOURCE_HEADER_HEIGHT,
   theme: externalTheme = "light",
 }: TimelineProviderProps) => {
   logWarn("TimelineProvider", `Debug ${debug ? "ON" : "OFF"}`);
@@ -124,10 +128,15 @@ export const TimelineProvider = ({
     return [RESOURCE_HEADER, ...externalResources];
   }, [externalResources]);
 
+  const rowHeight = useMemo(() => {
+    logDebug("TimelineProvider", "Calculating rowHeight...");
+    return externalRowHeight || RESOURCE_HEADER_HEIGHT;
+  }, [externalRowHeight]);
+
   const resourcesContentHeight = useMemo(() => {
     logDebug("TimelineProvider", "Calculating resources content height...");
-    return RESOURCE_HEADER_HEIGHT * resources.length;
-  }, [resources]);
+    return rowHeight * resources.length;
+  }, [resources, rowHeight]);
 
   const timeBlocks = useMemo(() => {
     logDebug("TimelineProvider", "Calculating time blocks...");
@@ -192,6 +201,7 @@ export const TimelineProvider = ({
     <TimelineContext.Provider
       value={{
         columnWidth,
+        displayTasksLabel,
         dragResolution,
         drawRange,
         hideResources,
@@ -202,6 +212,7 @@ export const TimelineProvider = ({
         resolutionKey: externalResolution,
         resources,
         resourcesContentHeight,
+        rowHeight,
         setDrawRange,
         tasks,
         theme,

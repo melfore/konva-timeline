@@ -9,6 +9,10 @@ export type TimelineInput = {
    */
   columnWidth?: number;
   /**
+   * Enables tasks label display
+   */
+  displayTasksLabel?: boolean;
+  /**
    * Drag and drop resolution (if not passed, defaults to resolution)
    */
   dragResolution?: Resolution;
@@ -20,6 +24,10 @@ export type TimelineInput = {
    * Resolution to display data in konva-timeline
    */
   resolution: Resolution;
+  /**
+   * Custom row height (defaults to 50px)
+   */
+  rowHeight?: number;
   /**
    * List of tasks to be displayed
    */

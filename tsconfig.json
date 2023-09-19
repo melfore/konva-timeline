@@ -6,7 +6,7 @@
     "forceConsistentCasingInFileNames": true,
     "jsx": "react",
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "NodeNext",
     "outDir": "./dist",
     "skipLibCheck": true,
     "strict": true,

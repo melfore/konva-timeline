@@ -1,12 +1,7 @@
 import React, { memo, useMemo } from "react";
 
 import { useTimelineContext } from "../../@contexts/Timeline";
-import {
-  Resource,
-  RESOURCE_HEADER_HEIGHT,
-  RESOURCE_HEADER_TEXT_OFFSET,
-  RESOURCE_HEADER_WIDTH,
-} from "../../@utils/resources";
+import { Resource, RESOURCE_HEADER_WIDTH } from "../../@utils/resources";
 import { KonvaGroup, KonvaLine, KonvaText } from "../@konva";
 
 interface ResourceHeaderProps extends Resource {
@@ -20,16 +15,19 @@ interface ResourceHeaderProps extends Resource {
  */
 const ResourceHeader = ({ index, label }: ResourceHeaderProps) => {
   const {
+    rowHeight,
     theme: { color: themeColor },
   } = useTimelineContext();
 
-  const yCoordinate = useMemo(() => RESOURCE_HEADER_HEIGHT * (index + 1), [index]);
+  const yCoordinate = useMemo(() => rowHeight * (index + 1), [index, rowHeight]);
 
-  const textYCoordinate = useMemo(() => RESOURCE_HEADER_HEIGHT * index, [index]);
+  const textOffset = useMemo(() => rowHeight * 0.35, [rowHeight]);
+
+  const textYCoordinate = useMemo(() => rowHeight * index, [index, rowHeight]);
 
   return (
     <KonvaGroup x={0} y={0}>
-      <KonvaGroup x={RESOURCE_HEADER_TEXT_OFFSET} y={RESOURCE_HEADER_TEXT_OFFSET}>
+      <KonvaGroup x={textOffset} y={textOffset}>
         <KonvaText fill={themeColor} text={label} y={textYCoordinate} />
       </KonvaGroup>
       <KonvaLine points={[0, 0, RESOURCE_HEADER_WIDTH, 0]} stroke={themeColor} y={yCoordinate} />

@@ -1,13 +1,13 @@
 import React, { memo, useCallback, useMemo, useState } from "react";
-import { Rect } from "react-konva";
+import { Group, Rect } from "react-konva";
 import { KonvaEventObject } from "konva/lib/Node";
 import { DateTime, Duration } from "luxon";
 
 import { useTimelineContext } from "../../@contexts/Timeline";
 import { KonvaDrawable, KonvaPoint } from "../../@utils/konva";
 import { logDebug } from "../../@utils/logger";
-import { RESOURCE_HEADER_HEIGHT, RESOURCE_HEADER_OFFSET } from "../../@utils/resources";
 import { TaskData } from "../../@utils/tasks";
+import { KonvaText } from "../@konva";
 
 type TaskMouseEventHandler = (taskId: string, point: KonvaPoint) => void;
 
@@ -60,12 +60,14 @@ const Task = ({
 }: TaskProps) => {
   const {
     columnWidth,
+    displayTasksLabel,
     dragResolution: { sizeInUnits: dragSizeInUnits, unit: dragUnit },
     interval,
     onTaskClick,
     onTaskDrag,
     resolution: { sizeInUnits, unit },
     resources,
+    rowHeight,
   } = useTimelineContext();
 
   const { id: taskId } = data;
@@ -77,12 +79,15 @@ const Task = ({
     return Math.floor(columnWidth * dragSnapInResolutionUnit);
   }, [columnWidth, dragUnit, dragSizeInUnits, unit]);
 
-  const getBoundedCoordinates = useCallback((xCoordinate: number, resourceIndex: number): KonvaPoint => {
-    const boundedX = xCoordinate < 0 ? 0 : xCoordinate;
-    const boundedY = resourceIndex * RESOURCE_HEADER_HEIGHT + RESOURCE_HEADER_OFFSET;
+  const getBoundedCoordinates = useCallback(
+    (xCoordinate: number, resourceIndex: number): KonvaPoint => {
+      const boundedX = xCoordinate < 0 ? 0 : xCoordinate;
+      const boundedY = resourceIndex * rowHeight + rowHeight * 0.1;
 
-    return { x: boundedX, y: boundedY };
-  }, []);
+      return { x: boundedX, y: boundedY };
+    },
+    [rowHeight]
+  );
 
   const getDragPoint = useCallback((e: KonvaEventObject<DragEvent>): KonvaPoint => {
     const { target } = e;
@@ -94,7 +99,7 @@ const Task = ({
 
   const getResourceIndexFromYCoordinate = useCallback(
     (yCoordinate: number) => {
-      const rawIndex = Math.floor(yCoordinate / RESOURCE_HEADER_HEIGHT);
+      const rawIndex = Math.floor(yCoordinate / rowHeight);
       if (rawIndex < 1) {
         return 1;
       }
@@ -106,7 +111,7 @@ const Task = ({
 
       return rawIndex;
     },
-    [resources]
+    [resources, rowHeight]
   );
 
   const onTaskMouseEvent = useCallback(
@@ -193,26 +198,44 @@ const Task = ({
 
   const opacity = useMemo(() => (dragging ? 0.5 : 1), [dragging]);
 
+  const taskHeight = useMemo(() => rowHeight * 0.8, [rowHeight]);
+
+  const textSizes = useMemo(() => TASK_HEIGHT / 3, []);
+
   return (
-    <Rect
-      id={taskId}
-      cornerRadius={TASK_BORDER_RADIUS}
+    <Group
+      x={x}
+      y={y}
       draggable={!!onTaskDrag}
-      fill={fill}
-      height={TASK_HEIGHT}
       onClick={onClick}
-      onDragStart={onDragStart}
-      onDragMove={onDragMove}
       onDragEnd={onDragEnd}
+      onDragMove={onDragMove}
+      onDragStart={onDragStart}
       onMouseLeave={onTaskLeave}
       onMouseMove={onTaskOver}
       onMouseOver={onTaskOver}
-      opacity={opacity}
-      stroke={stroke}
-      x={x}
-      y={y}
-      width={width}
-    />
+    >
+      <Rect
+        id={taskId}
+        cornerRadius={TASK_BORDER_RADIUS}
+        fill={fill}
+        height={taskHeight}
+        opacity={opacity}
+        stroke={stroke}
+        width={width}
+      />
+      {displayTasksLabel && (
+        <KonvaText
+          ellipsis
+          fontSize={textSizes}
+          text={data.label}
+          width={width - textSizes * 2}
+          wrap="none"
+          x={textSizes}
+          y={textSizes}
+        />
+      )}
+    </Group>
   );
 };
 

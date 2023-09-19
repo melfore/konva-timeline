@@ -87,7 +87,9 @@ const Timeline: FC<TimelineProps> = () => {
 
   const fullTimelineWidth = useMemo(() => columnWidth * timeBlocks.length, [columnWidth, timeBlocks]);
 
-  const stageHeight = useMemo(() => size.height, [size]);
+  // const stageHeight = useMemo(() => size.height, [size]);
+  // TODO#lb: check if ok
+  const stageHeight = resourcesContentHeight;
 
   const stageWidth = useMemo(() => scrollbarSize + size.width, [scrollbarSize, size]);
 
