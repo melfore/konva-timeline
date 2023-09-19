@@ -1,4 +1,4 @@
-import React, { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, PropsWithChildren, useContext, useMemo, useState } from "react";
 import { DateTime, Interval } from "luxon";
 
 import { logDebug, logWarn } from "../@utils/logger";
@@ -50,7 +50,6 @@ type TimelineContextType = Required<Pick<TimelineInput, "columnWidth" | "hideRes
   resolutionKey: Resolution;
   resourcesContentHeight: number;
   setDrawRange: (range: TimeRange) => void;
-  setResolutionKey: (resolution: Resolution) => void;
   theme: TimelineTheme;
   timeBlocks: Interval[];
   visibleTimeBlocks: Interval[];
@@ -76,38 +75,42 @@ export const TimelineProvider = ({
   resources: externalResources,
   theme: externalTheme = "light",
 }: TimelineProviderProps) => {
+  logWarn("TimelineProvider", `Debug ${debug ? "ON" : "OFF"}`);
+  window.__MELFORE_KONVA_TIMELINE_DEBUG__ = debug;
+
   const [drawRange, setDrawRange] = useState(DEFAULT_DRAW_RANGE);
-  const [resolutionKey, setResolutionKey] = useState(externalResolution);
 
-  useEffect(() => {
-    logWarn("TimelineProvider", `Debug ${debug ? "ON" : "OFF"}`);
-    window.__MELFORE_KONVA_TIMELINE_DEBUG__ = debug;
-  }, [debug]);
-
-  useEffect(() => {
-    if (externalResolution === resolutionKey) {
-      return;
-    }
-
-    logDebug("TimelineProvider", `Resolution changed to '${externalResolution}'`);
-    setResolutionKey(externalResolution);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [externalResolution]);
+  // useEffect(() => {
+  //   logWarn("TimelineProvider", `Debug ${debug ? "ON" : "OFF"}`);
+  //   window.__MELFORE_KONVA_TIMELINE_DEBUG__ = debug;
+  // }, [debug]);
 
   const interval = useMemo(() => {
     logDebug("TimelineProvider", "Calculating interval...");
-    return toInterval(range);
+    const start = DateTime.now().toMillis();
+    const itv = toInterval(range);
+    const end = DateTime.now().toMillis();
+    logDebug("TimelineProvider", `Interval calculation took ${end - start} ms`);
+    return itv;
   }, [range]);
 
   const resolution = useMemo(() => {
     logDebug("TimelineProvider", "Calculating resolution...");
-    return getResolutionData(resolutionKey);
-  }, [resolutionKey]);
+    const start = DateTime.now().toMillis();
+    const resData = getResolutionData(externalResolution);
+    const end = DateTime.now().toMillis();
+    logDebug("TimelineProvider", `Resolution calculation took ${end - start} ms`);
+    return resData;
+  }, [externalResolution]);
 
   const dragResolution = useMemo(() => {
     logDebug("TimelineProvider", "Calculating drag resolution...");
-    return getResolutionData(externalDragResolution || resolutionKey);
-  }, [externalDragResolution, resolutionKey]);
+    const start = DateTime.now().toMillis();
+    const resData = getResolutionData(externalDragResolution || externalResolution);
+    const end = DateTime.now().toMillis();
+    logDebug("TimelineProvider", `Drag resolution calculation took ${end - start} ms`);
+    return resData;
+  }, [externalDragResolution, externalResolution]);
 
   const columnWidth = useMemo(() => {
     logDebug("TimelineProvider", "Calculating columnWidth...");
@@ -128,12 +131,18 @@ export const TimelineProvider = ({
 
   const timeBlocks = useMemo(() => {
     logDebug("TimelineProvider", "Calculating time blocks...");
-    return interval.splitBy({ [resolution.unit]: resolution.sizeInUnits });
+    const start = DateTime.now().toMillis();
+    const itvs = interval.splitBy({ [resolution.unit]: resolution.sizeInUnits });
+    const end = DateTime.now().toMillis();
+    logDebug("TimelineProvider", `Time blocks calculation took ${end - start} ms`);
+    return itvs;
   }, [interval, resolution]);
 
   const timeblocksOffset = useMemo(() => Math.floor(drawRange.start / columnWidth), [drawRange, columnWidth]);
 
   const visibleTimeBlocks = useMemo(() => {
+    logDebug("TimelineProvider", "Calculating visible time blocks...");
+    const start = DateTime.now().toMillis();
     const rangeLength = drawRange.end - drawRange.start;
     if (rangeLength <= 0) {
       return [];
@@ -149,7 +158,10 @@ export const TimelineProvider = ({
       endIndex = endIndex + TIME_BLOCKS_PRELOAD;
     }
 
-    return [...timeBlocks].slice(timeblocksOffset, endIndex);
+    const vtbs = [...timeBlocks].slice(timeblocksOffset, endIndex);
+    const end = DateTime.now().toMillis();
+    logDebug("TimelineProvider", `Visible time blocks calculation took ${end - start} ms`);
+    return vtbs;
   }, [timeblocksOffset, columnWidth, drawRange, timeBlocks]);
 
   const tasks = useMemo(() => {
@@ -158,12 +170,16 @@ export const TimelineProvider = ({
       return [];
     }
 
+    const start = DateTime.now().toMillis();
     const interval = Interval.fromDateTimes(
       DateTime.fromMillis(visibleTimeBlocks[0].start!.toMillis()),
       DateTime.fromMillis(visibleTimeBlocks[visibleTimeBlocks.length - 1].start!.toMillis())
     );
 
-    return filterOutOfInterval(externalTasks, interval);
+    const ts = filterOutOfInterval(externalTasks, interval);
+    const end = DateTime.now().toMillis();
+    logDebug("TimelineProvider", `Tasks preparation took ${end - start} ms`);
+    return ts;
   }, [externalTasks, visibleTimeBlocks]);
 
   const theme = useMemo((): TimelineTheme => {
@@ -183,11 +199,10 @@ export const TimelineProvider = ({
         onTaskClick,
         onTaskDrag,
         resolution,
-        resolutionKey,
+        resolutionKey: externalResolution,
         resources,
         resourcesContentHeight,
         setDrawRange,
-        setResolutionKey,
         tasks,
         theme,
         timeBlocks,
