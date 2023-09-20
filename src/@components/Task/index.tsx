@@ -35,7 +35,6 @@ const TASK_DEFAULT_FILL = "transparent";
 const TASK_DEFAULT_STROKE = "black";
 
 const TASK_BORDER_RADIUS = 4;
-const TASK_HEIGHT = 40;
 
 /**
  * This component renders a simple task as a rectangle inside a canvas.
@@ -200,7 +199,9 @@ const Task = ({
 
   const taskHeight = useMemo(() => rowHeight * 0.8, [rowHeight]);
 
-  const textSizes = useMemo(() => TASK_HEIGHT / 3, []);
+  const textOffsets = useMemo(() => taskHeight / 3, [taskHeight]);
+
+  const textSize = useMemo(() => taskHeight / 2.5, [taskHeight]);
 
   return (
     <Group
@@ -227,12 +228,12 @@ const Task = ({
       {displayTasksLabel && (
         <KonvaText
           ellipsis
-          fontSize={textSizes}
+          fontSize={textSize}
           text={data.label}
-          width={width - textSizes * 2}
+          width={width - textOffsets * 2}
           wrap="none"
-          x={textSizes}
-          y={textSizes}
+          x={textOffsets}
+          y={textOffsets}
         />
       )}
     </Group>
