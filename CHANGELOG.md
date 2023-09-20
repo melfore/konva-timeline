@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/melfore/konva-timeline/compare/v1.7.0...v1.7.1) (2023-09-20)
+
+
+### Bug Fixes
+
+* 🐛 [Task] Drag and drop fix resolution ratio ([5bbe29a](https://github.com/melfore/konva-timeline/commit/5bbe29a41dbc911cc790dfae130e16e2fc5bbc01)), closes [#71](https://github.com/melfore/konva-timeline/issues/71) [#81](https://github.com/melfore/konva-timeline/issues/81)
+
 # [1.7.0](https://github.com/melfore/konva-timeline/compare/v1.6.0...v1.7.0) (2023-09-20)
 
 ### Bug Fixes
