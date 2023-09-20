@@ -1,15 +1,13 @@
 # [1.7.0](https://github.com/melfore/konva-timeline/compare/v1.6.0...v1.7.0) (2023-09-20)
 
-
 ### Bug Fixes
 
-* 🐛 [Grid] Added min safe dimensions ([a8627f4](https://github.com/melfore/konva-timeline/commit/a8627f43bce38dbc6fdbe602f68dbfd95b0bee21)), closes [#85](https://github.com/melfore/konva-timeline/issues/85)
-* 🐛 [Task] Fixed label responsive positioning ([cde0663](https://github.com/melfore/konva-timeline/commit/cde06639f93fc450254245b318bad5a25816c51b)), closes [#86](https://github.com/melfore/konva-timeline/issues/86)
-
+- 🐛 [Grid] Added min safe dimensions ([a8627f4](https://github.com/melfore/konva-timeline/commit/a8627f43bce38dbc6fdbe602f68dbfd95b0bee21)), closes [#85](https://github.com/melfore/konva-timeline/issues/85)
+- 🐛 [Task] Fixed label responsive positioning ([cde0663](https://github.com/melfore/konva-timeline/commit/cde06639f93fc450254245b318bad5a25816c51b)), closes [#86](https://github.com/melfore/konva-timeline/issues/86)
 
 ### Features
 
-* 🎸 [Task] Add contrast text color ([94f922c](https://github.com/melfore/konva-timeline/commit/94f922cd22066983cbc33b48e37a0b699135e5db))
+- 🎸 [Task] Add contrast text color ([94f922c](https://github.com/melfore/konva-timeline/commit/94f922cd22066983cbc33b48e37a0b699135e5db))
 
 # [1.6.0](https://github.com/melfore/konva-timeline/compare/v1.5.2...v1.6.0) (2023-09-19)
 
