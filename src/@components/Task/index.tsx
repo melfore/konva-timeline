@@ -222,11 +222,12 @@ const Task = ({
         fill={fill}
         height={taskHeight}
         opacity={opacity}
-        stroke={stroke}
+        stroke={TASK_DEFAULT_STROKE}
         width={width}
       />
       {displayTasksLabel && (
         <KonvaText
+          fill={stroke}
           ellipsis
           fontSize={textSize}
           text={data.label}
