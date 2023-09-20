@@ -74,9 +74,10 @@ const Task = ({
   const [dragging, setDragging] = useState(false);
 
   const dragSnapInPX = useMemo(() => {
-    const dragSnapInResolutionUnit = Duration.fromObject({ [dragUnit]: dragSizeInUnits }).as(unit);
-    return Math.floor(columnWidth * dragSnapInResolutionUnit);
-  }, [columnWidth, dragUnit, dragSizeInUnits, unit]);
+    const resolutionInSnapUnit = Duration.fromObject({ [unit]: sizeInUnits }).as(dragUnit);
+    const dragSnapInResUnit = dragSizeInUnits / resolutionInSnapUnit;
+    return Math.floor(dragSnapInResUnit * columnWidth);
+  }, [columnWidth, dragUnit, dragSizeInUnits, sizeInUnits, unit]);
 
   const getBoundedCoordinates = useCallback(
     (xCoordinate: number, resourceIndex: number): KonvaPoint => {
