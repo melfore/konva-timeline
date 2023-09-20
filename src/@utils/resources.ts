@@ -13,8 +13,6 @@ export interface Resource {
   color: string;
 }
 
-export const RESOURCE_HEADER_HEIGHT = 50;
-
 export const RESOURCE_HEADER_WIDTH = 200;
 
 export const RESOURCE_HEADER: Resource = {

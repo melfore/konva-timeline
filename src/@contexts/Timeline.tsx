@@ -1,11 +1,12 @@
 import React, { createContext, PropsWithChildren, useContext, useMemo, useState } from "react";
 import { DateTime, Interval } from "luxon";
 
+import { DEFAULT_GRID_COLUMN_WIDTH, DEFAULT_GRID_ROW_HEIGHT, MINIMUM_GRID_ROW_HEIGHT } from "../@utils/dimensions";
 import { logDebug, logWarn } from "../@utils/logger";
-import { RESOURCE_HEADER, RESOURCE_HEADER_HEIGHT } from "../@utils/resources";
+import { RESOURCE_HEADER } from "../@utils/resources";
 import { filterOutOfInterval, TaskData } from "../@utils/tasks";
 import { TimeRange, toInterval } from "../@utils/time-range";
-import { DEFAULT_COLUMN_WIDTH, getResolutionData, Resolution, ResolutionData } from "../@utils/time-resolution";
+import { getResolutionData, Resolution, ResolutionData } from "../@utils/time-resolution";
 import { TimelineInput } from "../@utils/timeline";
 
 declare global {
@@ -65,7 +66,7 @@ const TIME_BLOCKS_PRELOAD = 5;
 
 export const TimelineProvider = ({
   children,
-  columnWidth: externalColumnWidth = DEFAULT_COLUMN_WIDTH,
+  columnWidth: externalColumnWidth,
   debug = false,
   displayTasksLabel = false,
   dragResolution: externalDragResolution,
@@ -76,7 +77,7 @@ export const TimelineProvider = ({
   range,
   resolution: externalResolution,
   resources: externalResources,
-  rowHeight: externalRowHeight = RESOURCE_HEADER_HEIGHT,
+  rowHeight: externalRowHeight,
   theme: externalTheme = "light",
 }: TimelineProviderProps) => {
   logWarn("TimelineProvider", `Debug ${debug ? "ON" : "OFF"}`);
@@ -118,7 +119,7 @@ export const TimelineProvider = ({
 
   const columnWidth = useMemo(() => {
     logDebug("TimelineProvider", "Calculating columnWidth...");
-    return !externalColumnWidth || externalColumnWidth < DEFAULT_COLUMN_WIDTH
+    return !externalColumnWidth || externalColumnWidth < DEFAULT_GRID_COLUMN_WIDTH
       ? resolution.columnSize
       : externalColumnWidth;
   }, [externalColumnWidth, resolution]);
@@ -130,7 +131,8 @@ export const TimelineProvider = ({
 
   const rowHeight = useMemo(() => {
     logDebug("TimelineProvider", "Calculating rowHeight...");
-    return externalRowHeight || RESOURCE_HEADER_HEIGHT;
+    const rowHeight = externalRowHeight || DEFAULT_GRID_ROW_HEIGHT;
+    return rowHeight < MINIMUM_GRID_ROW_HEIGHT ? MINIMUM_GRID_ROW_HEIGHT : rowHeight;
   }, [externalRowHeight]);
 
   const resourcesContentHeight = useMemo(() => {
