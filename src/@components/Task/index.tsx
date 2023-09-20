@@ -76,7 +76,12 @@ const Task = ({
   const dragSnapInPX = useMemo(() => {
     const resolutionInSnapUnit = Duration.fromObject({ [unit]: sizeInUnits }).as(dragUnit);
     const dragSnapInResUnit = dragSizeInUnits / resolutionInSnapUnit;
-    return Math.floor(dragSnapInResUnit * columnWidth);
+    const dragSnapInPx = Math.floor(dragSnapInResUnit * columnWidth);
+    if (!dragSnapInPx || isNaN(dragSnapInPx)) {
+      return 1;
+    }
+
+    return dragSnapInPx;
   }, [columnWidth, dragUnit, dragSizeInUnits, sizeInUnits, unit]);
 
   const getBoundedCoordinates = useCallback(
