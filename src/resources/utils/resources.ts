@@ -13,10 +13,18 @@ export interface Resource {
   color: string;
 }
 
-export const RESOURCE_HEADER_WIDTH = 200;
-
-export const RESOURCE_HEADER: Resource = {
-  color: "transparent",
+const RESOURCE_HEADER: Resource = {
   id: "-1",
+  color: "transparent",
   label: "Header",
 };
+
+export const RESOURCE_HEADER_WIDTH = 200;
+
+export const RESOURCE_TEXT_OFFSET = 12;
+
+/**
+ * Adds header resource to incoming list of resources
+ * @param resources the list of all resources
+ */
+export const addHeaderResource = (resources: Resource[]): Resource[] => [RESOURCE_HEADER, ...resources];

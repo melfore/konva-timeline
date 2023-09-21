@@ -3,9 +3,9 @@ import { Stage } from "react-konva";
 import Konva from "konva";
 
 import GridLayer from "../grid/Layer";
-import ResourcesLayer from "../resources";
+import ResourcesLayer from "../resources/components/Layer";
 import { RESOURCE_HEADER_WIDTH } from "../resources/utils/resources";
-import TasksLayer from "../tasks";
+import TasksLayer from "../tasks/components/Layer";
 import { logDebug } from "../utils/logger";
 
 import { useTimelineContext } from "./TimelineContext";

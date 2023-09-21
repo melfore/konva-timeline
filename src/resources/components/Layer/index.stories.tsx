@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { TasksLayerDecorator } from "../utils/stories";
+import { TasksLayerDecorator } from "../../../utils/stories";
 
 import ResourcesLayer from ".";
 
 const meta = {
-  title: "Components/ResourcesLayer",
+  title: "Components/Resources/Layer",
   component: ResourcesLayer,
   decorators: [TasksLayerDecorator],
   tags: ["autodocs"],
