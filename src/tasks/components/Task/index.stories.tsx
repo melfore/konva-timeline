@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { COLOR_ARG_TYPE, STORY_DATA, TaskDecorator } from "../../../@utils/stories";
+import { COLOR_ARG_TYPE, STORY_DATA, TaskDecorator } from "../../../utils/stories";
 
 import { TaskDocs } from ".";
 

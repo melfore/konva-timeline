@@ -2,12 +2,12 @@ import React, { FC, useCallback, useState } from "react";
 import { Layer } from "react-konva";
 import { DateTime } from "luxon";
 
-import { useTimelineContext } from "../@contexts/Timeline";
-import { KonvaPoint } from "../@utils/konva";
-import { TimeRange } from "../@utils/time-range";
+import { useTimelineContext } from "../timeline/TimelineContext";
+import { KonvaPoint } from "../utils/konva";
+import { TimeRange } from "../utils/time-range";
 
-import Task from "./@components/Task";
-import TaskTooltip, { TaskTooltipProps } from "./@components/Tooltip";
+import Task from "./components/Task";
+import TaskTooltip, { TaskTooltipProps } from "./components/Tooltip";
 
 interface TasksLayerProps {}
 

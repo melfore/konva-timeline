@@ -3,11 +3,11 @@ import { Group, Rect } from "react-konva";
 import { KonvaEventObject } from "konva/lib/Node";
 import { DateTime, Duration } from "luxon";
 
-import { useTimelineContext } from "../../../@contexts/Timeline";
 import { KonvaText } from "../../../@konva";
-import { KonvaDrawable, KonvaPoint } from "../../../@utils/konva";
-import { logDebug } from "../../../@utils/logger";
-import { TaskData } from "../../@utils/tasks";
+import { useTimelineContext } from "../../../timeline/TimelineContext";
+import { KonvaDrawable, KonvaPoint } from "../../../utils/konva";
+import { logDebug } from "../../../utils/logger";
+import { TaskData } from "../../utils/tasks";
 
 type TaskMouseEventHandler = (taskId: string, point: KonvaPoint) => void;
 

@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 
-import { useTimelineContext } from "../../@contexts/Timeline";
 import { KonvaGroup } from "../../@konva";
+import { useTimelineContext } from "../../timeline/TimelineContext";
 import GridCell from "../Cell";
 
 interface GridCellsProps {

@@ -2,12 +2,13 @@ import React, { CSSProperties, FC, useCallback, useEffect, useMemo, useRef, useS
 import { Stage } from "react-konva";
 import Konva from "konva";
 
-import { useTimelineContext } from "../../@contexts/Timeline";
-import { logDebug } from "../../@utils/logger";
-import { RESOURCE_HEADER_WIDTH } from "../../@utils/resources";
-import GridLayer from "../../grid/Layer";
-import TasksLayer from "../../tasks";
-import ResourcesLayer from "../ResourcesLayer";
+import GridLayer from "../grid/Layer";
+import ResourcesLayer from "../resources";
+import { RESOURCE_HEADER_WIDTH } from "../resources/utils/resources";
+import TasksLayer from "../tasks";
+import { logDebug } from "../utils/logger";
+
+import { useTimelineContext } from "./TimelineContext";
 
 interface TimelineProps {}
 

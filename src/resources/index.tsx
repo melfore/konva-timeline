@@ -1,8 +1,9 @@
 import React, { FC } from "react";
 
-import { useTimelineContext } from "../../@contexts/Timeline";
-import { KonvaLayer } from "../../@konva";
-import ResourceHeader from "../ResourceHeader";
+import { KonvaLayer } from "../@konva";
+import { useTimelineContext } from "../timeline/TimelineContext";
+
+import ResourceHeader from "./components/Header";
 
 interface ResourcesLayerProps {}
 
