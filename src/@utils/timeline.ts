@@ -1,5 +1,6 @@
+import { TaskData } from "../tasks/@utils/tasks";
+
 import { Resource } from "./resources";
-import { TaskData } from "./tasks";
 import { TimeRange } from "./time-range";
 import { Resolution } from "./time-resolution";
 

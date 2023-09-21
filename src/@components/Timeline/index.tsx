@@ -6,8 +6,8 @@ import { useTimelineContext } from "../../@contexts/Timeline";
 import { logDebug } from "../../@utils/logger";
 import { RESOURCE_HEADER_WIDTH } from "../../@utils/resources";
 import GridLayer from "../../grid/Layer";
+import TasksLayer from "../../tasks";
 import ResourcesLayer from "../ResourcesLayer";
-import TasksLayer from "../TasksLayer";
 
 interface TimelineProps {}
 

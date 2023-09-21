@@ -1,8 +1,8 @@
 import React, { FC, useMemo } from "react";
 import { Label, Tag, Text } from "react-konva";
 
-import { useTimelineContext } from "../../@contexts/Timeline";
-import { KonvaPoint } from "../../@utils/konva";
+import { useTimelineContext } from "../../../@contexts/Timeline";
+import { KonvaPoint } from "../../../@utils/konva";
 import { TaskData } from "../../@utils/tasks";
 
 export interface TaskTooltipProps extends KonvaPoint {

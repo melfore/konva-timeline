@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { LayerDecorator, STORY_DATA, TasksLayerDecorator } from "../../@utils/stories";
+import { LayerDecorator, STORY_DATA, TasksLayerDecorator } from "../../../@utils/stories";
 
 import TaskTooltip from ".";
 

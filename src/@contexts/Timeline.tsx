@@ -4,10 +4,10 @@ import { DateTime, Interval } from "luxon";
 import { DEFAULT_GRID_COLUMN_WIDTH, DEFAULT_GRID_ROW_HEIGHT, MINIMUM_GRID_ROW_HEIGHT } from "../@utils/dimensions";
 import { logDebug, logWarn } from "../@utils/logger";
 import { RESOURCE_HEADER } from "../@utils/resources";
-import { filterOutOfInterval, TaskData } from "../@utils/tasks";
 import { TimeRange, toInterval } from "../@utils/time-range";
 import { getResolutionData, Resolution, ResolutionData } from "../@utils/time-resolution";
 import { TimelineInput } from "../@utils/timeline";
+import { filterOutOfInterval, TaskData } from "../tasks/@utils/tasks";
 
 declare global {
   interface Window {

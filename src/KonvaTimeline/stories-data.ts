@@ -1,6 +1,6 @@
 import { Resource } from "../@utils/resources";
-import { TaskData } from "../@utils/tasks";
 import { TimeRange } from "../@utils/time-range";
+import { TaskData } from "../tasks/@utils/tasks";
 
 interface StoryDataInput {
   resourcesCount: number;

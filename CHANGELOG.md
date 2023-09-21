@@ -1,9 +1,8 @@
 ## [1.7.2](https://github.com/melfore/konva-timeline/compare/v1.7.1...v1.7.2) (2023-09-20)
 
-
 ### Bug Fixes
 
-* 🐛 [Task] Fixed drag snap when ratio too small ([84ac93e](https://github.com/melfore/konva-timeline/commit/84ac93e25fb8b70501f0e6347b81197d9c3527e8)), closes [#89](https://github.com/melfore/konva-timeline/issues/89)
+- 🐛 [Task] Fixed drag snap when ratio too small ([84ac93e](https://github.com/melfore/konva-timeline/commit/84ac93e25fb8b70501f0e6347b81197d9c3527e8)), closes [#89](https://github.com/melfore/konva-timeline/issues/89)
 
 ## [1.7.1](https://github.com/melfore/konva-timeline/compare/v1.7.0...v1.7.1) (2023-09-20)
 
