@@ -2,7 +2,7 @@ import React, { memo, useMemo } from "react";
 
 import { useTimelineContext } from "../../@contexts/Timeline";
 import { Resource, RESOURCE_HEADER_WIDTH } from "../../@utils/resources";
-import { KonvaGroup, KonvaLine, KonvaText } from "../@konva";
+import { KonvaGroup, KonvaLine, KonvaText } from "../../@konva";
 
 interface ResourceHeaderProps extends Resource {
   index: number;

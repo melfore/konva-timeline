@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 
 import { useTimelineContext } from "../../@contexts/Timeline";
-import { KonvaLayer } from "../@konva";
+import { KonvaLayer } from "../../@konva";
 import ResourceHeader from "../ResourceHeader";
 
 interface ResourcesLayerProps {}

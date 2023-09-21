@@ -1,6 +1,6 @@
 import React, { FC, memo } from "react";
 
-import { KonvaLayer } from "../../@components/@konva";
+import { KonvaLayer } from "../../@konva";
 import GridCells from "../Cells";
 import GridRows from "../Rows";
 

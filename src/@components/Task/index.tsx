@@ -7,7 +7,7 @@ import { useTimelineContext } from "../../@contexts/Timeline";
 import { KonvaDrawable, KonvaPoint } from "../../@utils/konva";
 import { logDebug } from "../../@utils/logger";
 import { TaskData } from "../../@utils/tasks";
-import { KonvaText } from "../@konva";
+import { KonvaText } from "../../@konva";
 
 type TaskMouseEventHandler = (taskId: string, point: KonvaPoint) => void;
 

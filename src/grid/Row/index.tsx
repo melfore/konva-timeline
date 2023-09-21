@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from "react";
 
-import { KonvaLine } from "../../@components/@konva";
+import { KonvaLine } from "../../@konva";
 import { useTimelineContext } from "../../@contexts/Timeline";
 
 interface GridRowProps {

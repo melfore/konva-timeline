@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 
-import { KonvaGroup } from "../../@components/@konva";
+import { KonvaGroup } from "../../@konva";
 import { useTimelineContext } from "../../@contexts/Timeline";
 import GridRow from "../Row";
 
