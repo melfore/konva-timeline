@@ -1,5 +1,7 @@
 # @melfore/konva-timeline
 
+[![Konva Timeline - Release](https://github.com/melfore/konva-timeline/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/melfore/konva-timeline/actions/workflows/release.yml) [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+
 `@melfore/konva-timeline` is a TypeScript ReactJS library that uses `konva` and `react-konva` to render a timeline component using canvas.
 
 ## Install
