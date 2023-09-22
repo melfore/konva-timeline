@@ -21,9 +21,7 @@ interface ResourceHeaderProps {
 }
 
 /**
- * This component renders a Resource header with text and delimiter line. It uses as text the `resource.label` attribute
- *
- * The playground has a simulated canvas with height: 200px and width: 100%
+ * This component renders a resource header. It displays a text (`resource.label`) and a delimiter line.
  */
 const ResourceHeader = ({ index, isLast = false, resource }: ResourceHeaderProps) => {
   const {

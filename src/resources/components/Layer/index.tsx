@@ -1,17 +1,16 @@
 import React, { FC } from "react";
 
 import { KonvaLayer } from "../../../@konva";
-import * as TimelineContext from "../../../timeline/TimelineContext";
+import { useTimelineContext } from "../../../timeline/TimelineContext";
 import ResourceHeader from "../Header";
 
 interface ResourcesLayerProps {}
 
 /**
- * This component renders a set of resources as a Konva Layer.
- * For each resource, a `ResourceHeader` is displayed.
+ * This component renders a Konva layer containing one header for each resource (`ResourceHeader`).
  */
 const ResourcesLayer: FC<ResourcesLayerProps> = () => {
-  const { resources } = TimelineContext.useTimelineContext();
+  const { resources } = useTimelineContext();
 
   return (
     <KonvaLayer>
