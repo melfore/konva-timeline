@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 
-import Timeline from "../@components/Timeline";
-import { TimelineProvider, TimelineProviderProps } from "../@contexts/Timeline";
+import Timeline from "../timeline";
+import { TimelineProvider, TimelineProviderProps } from "../timeline/TimelineContext";
 
 const KonvaTimeline: FC<TimelineProviderProps> = (props) => {
   return (

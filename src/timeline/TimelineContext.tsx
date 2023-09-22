@@ -1,13 +1,13 @@
 import React, { createContext, PropsWithChildren, useContext, useMemo, useState } from "react";
 import { DateTime, Interval } from "luxon";
 
-import { DEFAULT_GRID_COLUMN_WIDTH, DEFAULT_GRID_ROW_HEIGHT, MINIMUM_GRID_ROW_HEIGHT } from "../@utils/dimensions";
-import { logDebug, logWarn } from "../@utils/logger";
-import { RESOURCE_HEADER } from "../@utils/resources";
-import { filterOutOfInterval, TaskData } from "../@utils/tasks";
-import { TimeRange, toInterval } from "../@utils/time-range";
-import { getResolutionData, Resolution, ResolutionData } from "../@utils/time-resolution";
-import { TimelineInput } from "../@utils/timeline";
+import { addHeaderResource } from "../resources/utils/resources";
+import { filterOutOfInterval, TaskData } from "../tasks/utils/tasks";
+import { DEFAULT_GRID_COLUMN_WIDTH, DEFAULT_GRID_ROW_HEIGHT, MINIMUM_GRID_ROW_HEIGHT } from "../utils/dimensions";
+import { logDebug, logWarn } from "../utils/logger";
+import { TimeRange, toInterval } from "../utils/time-range";
+import { getResolutionData, Resolution, ResolutionData } from "../utils/time-resolution";
+import { TimelineInput } from "../utils/timeline";
 
 declare global {
   interface Window {
@@ -124,10 +124,7 @@ export const TimelineProvider = ({
       : externalColumnWidth;
   }, [externalColumnWidth, resolution]);
 
-  const resources = useMemo(() => {
-    logDebug("TimelineProvider", "Preparing resources...");
-    return [RESOURCE_HEADER, ...externalResources];
-  }, [externalResources]);
+  const resources = useMemo(() => addHeaderResource(externalResources), [externalResources]);
 
   const rowHeight = useMemo(() => {
     logDebug("TimelineProvider", "Calculating rowHeight...");

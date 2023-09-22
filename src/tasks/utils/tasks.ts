@@ -1,6 +1,6 @@
 import { Interval } from "luxon";
 
-import { TimeRange, toInterval } from "./time-range";
+import { TimeRange, toInterval } from "../../utils/time-range";
 
 export interface TaskData {
   /**

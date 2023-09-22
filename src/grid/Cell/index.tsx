@@ -1,9 +1,9 @@
 import React, { memo, useMemo } from "react";
 import { Interval } from "luxon";
 
-import { KonvaGroup, KonvaLine, KonvaRect, KonvaText } from "../../@components/@konva";
-import { useTimelineContext } from "../../@contexts/Timeline";
-import { displayInterval } from "../../@utils/time-resolution";
+import { KonvaGroup, KonvaLine, KonvaRect, KonvaText } from "../../@konva";
+import { useTimelineContext } from "../../timeline/TimelineContext";
+import { displayInterval } from "../../utils/time-resolution";
 
 interface GridCellProps {
   column: Interval;

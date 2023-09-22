@@ -15,8 +15,9 @@
     "pre:commit": "npm run clean:code && npm run build",
     "prepare": "husky install",
     "start": "storybook dev -p 6006",
-    "test": "test-storybook --coverage --coverageDirectory coverage/storybook --ci --verbose",
-    "test:coverage": "npx nyc report --reporter=lcov -t coverage/storybook --report-dir coverage/storybook",
+    "test": "jest --watch",
+    "test:sb": "test-storybook --coverage --coverageDirectory coverage/storybook --ci --verbose",
+    "test:sb:coverage": "npx nyc report --reporter=lcov -t coverage/storybook --report-dir coverage/storybook",
     "semantic-release": "semantic-release"
   },
   "repository": {

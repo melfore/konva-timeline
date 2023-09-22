@@ -1,16 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { TasksLayerDecorator } from "../../@utils/stories";
+import { TasksLayerDecorator } from "../../../utils/stories";
 
-import ResourcesLayer from ".";
+import TasksLayer from ".";
 
 const meta = {
-  title: "Components/ResourcesLayer",
-  component: ResourcesLayer,
+  title: "Components/TaskLayer",
+  component: TasksLayer,
   decorators: [TasksLayerDecorator],
   tags: ["autodocs"],
   argTypes: {},
-} satisfies Meta<typeof ResourcesLayer>;
+} satisfies Meta<typeof TasksLayer>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

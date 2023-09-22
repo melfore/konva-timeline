@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import { Layer, Stage } from "react-konva";
 
-import { TimelineProvider, useTimelineContext } from "../@contexts/Timeline";
 import { generateStoryData } from "../KonvaTimeline/stories-data";
+import { TimelineProvider, useTimelineContext } from "../timeline/TimelineContext";
 
 export const COLOR_ARG_TYPE = {
   control: {
