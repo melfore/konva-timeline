@@ -22,18 +22,13 @@ export const Primary: Story = {
       color: "red",
       label: "Resource #1",
     },
-    index: 1,
+    index: 0,
   },
 };
 
 export const Last: Story = {
   args: {
-    resource: {
-      id: "1",
-      color: "red",
-      label: "Resource #1",
-    },
-    index: 1,
+    ...Primary.args,
     isLast: true,
   },
 };
