@@ -1,5 +1,6 @@
 export { Resource } from "./resources/utils/resources";
 export { TaskData } from "./tasks/utils/tasks";
+export { KonvaTimelineError } from "./utils/operations";
 export { TimeRange } from "./utils/time-range";
 export { RESOLUTIONS, Resolution } from "./utils/time-resolution";
 

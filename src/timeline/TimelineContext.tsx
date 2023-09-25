@@ -2,7 +2,7 @@ import React, { createContext, PropsWithChildren, useContext, useMemo, useState 
 import { DateTime, Interval } from "luxon";
 
 import { addHeaderResource } from "../resources/utils/resources";
-import { filterOutOfInterval, TaskData } from "../tasks/utils/tasks";
+import { filterTasks, TaskData } from "../tasks/utils/tasks";
 import { DEFAULT_GRID_COLUMN_WIDTH, DEFAULT_GRID_ROW_HEIGHT, MINIMUM_GRID_ROW_HEIGHT } from "../utils/dimensions";
 import { logDebug, logWarn } from "../utils/logger";
 import { TimeRange, toInterval } from "../utils/time-range";
@@ -184,10 +184,11 @@ export const TimelineProvider = ({
       DateTime.fromMillis(visibleTimeBlocks[visibleTimeBlocks.length - 1].start!.toMillis())
     );
 
-    const ts = filterOutOfInterval(externalTasks, interval);
+    const { items } = filterTasks(externalTasks, interval);
+
     const end = DateTime.now().toMillis();
     logDebug("TimelineProvider", `Tasks preparation took ${end - start} ms`);
-    return ts;
+    return items;
   }, [externalTasks, visibleTimeBlocks]);
 
   const theme = useMemo((): TimelineTheme => {
