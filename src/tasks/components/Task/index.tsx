@@ -33,8 +33,8 @@ type TaskProps = KonvaDrawable &
     width: number;
   };
 
-const TASK_DEFAULT_FILL = "transparent";
-const TASK_DEFAULT_STROKE = "black";
+const TASK_DEFAULT_FILL = "#FFFFFF";
+const TASK_DEFAULT_STROKE = "#000000";
 
 const TASK_BORDER_RADIUS = 4;
 
@@ -132,9 +132,12 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
   const onDragMove = useCallback(
     (e: KonvaEventObject<DragEvent>) => {
       const { x, y } = getDragPoint(e);
+      // console.log("=> onDragMove.dragY", y);
       const resourceIndex = findResourceIndexByCoordinate(y, rowHeight, resources);
+      // console.log("=> onDragMove.resourceIndex", resourceIndex);
       const dragFinalX = Math.ceil(x / dragSnapInPX) * dragSnapInPX;
       const point = getBoundedCoordinates(dragFinalX, resourceIndex);
+      // console.log("=> onDragMove.point.y", point.y);
       e.target.setPosition(point);
       onOver(taskId, point);
     },
