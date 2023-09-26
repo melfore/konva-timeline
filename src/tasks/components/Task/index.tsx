@@ -8,6 +8,7 @@ import { findResourceByCoordinate, findResourceIndexByCoordinate } from "../../.
 import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { KonvaDrawable, KonvaPoint } from "../../../utils/konva";
 import { logDebug } from "../../../utils/logger";
+import { getContrastColor } from "../../../utils/theme";
 import { TaskData } from "../../utils/tasks";
 
 type TaskMouseEventHandler = (taskId: string, point: KonvaPoint) => void;
@@ -48,16 +49,7 @@ const TASK_BORDER_RADIUS = 4;
  *
  * The playground has a simulated canvas with height: 200px and width: 100%
  */
-const Task = ({
-  data,
-  fill = TASK_DEFAULT_FILL,
-  onLeave,
-  onOver,
-  stroke = TASK_DEFAULT_STROKE,
-  x,
-  y,
-  width,
-}: TaskProps) => {
+const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: TaskProps) => {
   const {
     columnWidth,
     displayTasksLabel,
@@ -182,6 +174,10 @@ const Task = ({
 
   const textSize = useMemo(() => taskHeight / 2.5, [taskHeight]);
 
+  const textStroke = useMemo(() => getContrastColor(fill), [fill]);
+
+  const textWidth = useMemo(() => width - textOffsets * 2, [textOffsets, width]);
+
   return (
     <Group
       x={x}
@@ -206,11 +202,11 @@ const Task = ({
       />
       {displayTasksLabel && (
         <KonvaText
-          fill={stroke}
+          fill={textStroke}
           ellipsis
           fontSize={textSize}
           text={data.label}
-          width={width - textOffsets * 2}
+          width={textWidth}
           wrap="none"
           x={textOffsets}
           y={textOffsets}

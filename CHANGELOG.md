@@ -1,9 +1,8 @@
 ## [1.7.6](https://github.com/melfore/konva-timeline/compare/v1.7.5...v1.7.6) (2023-09-26)
 
-
 ### Bug Fixes
 
-* 🐛 [Task] Tooltip auto closes when scrolling ([38d4113](https://github.com/melfore/konva-timeline/commit/38d411362fc78e219051742765782f3837147553)), closes [#99](https://github.com/melfore/konva-timeline/issues/99)
+- 🐛 [Task] Tooltip auto closes when scrolling ([38d4113](https://github.com/melfore/konva-timeline/commit/38d411362fc78e219051742765782f3837147553)), closes [#99](https://github.com/melfore/konva-timeline/issues/99)
 
 ## [1.7.5](https://github.com/melfore/konva-timeline/compare/v1.7.4...v1.7.5) (2023-09-25)
 
