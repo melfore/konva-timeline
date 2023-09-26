@@ -6,6 +6,7 @@ import GridLayer from "../grid/Layer";
 import ResourcesLayer from "../resources/components/Layer";
 import { RESOURCE_HEADER_WIDTH } from "../resources/utils/resources";
 import TasksLayer from "../tasks/components/Layer";
+import { TaskTooltipProps } from "../tasks/components/Tooltip";
 import { logDebug } from "../utils/logger";
 
 import { useTimelineContext } from "./TimelineContext";
@@ -34,6 +35,8 @@ const Timeline: FC<TimelineProps> = () => {
   const stageRef = useRef<Konva.Stage>(null);
   const wrapper = useRef<HTMLDivElement>(null);
 
+  const [taskTooltip, setTaskTooltip] = useState<TaskTooltipProps | null>(null);
+
   const onWindowResize = useCallback(() => {
     if (!wrapper.current) {
       return;
@@ -59,6 +62,7 @@ const Timeline: FC<TimelineProps> = () => {
     const start = scrollLeft;
     const end = scrollLeft + size.width;
     setDrawRange({ start, end });
+    setTaskTooltip(null);
   }, [setDrawRange, size.width]);
 
   useEffect(() => {
@@ -164,7 +168,7 @@ const Timeline: FC<TimelineProps> = () => {
         <div style={gridStageWrapperStyle}>
           <Stage ref={stageRef} height={stageHeight} width={stageWidth}>
             <GridLayer height={stageHeight} />
-            <TasksLayer />
+            <TasksLayer taskTooltip={taskTooltip} setTaskTooltip={setTaskTooltip} />
           </Stage>
         </div>
       </div>
