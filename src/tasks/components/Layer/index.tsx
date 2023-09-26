@@ -78,14 +78,6 @@ const TasksLayer: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip }) => {
     [getXCoordinate, resolution.unit]
   );
 
-  const getContrastTextColor = useCallback((hexcolor: string) => {
-    var r = parseInt(hexcolor.substring(1, 3), 16);
-    var g = parseInt(hexcolor.substring(3, 5), 16);
-    var b = parseInt(hexcolor.substring(5, 7), 16);
-    var yiq = (r * 299 + g * 587 + b * 114) / 1000;
-    return yiq >= 128 ? "black" : "white";
-  }, []);
-
   if (!intervalStart || !intervalEnd) {
     return null;
   }
@@ -111,8 +103,6 @@ const TasksLayer: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip }) => {
           return null;
         }
 
-        const stroke = getContrastTextColor(resourceColor);
-
         return (
           <Task
             key={`task-${taskData.id}`}
@@ -120,7 +110,6 @@ const TasksLayer: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip }) => {
             fill={resourceColor}
             onLeave={onTaskLeave}
             onOver={onTaskOver}
-            stroke={stroke}
             x={xCoordinate}
             y={yCoordinate}
             width={width}

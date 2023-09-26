@@ -19,7 +19,14 @@ export const HOUR_IN_MILLISECONDS = 1000 * 60 * 60;
 
 export const TIME_RANGE_START_DATE = new Date("2019-12-31T23:00:00.000Z");
 
-const getRandomColor = () => Math.floor(Math.random() * 16777215).toString(16);
+const getRandomColor = () => {
+  let color = "";
+  while (color.length !== 6) {
+    color = Math.floor(Math.random() * 16777215).toString(16);
+  }
+
+  return color;
+};
 
 const generateResources = (count: number): Resource[] => {
   const resources: Resource[] = [];
