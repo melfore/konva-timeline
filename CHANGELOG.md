@@ -1,3 +1,10 @@
+## [1.7.7](https://github.com/melfore/konva-timeline/compare/v1.7.6...v1.7.7) (2023-09-26)
+
+
+### Bug Fixes
+
+* 🐛 [Task] Fixed foreground color ([d037b67](https://github.com/melfore/konva-timeline/commit/d037b675f905ddf31be390fe9f10ff0dcc5c02c5)), closes [#96](https://github.com/melfore/konva-timeline/issues/96)
+
 ## [1.7.6](https://github.com/melfore/konva-timeline/compare/v1.7.5...v1.7.6) (2023-09-26)
 
 ### Bug Fixes
