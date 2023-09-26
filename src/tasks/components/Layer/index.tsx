@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback } from "react";
 import { Layer } from "react-konva";
 import { DateTime } from "luxon";
 
@@ -8,7 +8,10 @@ import { TimeRange } from "../../../utils/time-range";
 import Task from "../Task";
 import TaskTooltip, { TaskTooltipProps } from "../Tooltip";
 
-interface TasksLayerProps {}
+interface TasksLayerProps {
+  taskTooltip: TaskTooltipProps | null;
+  setTaskTooltip: (tooltip: TaskTooltipProps | null) => void;
+}
 
 /**
  * This component renders a set of tasks as a Konva Layer.
@@ -18,7 +21,7 @@ interface TasksLayerProps {}
  * The playground has a canvas that simulates 1 day of data with 1 hour resolution.
  * Depending on your screen size you might be able to test also the horizontal scrolling behaviour.
  */
-const TasksLayer: FC<TasksLayerProps> = () => {
+const TasksLayer: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip }) => {
   const {
     columnWidth,
     drawRange,
@@ -29,8 +32,6 @@ const TasksLayer: FC<TasksLayerProps> = () => {
     tasks,
   } = useTimelineContext();
 
-  const [taskTooltip, setTaskTooltip] = useState<TaskTooltipProps | null>(null);
-
   const getResourceById = useCallback(
     (resourceId: string) => resources.findIndex(({ id }) => resourceId === id),
     [resources]
@@ -38,7 +39,7 @@ const TasksLayer: FC<TasksLayerProps> = () => {
 
   const getTaskById = useCallback((taskId: string) => tasks.find(({ id }) => taskId === id), [tasks]);
 
-  const onTaskLeave = useCallback(() => setTaskTooltip(null), []);
+  const onTaskLeave = useCallback(() => setTaskTooltip(null), [setTaskTooltip]);
 
   const onTaskOver = useCallback(
     (taskId: string, point: KonvaPoint) => {
@@ -50,7 +51,7 @@ const TasksLayer: FC<TasksLayerProps> = () => {
       const { x, y } = point;
       setTaskTooltip({ task, x, y });
     },
-    [getTaskById]
+    [getTaskById, setTaskTooltip]
   );
 
   const getXCoordinate = useCallback(
