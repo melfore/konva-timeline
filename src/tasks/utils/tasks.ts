@@ -1,5 +1,3 @@
-import { Interval } from "luxon";
-
 import { KonvaTimelineError, Operation } from "../../utils/operations";
 import { TimeRange } from "../../utils/time-range";
 
@@ -27,16 +25,15 @@ type FilteredTasks = Operation<TaskData>;
 /**
  * Filters valid tasks to be shown in the chart
  * @param tasks list of tasks as passed to the component
- * @param interval interval as passed to the component
+ * @param intervals intervals as passed to the component
  */
-export const filterTasks = (tasks: TaskData[], interval: Interval): FilteredTasks => {
-  if (!tasks || !tasks.length) {
-    return { items: [], errors: [{ entity: "task", level: "warn", message: "No data" }] };
+export const validateTasks = (tasks: TaskData[], range: TimeRange | null): FilteredTasks => {
+  if (!range || !range.start || !range.end) {
+    return { items: [], errors: [{ entity: "task", level: "warn", message: "Invalid range" }] };
   }
 
-  const { end: intervalEnd, start: intervalStart } = interval;
-  if (!intervalEnd || !intervalStart) {
-    return { items: [], errors: [{ entity: "interval", level: "warn", message: "Incomplete" }] };
+  if (!tasks || !tasks.length) {
+    return { items: [], errors: [{ entity: "task", level: "warn", message: "No data" }] };
   }
 
   const errors: KonvaTimelineError[] = [];
@@ -46,8 +43,8 @@ export const filterTasks = (tasks: TaskData[], interval: Interval): FilteredTask
       return false;
     }
 
-    if (taskEnd < intervalStart.toMillis() || taskStart > intervalEnd.toMillis()) {
-      errors.push({ entity: "task", level: "warn", message: "Outside interval", refId: taskId });
+    if (taskEnd < range.start || taskStart > range.end) {
+      errors.push({ entity: "task", level: "warn", message: "Outside range", refId: taskId });
       return false;
     }
 
@@ -55,4 +52,27 @@ export const filterTasks = (tasks: TaskData[], interval: Interval): FilteredTask
   });
 
   return { items, errors };
+};
+
+/**
+ * Filters valid tasks to be shown in the chart
+ * @param tasks list of tasks as passed to the component
+ * @param intervals intervals as passed to the component
+ */
+export const filterTasks = (tasks: TaskData[], range: TimeRange | null): TaskData[] => {
+  if (!range || !range.start || !range.end || !tasks || !tasks.length) {
+    return [];
+  }
+
+  return tasks.filter(({ id: taskId, time: { start: taskStart, end: taskEnd } }) => {
+    if (taskStart >= taskEnd) {
+      return false;
+    }
+
+    if (taskEnd < range.start || taskStart > range.end) {
+      return false;
+    }
+
+    return true;
+  });
 };
