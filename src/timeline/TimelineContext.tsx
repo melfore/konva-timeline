@@ -80,15 +80,15 @@ export const TimelineProvider = ({
   rowHeight: externalRowHeight,
   theme: externalTheme = "light",
 }: TimelineProviderProps) => {
-  logWarn("TimelineProvider", `Debug ${debug ? "ON" : "OFF"}`);
-  window.__MELFORE_KONVA_TIMELINE_DEBUG__ = debug;
+  // logWarn("TimelineProvider", `Debug ${debug ? "ON" : "OFF"}`);
+  // window.__MELFORE_KONVA_TIMELINE_DEBUG__ = debug;
 
   const [drawRange, setDrawRange] = useState(DEFAULT_DRAW_RANGE);
 
-  // useEffect(() => {
-  //   logWarn("TimelineProvider", `Debug ${debug ? "ON" : "OFF"}`);
-  //   window.__MELFORE_KONVA_TIMELINE_DEBUG__ = debug;
-  // }, [debug]);
+  useEffect(() => {
+    logWarn("TimelineProvider", `Debug ${debug ? "ON" : "OFF"}`);
+    window.__MELFORE_KONVA_TIMELINE_DEBUG__ = debug;
+  }, [debug]);
 
   const interval = useMemo(() => {
     logDebug("TimelineProvider", "Calculating interval...");
