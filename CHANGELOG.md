@@ -1,3 +1,15 @@
+# [1.8.0](https://github.com/melfore/konva-timeline/compare/v1.7.7...v1.8.0) (2023-09-28)
+
+
+### Bug Fixes
+
+* 🐛 [Timeline] Removed useless init warn log ([34d6e6c](https://github.com/melfore/konva-timeline/commit/34d6e6c1aff688bee9ae1ca5a35cf03cd7de8c8b)), closes [#108](https://github.com/melfore/konva-timeline/issues/108)
+
+
+### Features
+
+* 🎸 [Timeline] Added onErrors callback ([15b4a54](https://github.com/melfore/konva-timeline/commit/15b4a54b4697abffbfb05a041aa6b8b9a75f0e53)), closes [#95](https://github.com/melfore/konva-timeline/issues/95)
+
 ## [1.7.7](https://github.com/melfore/konva-timeline/compare/v1.7.6...v1.7.7) (2023-09-26)
 
 ### Bug Fixes
