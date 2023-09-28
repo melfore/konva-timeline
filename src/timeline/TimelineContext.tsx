@@ -1,13 +1,15 @@
-import React, { createContext, PropsWithChildren, useContext, useMemo, useState } from "react";
+import React, { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
 import { DateTime, Interval } from "luxon";
 
 import { addHeaderResource } from "../resources/utils/resources";
-import { filterTasks, TaskData } from "../tasks/utils/tasks";
+import { filterTasks, TaskData, validateTasks } from "../tasks/utils/tasks";
 import { DEFAULT_GRID_COLUMN_WIDTH, DEFAULT_GRID_ROW_HEIGHT, MINIMUM_GRID_ROW_HEIGHT } from "../utils/dimensions";
 import { logDebug, logWarn } from "../utils/logger";
 import { TimeRange, toInterval } from "../utils/time-range";
 import { getResolutionData, Resolution, ResolutionData } from "../utils/time-resolution";
 import { TimelineInput } from "../utils/timeline";
+import { executeWithPerfomanceCheck } from "../utils/utils";
+import { KonvaTimelineError } from "..";
 
 declare global {
   interface Window {
@@ -22,6 +24,10 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
    * Enables debug logging in browser console
    */
   debug?: boolean;
+  /**
+   * Callback invoked when errors are thrown
+   */
+  onErrors?: (errors: KonvaTimelineError[]) => void;
   /**
    * Event handler for task click
    */
@@ -47,6 +53,7 @@ type TimelineContextType = Required<
   dragResolution: ResolutionData;
   drawRange: TimeRange;
   interval: Interval;
+  onErrors?: (errors: KonvaTimelineError[]) => void;
   onTaskClick?: (task: TaskData) => void;
   onTaskDrag?: (task: TaskData) => void;
   resolution: ResolutionData;
@@ -71,6 +78,7 @@ export const TimelineProvider = ({
   displayTasksLabel = false,
   dragResolution: externalDragResolution,
   hideResources = false,
+  onErrors,
   onTaskClick,
   onTaskDrag,
   tasks: externalTasks,
@@ -80,42 +88,35 @@ export const TimelineProvider = ({
   rowHeight: externalRowHeight,
   theme: externalTheme = "light",
 }: TimelineProviderProps) => {
-  logWarn("TimelineProvider", `Debug ${debug ? "ON" : "OFF"}`);
-  window.__MELFORE_KONVA_TIMELINE_DEBUG__ = debug;
+  // logWarn("TimelineProvider", `Debug ${debug ? "ON" : "OFF"}`);
+  // window.__MELFORE_KONVA_TIMELINE_DEBUG__ = debug;
 
   const [drawRange, setDrawRange] = useState(DEFAULT_DRAW_RANGE);
 
-  // useEffect(() => {
-  //   logWarn("TimelineProvider", `Debug ${debug ? "ON" : "OFF"}`);
-  //   window.__MELFORE_KONVA_TIMELINE_DEBUG__ = debug;
-  // }, [debug]);
+  useEffect(() => {
+    logWarn("TimelineProvider", `Debug ${debug ? "ON" : "OFF"}`);
+    window.__MELFORE_KONVA_TIMELINE_DEBUG__ = debug;
+  }, [debug]);
 
-  const interval = useMemo(() => {
-    logDebug("TimelineProvider", "Calculating interval...");
-    const start = DateTime.now().toMillis();
-    const itv = toInterval(range);
-    const end = DateTime.now().toMillis();
-    logDebug("TimelineProvider", `Interval calculation took ${end - start} ms`);
-    return itv;
-  }, [range]);
+  const validTasks = useMemo(() => validateTasks(externalTasks, range), [externalTasks, range]);
 
-  const resolution = useMemo(() => {
-    logDebug("TimelineProvider", "Calculating resolution...");
-    const start = DateTime.now().toMillis();
-    const resData = getResolutionData(externalResolution);
-    const end = DateTime.now().toMillis();
-    logDebug("TimelineProvider", `Resolution calculation took ${end - start} ms`);
-    return resData;
-  }, [externalResolution]);
+  const interval = useMemo(
+    () => executeWithPerfomanceCheck("TimelineProvider", "interval", () => toInterval(range)),
+    [range]
+  );
 
-  const dragResolution = useMemo(() => {
-    logDebug("TimelineProvider", "Calculating drag resolution...");
-    const start = DateTime.now().toMillis();
-    const resData = getResolutionData(externalDragResolution || externalResolution);
-    const end = DateTime.now().toMillis();
-    logDebug("TimelineProvider", `Drag resolution calculation took ${end - start} ms`);
-    return resData;
-  }, [externalDragResolution, externalResolution]);
+  const resolution = useMemo(
+    () => executeWithPerfomanceCheck("TimelineProvider", "resolution", () => getResolutionData(externalResolution)),
+    [externalResolution]
+  );
+
+  const timeBlocks = useMemo(
+    () =>
+      executeWithPerfomanceCheck("TimelineProvider", "timeBlocks", () =>
+        interval.splitBy({ [resolution.unit]: resolution.sizeInUnits })
+      ),
+    [interval, resolution]
+  );
 
   const columnWidth = useMemo(() => {
     logDebug("TimelineProvider", "Calculating columnWidth...");
@@ -123,28 +124,6 @@ export const TimelineProvider = ({
       ? resolution.columnSize
       : externalColumnWidth;
   }, [externalColumnWidth, resolution]);
-
-  const resources = useMemo(() => addHeaderResource(externalResources), [externalResources]);
-
-  const rowHeight = useMemo(() => {
-    logDebug("TimelineProvider", "Calculating rowHeight...");
-    const rowHeight = externalRowHeight || DEFAULT_GRID_ROW_HEIGHT;
-    return rowHeight < MINIMUM_GRID_ROW_HEIGHT ? MINIMUM_GRID_ROW_HEIGHT : rowHeight;
-  }, [externalRowHeight]);
-
-  const resourcesContentHeight = useMemo(() => {
-    logDebug("TimelineProvider", "Calculating resources content height...");
-    return rowHeight * resources.length;
-  }, [resources, rowHeight]);
-
-  const timeBlocks = useMemo(() => {
-    logDebug("TimelineProvider", "Calculating time blocks...");
-    const start = DateTime.now().toMillis();
-    const itvs = interval.splitBy({ [resolution.unit]: resolution.sizeInUnits });
-    const end = DateTime.now().toMillis();
-    logDebug("TimelineProvider", `Time blocks calculation took ${end - start} ms`);
-    return itvs;
-  }, [interval, resolution]);
 
   const timeblocksOffset = useMemo(() => Math.floor(drawRange.start / columnWidth), [drawRange, columnWidth]);
 
@@ -172,30 +151,56 @@ export const TimelineProvider = ({
     return vtbs;
   }, [timeblocksOffset, columnWidth, drawRange, timeBlocks]);
 
-  const tasks = useMemo(() => {
-    logDebug("TimelineProvider", "Preparing tasks...");
-    if (!visibleTimeBlocks || !visibleTimeBlocks.length) {
-      return [];
+  const visibleRange = useMemo(() => {
+    let range = null;
+    if (visibleTimeBlocks && visibleTimeBlocks.length) {
+      range = {
+        start: visibleTimeBlocks[0].start!.toMillis(),
+        end: visibleTimeBlocks[visibleTimeBlocks.length - 1].end!.toMillis(),
+      };
     }
 
+    return range;
+  }, [visibleTimeBlocks]);
+
+  const tasks = useMemo(
+    () => executeWithPerfomanceCheck("TimelineProvider", "tasks", () => filterTasks(validTasks.items, visibleRange)),
+    [validTasks, visibleRange]
+  );
+
+  const dragResolution = useMemo(() => {
+    logDebug("TimelineProvider", "Calculating drag resolution...");
     const start = DateTime.now().toMillis();
-    const interval = Interval.fromDateTimes(
-      DateTime.fromMillis(visibleTimeBlocks[0].start!.toMillis()),
-      DateTime.fromMillis(visibleTimeBlocks[visibleTimeBlocks.length - 1].start!.toMillis())
-    );
-
-    const { items } = filterTasks(externalTasks, interval);
-
+    const resData = getResolutionData(externalDragResolution || externalResolution);
     const end = DateTime.now().toMillis();
-    logDebug("TimelineProvider", `Tasks preparation took ${end - start} ms`);
-    return items;
-  }, [externalTasks, visibleTimeBlocks]);
+    logDebug("TimelineProvider", `Drag resolution calculation took ${end - start} ms`);
+    return resData;
+  }, [externalDragResolution, externalResolution]);
+
+  const resources = useMemo(() => addHeaderResource(externalResources), [externalResources]);
+
+  const rowHeight = useMemo(() => {
+    logDebug("TimelineProvider", "Calculating rowHeight...");
+    const rowHeight = externalRowHeight || DEFAULT_GRID_ROW_HEIGHT;
+    return rowHeight < MINIMUM_GRID_ROW_HEIGHT ? MINIMUM_GRID_ROW_HEIGHT : rowHeight;
+  }, [externalRowHeight]);
+
+  const resourcesContentHeight = useMemo(() => {
+    logDebug("TimelineProvider", "Calculating resources content height...");
+    return rowHeight * resources.length;
+  }, [resources, rowHeight]);
 
   const theme = useMemo((): TimelineTheme => {
     return {
       color: externalTheme === "dark" ? "white" : "black",
     };
   }, [externalTheme]);
+
+  useEffect(() => {
+    if (onErrors) {
+      onErrors(validTasks.errors);
+    }
+  }, [onErrors, validTasks]);
 
   return (
     <TimelineContext.Provider
@@ -206,6 +211,7 @@ export const TimelineProvider = ({
         drawRange,
         hideResources,
         interval,
+        onErrors,
         onTaskClick,
         onTaskDrag,
         resolution,
