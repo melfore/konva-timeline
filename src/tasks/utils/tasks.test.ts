@@ -1,17 +1,15 @@
-import { DateTime, Interval } from "luxon";
-
 import { TimeRange } from "../..";
 import { generateStoryData } from "../../KonvaTimeline/stories-data";
 
-import { filterTasks } from "./tasks";
+import { validateTasks } from "./tasks";
 
+// From: Sunday, 1 January 2023 00:00:00 GMT+01:00
+// To: Monday, 2 January 2023 00:00:00 GMT+01:00
 const range: TimeRange = { start: 1672527600000, end: 1672614000000 };
 
-const interval = Interval.fromDateTimes(DateTime.fromMillis(range.start), DateTime.fromMillis(range.end));
-
-describe("filterTasks", () => {
+describe("validateTasks", () => {
   it("empty", () => {
-    const tasks = filterTasks([], interval);
+    const tasks = validateTasks([], range);
     expect(tasks).toEqual({
       errors: [{ entity: "task", level: "warn", message: "No data" }],
       items: [],
@@ -19,9 +17,9 @@ describe("filterTasks", () => {
   });
 
   it("task invalid", () => {
-    const tasks = filterTasks(
+    const tasks = validateTasks(
       [{ id: "1", label: "Task #1", resourceId: "1", time: { start: 1672578000000, end: 1672563600000 } }],
-      interval
+      range
     );
 
     expect(tasks).toEqual({
@@ -31,21 +29,21 @@ describe("filterTasks", () => {
   });
 
   it("task out of interval", () => {
-    const tasks = filterTasks(
+    const tasks = validateTasks(
       [{ id: "1", label: "Task #1", resourceId: "1", time: { start: 1672470000000, end: 1672477200000 } }],
-      interval
+      range
     );
 
     expect(tasks).toEqual({
-      errors: [{ entity: "task", level: "warn", message: "Outside interval", refId: "1" }],
+      errors: [{ entity: "task", level: "warn", message: "Outside range", refId: "1" }],
       items: [],
     });
   });
 
   it("valid", () => {
-    const tasks = filterTasks(
+    const tasks = validateTasks(
       [{ id: "1", label: "Task #1", resourceId: "1", time: { start: 1672556400000, end: 1672578000000 } }],
-      interval
+      range
     );
 
     expect(tasks).toEqual({
@@ -55,18 +53,18 @@ describe("filterTasks", () => {
   });
 
   it("mixed", () => {
-    const tasks = filterTasks(
+    const tasks = validateTasks(
       [
         { id: "1", label: "Task #1", resourceId: "1", time: { start: 1672556400000, end: 1672578000000 } },
         { id: "2", label: "Task #2", resourceId: "1", time: { start: 1672470000000, end: 1672477200000 } },
         { id: "3", label: "Task #3", resourceId: "1", time: { start: 1672578000000, end: 1672563600000 } },
       ],
-      interval
+      range
     );
 
     expect(tasks).toEqual({
       errors: [
-        { entity: "task", level: "warn", message: "Outside interval", refId: "2" },
+        { entity: "task", level: "warn", message: "Outside range", refId: "2" },
         { entity: "task", level: "error", message: "Invalid time", refId: "3" },
       ],
       items: [{ id: "1", label: "Task #1", resourceId: "1", time: { start: 1672556400000, end: 1672578000000 } }],
@@ -82,7 +80,7 @@ describe("filterTasks", () => {
     });
 
     const start = new Date().valueOf();
-    filterTasks(allTasks, Interval.fromDateTimes(DateTime.fromMillis(range.start), DateTime.fromMillis(range.end)));
+    validateTasks(allTasks, range);
     const end = new Date().valueOf();
     const operationLength = end - start;
     console.log(`Filter tasks: ${operationLength} ms`);
