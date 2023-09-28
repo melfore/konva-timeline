@@ -4,11 +4,12 @@ import { DateTime, Interval } from "luxon";
 import { addHeaderResource } from "../resources/utils/resources";
 import { filterTasks, TaskData, validateTasks } from "../tasks/utils/tasks";
 import { DEFAULT_GRID_COLUMN_WIDTH, DEFAULT_GRID_ROW_HEIGHT, MINIMUM_GRID_ROW_HEIGHT } from "../utils/dimensions";
-import { logDebug, logError, logWarn } from "../utils/logger";
+import { logDebug, logWarn } from "../utils/logger";
 import { TimeRange, toInterval } from "../utils/time-range";
 import { getResolutionData, Resolution, ResolutionData } from "../utils/time-resolution";
 import { TimelineInput } from "../utils/timeline";
 import { executeWithPerfomanceCheck } from "../utils/utils";
+import { KonvaTimelineError } from "..";
 
 declare global {
   interface Window {
@@ -23,6 +24,10 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
    * Enables debug logging in browser console
    */
   debug?: boolean;
+  /**
+   * Callback invoked when errors are thrown
+   */
+  onErrors?: (errors: KonvaTimelineError[]) => void;
   /**
    * Event handler for task click
    */
@@ -48,6 +53,7 @@ type TimelineContextType = Required<
   dragResolution: ResolutionData;
   drawRange: TimeRange;
   interval: Interval;
+  onErrors?: (errors: KonvaTimelineError[]) => void;
   onTaskClick?: (task: TaskData) => void;
   onTaskDrag?: (task: TaskData) => void;
   resolution: ResolutionData;
@@ -72,6 +78,7 @@ export const TimelineProvider = ({
   displayTasksLabel = false,
   dragResolution: externalDragResolution,
   hideResources = false,
+  onErrors,
   onTaskClick,
   onTaskDrag,
   tasks: externalTasks,
@@ -190,9 +197,10 @@ export const TimelineProvider = ({
   }, [externalTheme]);
 
   useEffect(() => {
-    // const realErrors = validTasks.errors.filter((error) => error.level === "error");
-    logError("TimelineProvider", `Thrown ${validTasks.errors.length} task errors`);
-  }, [validTasks]);
+    if (onErrors) {
+      onErrors(validTasks.errors);
+    }
+  }, [onErrors, validTasks]);
 
   return (
     <TimelineContext.Provider
@@ -203,6 +211,7 @@ export const TimelineProvider = ({
         drawRange,
         hideResources,
         interval,
+        onErrors,
         onTaskClick,
         onTaskDrag,
         resolution,
