@@ -16,20 +16,23 @@ export interface InternalTimeRange {
   end: number;
 }
 
+/**
+ * Returns valid date based on input, otherwise now
+ * @param date the input date (number or string formats)
+ */
 export const getValidTime = (date: number | string): number => {
-  const now = DateTime.now();
-  let start;
-  if (typeof date === "number") {
-    start = DateTime.fromMillis(date);
-  } else if (typeof date === "string") {
-    start = DateTime.fromISO(date);
+  if (typeof date === "number" && !Number.isNaN(date)) {
+    return date;
   }
 
-  if (!start || !start.isValid) {
-    start = now;
+  if (typeof date === "string") {
+    const dateTime = DateTime.fromISO(date, { zone: "utc" });
+    if (dateTime.toISO() === date) {
+      return dateTime.toMillis();
+    }
   }
 
-  return start.toMillis();
+  return DateTime.now().toMillis();
 };
 
 /**

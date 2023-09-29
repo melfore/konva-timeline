@@ -1,11 +1,11 @@
-import { TimeRange } from "../..";
 import { generateStoryData } from "../../KonvaTimeline/stories-data";
+import { InternalTimeRange } from "../../utils/time";
 
 import { validateTasks } from "./tasks";
 
 // From: Sunday, 1 January 2023 00:00:00 GMT+01:00
 // To: Monday, 2 January 2023 00:00:00 GMT+01:00
-const range: TimeRange = { start: 1672527600000, end: 1672614000000 };
+const range: InternalTimeRange = { start: 1672527600000, end: 1672614000000 };
 
 describe("validateTasks", () => {
   it("empty", () => {
