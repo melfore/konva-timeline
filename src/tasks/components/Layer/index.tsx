@@ -4,7 +4,7 @@ import { DateTime } from "luxon";
 
 import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { KonvaPoint } from "../../../utils/konva";
-import { TimeRange } from "../../../utils/time-range";
+import { InternalTimeRange } from "../../../utils/time";
 import Task from "../Task";
 import TaskTooltip, { TaskTooltipProps } from "../Tooltip";
 
@@ -69,7 +69,7 @@ const TasksLayer: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip }) => {
   );
 
   const getTaskWidth = useCallback(
-    ({ start, end }: TimeRange) => {
+    ({ start, end }: InternalTimeRange) => {
       const timeStart = DateTime.fromMillis(start);
       const timeEnd = DateTime.fromMillis(end);
       const widthOffsetInUnit = timeEnd.diff(timeStart).as(resolution.unit);
