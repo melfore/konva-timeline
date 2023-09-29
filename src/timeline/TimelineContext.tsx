@@ -5,7 +5,8 @@ import { addHeaderResource } from "../resources/utils/resources";
 import { filterTasks, TaskData, validateTasks } from "../tasks/utils/tasks";
 import { DEFAULT_GRID_COLUMN_WIDTH, DEFAULT_GRID_ROW_HEIGHT, MINIMUM_GRID_ROW_HEIGHT } from "../utils/dimensions";
 import { logDebug, logWarn } from "../utils/logger";
-import { TimeRange, toInterval } from "../utils/time-range";
+import { getValidTime, InternalTimeRange } from "../utils/time";
+import { getIntervalFromInternalTimeRange } from "../utils/time";
 import { getResolutionData, Resolution, ResolutionData } from "../utils/time-resolution";
 import { TimelineInput } from "../utils/timeline";
 import { executeWithPerfomanceCheck } from "../utils/utils";
@@ -47,11 +48,11 @@ type TimelineTheme = {
 };
 
 type TimelineContextType = Required<
-  Pick<TimelineInput, "columnWidth" | "displayTasksLabel" | "hideResources" | "resources" | "rowHeight" | "tasks">
+  Pick<TimelineInput, "columnWidth" | "displayTasksLabel" | "hideResources" | "resources" | "rowHeight">
 > & {
   blocksOffset: number;
   dragResolution: ResolutionData;
-  drawRange: TimeRange;
+  drawRange: InternalTimeRange;
   interval: Interval;
   onErrors?: (errors: KonvaTimelineError[]) => void;
   onTaskClick?: (task: TaskData) => void;
@@ -59,7 +60,8 @@ type TimelineContextType = Required<
   resolution: ResolutionData;
   resolutionKey: Resolution;
   resourcesContentHeight: number;
-  setDrawRange: (range: TimeRange) => void;
+  setDrawRange: (range: InternalTimeRange) => void;
+  tasks: TaskData<InternalTimeRange>[];
   theme: TimelineTheme;
   timeBlocks: Interval[];
   visibleTimeBlocks: Interval[];
@@ -67,7 +69,8 @@ type TimelineContextType = Required<
 
 const TimelineContext = createContext<TimelineContextType | undefined>(undefined);
 
-const DEFAULT_DRAW_RANGE: TimeRange = { start: 0, end: 0 };
+// TODO#lb: this should be another data type, specific to drawing
+const DEFAULT_DRAW_RANGE: InternalTimeRange = { start: 0, end: 0 };
 
 const TIME_BLOCKS_PRELOAD = 5;
 
@@ -82,7 +85,7 @@ export const TimelineProvider = ({
   onTaskClick,
   onTaskDrag,
   tasks: externalTasks,
-  range,
+  range: externalRange,
   resolution: externalResolution,
   resources: externalResources,
   rowHeight: externalRowHeight,
@@ -98,10 +101,18 @@ export const TimelineProvider = ({
     window.__MELFORE_KONVA_TIMELINE_DEBUG__ = debug;
   }, [debug]);
 
+  const range = useMemo((): InternalTimeRange => {
+    const { start: externalStart, end: externalEnd } = externalRange;
+    const start = getValidTime(externalStart);
+    const end = getValidTime(externalEnd);
+
+    return { start, end };
+  }, [externalRange]);
+
   const validTasks = useMemo(() => validateTasks(externalTasks, range), [externalTasks, range]);
 
   const interval = useMemo(
-    () => executeWithPerfomanceCheck("TimelineProvider", "interval", () => toInterval(range)),
+    () => executeWithPerfomanceCheck("TimelineProvider", "interval", () => getIntervalFromInternalTimeRange(range)),
     [range]
   );
 

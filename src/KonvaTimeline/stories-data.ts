@@ -1,6 +1,6 @@
 import { Resource } from "../resources/utils/resources";
 import { TaskData } from "../tasks/utils/tasks";
-import { TimeRange } from "../utils/time-range";
+import { InternalTimeRange } from "../utils/time";
 
 interface StoryDataInput {
   resourcesCount: number;
@@ -12,7 +12,7 @@ interface StoryDataInput {
 export interface StoryData {
   resources: Resource[];
   tasks: TaskData[];
-  range: TimeRange;
+  range: InternalTimeRange;
 }
 
 export const HOUR_IN_MILLISECONDS = 1000 * 60 * 60;
@@ -42,8 +42,12 @@ const generateResources = (count: number): Resource[] => {
   return resources;
 };
 
-const generateTasks = (count: number, avgDurationInMinutes: number, resourcesCount: number): TaskData[] => {
-  const tasks: TaskData[] = [];
+const generateTasks = (
+  count: number,
+  avgDurationInMinutes: number,
+  resourcesCount: number
+): TaskData<InternalTimeRange>[] => {
+  const tasks: TaskData<InternalTimeRange>[] = [];
 
   for (let i = 1; i <= count; i++) {
     const resourceId = `${Math.floor(Math.random() * resourcesCount) + 1}`;
@@ -70,7 +74,7 @@ const generateTasks = (count: number, avgDurationInMinutes: number, resourcesCou
   return tasks;
 };
 
-const generateTimeRange = (durationInDays: number): TimeRange => {
+const generateTimeRange = (durationInDays: number): InternalTimeRange => {
   const start = TIME_RANGE_START_DATE.valueOf();
   const end = TIME_RANGE_START_DATE.setDate(TIME_RANGE_START_DATE.getDate() + durationInDays).valueOf();
 

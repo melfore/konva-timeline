@@ -1,7 +1,7 @@
 import { KonvaTimelineError, Operation } from "../../utils/operations";
-import { TimeRange } from "../../utils/time-range";
+import { getValidTime, InternalTimeRange, TimeRange } from "../../utils/time";
 
-export interface TaskData {
+export interface TaskData<T extends TimeRange = TimeRange> {
   /**
    * Unique identifier of the task
    */
@@ -17,17 +17,17 @@ export interface TaskData {
   /**
    * Task time range
    */
-  time: TimeRange;
+  time: T;
 }
 
-type FilteredTasks = Operation<TaskData>;
+type FilteredTasks = Operation<TaskData<InternalTimeRange>>;
 
 /**
  * Filters valid tasks to be shown in the chart
  * @param tasks list of tasks as passed to the component
  * @param intervals intervals as passed to the component
  */
-export const validateTasks = (tasks: TaskData[], range: TimeRange | null): FilteredTasks => {
+export const validateTasks = (tasks: TaskData[], range: InternalTimeRange | null): FilteredTasks => {
   if (!range || !range.start || !range.end) {
     return { items: [], errors: [{ entity: "task", level: "warn", message: "Invalid range" }] };
   }
@@ -37,19 +37,29 @@ export const validateTasks = (tasks: TaskData[], range: TimeRange | null): Filte
   }
 
   const errors: KonvaTimelineError[] = [];
-  const items = tasks.filter(({ id: taskId, time: { start: taskStart, end: taskEnd } }) => {
-    if (taskStart >= taskEnd) {
-      errors.push({ entity: "task", level: "error", message: "Invalid time", refId: taskId });
-      return false;
-    }
+  const items = tasks
+    .map(
+      (task): TaskData<InternalTimeRange> => ({
+        ...task,
+        time: {
+          start: getValidTime(task.time.start),
+          end: getValidTime(task.time.end),
+        },
+      })
+    )
+    .filter(({ id: taskId, time: { start: taskStart, end: taskEnd } }) => {
+      if (taskStart >= taskEnd) {
+        errors.push({ entity: "task", level: "error", message: "Invalid time", refId: taskId });
+        return false;
+      }
 
-    if (taskEnd < range.start || taskStart > range.end) {
-      errors.push({ entity: "task", level: "warn", message: "Outside range", refId: taskId });
-      return false;
-    }
+      if (taskEnd < range.start || taskStart > range.end) {
+        errors.push({ entity: "task", level: "warn", message: "Outside range", refId: taskId });
+        return false;
+      }
 
-    return true;
-  });
+      return true;
+    });
 
   return { items, errors };
 };
@@ -59,7 +69,10 @@ export const validateTasks = (tasks: TaskData[], range: TimeRange | null): Filte
  * @param tasks list of tasks as passed to the component
  * @param intervals intervals as passed to the component
  */
-export const filterTasks = (tasks: TaskData[], range: TimeRange | null): TaskData[] => {
+export const filterTasks = (
+  tasks: TaskData<InternalTimeRange>[],
+  range: InternalTimeRange | null
+): TaskData<InternalTimeRange>[] => {
   if (!range || !range.start || !range.end || !tasks || !tasks.length) {
     return [];
   }

@@ -103,10 +103,33 @@ interface TimeRange {
   /**
    * Start of time range interval
    */
-  start: number;
+  start: number | string;
   /**
    * End of time range interval
    */
-  end: number;
+  end: number | string;
+}
+```
+
+#### KonvaTimelineError
+
+```
+interface KonvaTimelineError {
+  /**
+   * The entity that thrown the error
+   */
+  entity: DataEntity;
+  /**
+   * The error level (error or warn)
+   */
+  level: ErrorLevel;
+  /**
+   * The error message
+   */
+  message: string;
+  /**
+   * The refId for entity item
+   */
+  refId?: string;
 }
 ```
