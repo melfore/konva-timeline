@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { DateTime } from "luxon";
 
 import { generateStoryData } from "./stories-data";
 import KonvaTimeline from ".";
@@ -62,5 +63,16 @@ export const HiddenResources: Story = {
   args: {
     ...Primary.args,
     hideResources: true,
+  },
+};
+
+export const MixedDateTimeFormats: Story = {
+  args: {
+    ...Primary.args,
+    onErrors: (errors) => errors.forEach((error) => console.log({ error })),
+    range: {
+      start: DateTime.fromMillis(range.start).toUTC().toISO()!,
+      end: DateTime.fromMillis(range.end).toUTC().toISO()!,
+    },
   },
 };
