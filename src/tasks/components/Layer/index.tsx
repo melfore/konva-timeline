@@ -5,6 +5,7 @@ import { DateTime } from "luxon";
 import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { KonvaPoint } from "../../../utils/konva";
 import { InternalTimeRange } from "../../../utils/time";
+import { getTaskYCoordinate } from "../../utils/tasks";
 import Task from "../Task";
 import TaskTooltip, { TaskTooltipProps } from "../Tooltip";
 
@@ -97,7 +98,7 @@ const TasksLayer: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip }) => {
 
         const { color: resourceColor } = resources[resourceIndex];
         const xCoordinate = getTaskXCoordinate(time.start);
-        const yCoordinate = rowHeight * resourceIndex + rowHeight * 0.1;
+        const yCoordinate = getTaskYCoordinate(resourceIndex, rowHeight);
         const width = getTaskWidth(time);
         if (xCoordinate > drawRange.end || xCoordinate + width < drawRange.start) {
           return null;
