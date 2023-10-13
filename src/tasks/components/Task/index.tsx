@@ -10,6 +10,7 @@ import { KonvaDrawable, KonvaPoint } from "../../../utils/konva";
 import { logDebug } from "../../../utils/logger";
 import { getContrastColor } from "../../../utils/theme";
 import { getTaskYCoordinate, TaskData } from "../../utils/tasks";
+import TaskResizeHandler from "../TaskResizeHandler";
 
 type TaskMouseEventHandler = (taskId: string, point: KonvaPoint) => void;
 
@@ -74,6 +75,7 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
   const { id: taskId } = data;
 
   const [dragging, setDragging] = useState(false);
+  const [resizing, setResizing] = useState(false);
 
   const initialTaskDimensions = useMemo((): TaskDimensions => {
     const row = findResourceIndexByCoordinate(y, rowHeight, resources);
@@ -124,13 +126,39 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
   );
 
   const onTaskLeave = useCallback(
-    (e: KonvaEventObject<MouseEvent>) => onTaskMouseEvent(e, onLeave),
-    [onLeave, onTaskMouseEvent]
+    (e: KonvaEventObject<MouseEvent>) => {
+      e.cancelBubble = true;
+      if (resizing) {
+        return;
+      }
+
+      const stage = e.target.getStage();
+      if (!stage) {
+        return;
+      }
+
+      stage.container().style.cursor = "default";
+      onTaskMouseEvent(e, onLeave);
+    },
+    [onLeave, onTaskMouseEvent, resizing]
   );
 
   const onTaskOver = useCallback(
-    (e: KonvaEventObject<MouseEvent>) => onTaskMouseEvent(e, onOver),
-    [onOver, onTaskMouseEvent]
+    (e: KonvaEventObject<MouseEvent>) => {
+      e.cancelBubble = true;
+      if (resizing) {
+        return;
+      }
+
+      const stage = e.target.getStage();
+      if (!stage) {
+        return;
+      }
+
+      stage.container().style.cursor = "move";
+      onTaskMouseEvent(e, onOver);
+    },
+    [onOver, onTaskMouseEvent, resizing]
   );
 
   const onDragStart = useCallback((e: KonvaEventObject<DragEvent>) => {
@@ -182,7 +210,7 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
     [columnWidth, data, interval.start, onTaskDrag, getDragPoint, resources, rowHeight, sizeInUnits, unit, width]
   );
 
-  const opacity = useMemo(() => (dragging ? 0.5 : 1), [dragging]);
+  const opacity = useMemo(() => (dragging || resizing ? 0.5 : 1), [dragging, resizing]);
 
   const taskHeight = useMemo(() => rowHeight * 0.8, [rowHeight]);
 
@@ -197,48 +225,37 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
   const onResizeStart = useCallback((e: KonvaEventObject<DragEvent>) => {
     e.cancelBubble = true;
     console.log("=> onResizeStart", e.target);
-    setDragging(true);
+    setResizing(true);
   }, []);
 
   const onResizeMove = useCallback(
     (e: KonvaEventObject<DragEvent>, handler: "lx" | "rx") => {
       e.cancelBubble = true;
-      console.log("=> onResizeMove ===");
+
       const { x: dragX } = getDragPoint(e);
-      if (handler === "rx") {
-        setTaskDimensions((taskDimensions) => {
-          const { x: taskX } = taskDimensions;
-          const handlerX = dragX + taskX;
-          console.log(`=> onResizeMove: x = ${dragX} / taskX = ${taskDimensions.x}`);
-          if (handlerX <= taskX + 2 * TASK_BORDER_RADIUS) {
-            console.log("=> onResizeMove: abort x lower than task start");
-            return { ...taskDimensions };
-          }
 
-          const width = handlerX - taskX;
-          return { ...taskDimensions, width };
-        });
-        return;
-      }
+      setTaskDimensions((taskDimensions) => {
+        const { x: taskX, width: taskWidth } = taskDimensions;
+        const handlerX = taskX + dragX;
+        const taskEndX = taskX + taskWidth;
 
-      if (handler === "lx") {
-        setTaskDimensions((taskDimensions) => {
-          const { x: taskX, width: taskWidth } = taskDimensions;
-          const handlerX = dragX + taskX;
-          const taskEndX = taskX + taskWidth;
-          console.log(`=> onResizeMove: x = ${dragX} / taskX = ${taskDimensions.x}`);
-          if (handlerX >= taskEndX - 2 * TASK_BORDER_RADIUS) {
-            console.log("=> onResizeMove: abort x higher than task end");
-            return { ...taskDimensions };
-          }
+        switch (handler) {
+          case "rx":
+            if (handlerX <= taskX + TASK_BORDER_RADIUS) {
+              console.log("=> onResizeMove: abort x lower than task start");
+              return { ...taskDimensions };
+            }
 
-          const width = taskEndX - handlerX;
-          return { ...taskDimensions, x: handlerX, width };
-        });
-        return;
-      }
+            return { ...taskDimensions, width: handlerX - taskX };
+          case "lx":
+            if (handlerX >= taskEndX - TASK_BORDER_RADIUS) {
+              console.log("=> onResizeMove: abort x higher than task end");
+              return { ...taskDimensions };
+            }
 
-      return;
+            return { ...taskDimensions, x: handlerX, width: taskEndX - handlerX };
+        }
+      });
     },
     [getDragPoint]
   );
@@ -246,7 +263,7 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
   const onResizeEnd = useCallback((e: KonvaEventObject<DragEvent>) => {
     e.cancelBubble = true;
     console.log("=> onResizeEnd", e.target);
-    setDragging(false);
+    setResizing(false);
   }, []);
 
   return (
@@ -258,9 +275,6 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
       onDragEnd={onDragEnd}
       onDragMove={onDragMove}
       onDragStart={onDragStart}
-      onMouseLeave={onTaskLeave}
-      onMouseMove={onTaskOver}
-      onMouseOver={onTaskOver}
     >
       <Rect
         id={taskId}
@@ -268,34 +282,31 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
         fill={fill}
         height={taskHeight}
         opacity={opacity}
+        onMouseLeave={onTaskLeave}
+        onMouseMove={onTaskOver}
+        onMouseOver={onTaskOver}
         stroke={TASK_DEFAULT_STROKE}
         width={taskDimensions.width}
       />
-      <Rect
-        id={`${taskId}-resize-lx`}
-        draggable
-        fill="yellow"
+      <TaskResizeHandler
         height={taskHeight}
-        onDragStart={onResizeStart}
-        onDragMove={(e) => onResizeMove(e, "lx")}
-        onDragEnd={onResizeEnd}
+        onResizeStart={onResizeStart}
+        onResizeMove={onResizeMove}
+        onResizeEnd={onResizeEnd}
         opacity={opacity}
-        width={2 * TASK_BORDER_RADIUS}
-        x={0}
-        y={0}
+        position="lx"
+        taskId={taskId}
+        xCoordinate={-1}
       />
-      <Rect
-        id={`${taskId}-resize-rx`}
-        draggable
-        fill="yellow"
+      <TaskResizeHandler
         height={taskHeight}
-        onDragStart={onResizeStart}
-        onDragMove={(e) => onResizeMove(e, "rx")}
-        onDragEnd={onResizeEnd}
+        onResizeStart={onResizeStart}
+        onResizeMove={onResizeMove}
+        onResizeEnd={onResizeEnd}
         opacity={opacity}
-        width={2 * TASK_BORDER_RADIUS}
-        x={taskDimensions.width - 2 * TASK_BORDER_RADIUS}
-        y={0}
+        position="rx"
+        taskId={taskId}
+        xCoordinate={taskDimensions.width}
       />
       {displayTasksLabel && (
         <KonvaText
