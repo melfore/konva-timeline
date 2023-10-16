@@ -43,6 +43,7 @@ type TaskDimensions = {
 
 const TASK_DEFAULT_FILL = "#FFFFFF";
 const TASK_DEFAULT_STROKE = "#000000";
+const TASK_DEFAULT_STROKE_WIDTH = 1;
 
 const TASK_BORDER_RADIUS = 4;
 
@@ -286,6 +287,7 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
         onMouseMove={onTaskOver}
         onMouseOver={onTaskOver}
         stroke={TASK_DEFAULT_STROKE}
+        strokeWidth={TASK_DEFAULT_STROKE_WIDTH}
         width={taskDimensions.width}
       />
       <TaskResizeHandler
