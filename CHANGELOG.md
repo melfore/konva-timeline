@@ -1,9 +1,8 @@
 # [1.10.0](https://github.com/melfore/konva-timeline/compare/v1.9.0...v1.10.0) (2023-10-16)
 
-
 ### Features
 
-* 🎸 [Task] Added y coordinate getter ([b8d3b24](https://github.com/melfore/konva-timeline/commit/b8d3b24492b603185ef24f668eeb2c97076db9d6))
+- 🎸 [Task] Added y coordinate getter ([b8d3b24](https://github.com/melfore/konva-timeline/commit/b8d3b24492b603185ef24f668eeb2c97076db9d6))
 
 # [1.9.0](https://github.com/melfore/konva-timeline/compare/v1.8.0...v1.9.0) (2023-09-29)
 
