@@ -34,9 +34,9 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
    */
   onTaskClick?: (task: TaskData) => void;
   /**
-   * Event handler for task click
+   * Event handler for task change event (drag and resize)
    */
-  onTaskDrag?: (task: TaskData) => void;
+  onTaskChange?: (task: TaskData) => void;
   /**
    * Theme color in use
    */
@@ -56,7 +56,7 @@ type TimelineContextType = Required<
   interval: Interval;
   onErrors?: (errors: KonvaTimelineError[]) => void;
   onTaskClick?: (task: TaskData) => void;
-  onTaskDrag?: (task: TaskData) => void;
+  onTaskChange?: (task: TaskData) => void;
   resolution: ResolutionData;
   resolutionKey: Resolution;
   resourcesContentHeight: number;
@@ -83,7 +83,7 @@ export const TimelineProvider = ({
   hideResources = false,
   onErrors,
   onTaskClick,
-  onTaskDrag,
+  onTaskChange,
   tasks: externalTasks,
   range: externalRange,
   resolution: externalResolution,
@@ -224,7 +224,7 @@ export const TimelineProvider = ({
         interval,
         onErrors,
         onTaskClick,
-        onTaskDrag,
+        onTaskChange,
         resolution,
         resolutionKey: externalResolution,
         resources,

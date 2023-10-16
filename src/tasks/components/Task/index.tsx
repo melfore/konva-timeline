@@ -67,7 +67,7 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
     dragResolution: { sizeInUnits: dragSizeInUnits, unit: dragUnit },
     interval,
     onTaskClick,
-    onTaskDrag,
+    onTaskChange,
     resolution: { sizeInUnits, unit },
     resources,
     rowHeight,
@@ -198,8 +198,8 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
       logDebug("Task", `StartTime: ${DateTime.fromMillis(newStartInMillis).toISO()}`);
       logDebug("Task", `End: ${DateTime.fromMillis(newEndInMillis).toISO()}`);
       setDragging(false);
-      onTaskDrag &&
-        onTaskDrag({
+      onTaskChange &&
+        onTaskChange({
           ...data,
           resourceId: resource.id,
           time: {
@@ -208,7 +208,7 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
           },
         });
     },
-    [columnWidth, data, interval.start, onTaskDrag, getDragPoint, resources, rowHeight, sizeInUnits, unit, width]
+    [columnWidth, data, interval.start, onTaskChange, getDragPoint, resources, rowHeight, sizeInUnits, unit, width]
   );
 
   const opacity = useMemo(() => (dragging || resizing ? 0.5 : 1), [dragging, resizing]);
@@ -271,7 +271,7 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
     <Group
       x={taskDimensions.x}
       y={taskDimensions.y}
-      draggable={!!onTaskDrag}
+      draggable={!!onTaskChange}
       onClick={onClick}
       onDragEnd={onDragEnd}
       onDragMove={onDragMove}

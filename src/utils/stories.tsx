@@ -39,7 +39,7 @@ export const TaskDecorator = (storyFn: any) => {
     <TimelineProvider
       {...STORY_DATA}
       onTaskClick={(task) => alert(`OnTaskClick event handler - TaskId: ${task.id}`)}
-      onTaskDrag={(task) => alert(`OnTaskDrag event handler - TaskId: ${task.id}`)}
+      onTaskChange={(task) => alert(`OnTaskChange event handler - TaskId: ${task.id}`)}
       resolution="1hrs"
     >
       <div ref={wrapperRef}>
@@ -74,7 +74,7 @@ export const TasksLayerDecorator = (storyFn: any) => {
     <TimelineProvider
       {...STORY_DATA}
       onTaskClick={(task) => alert(`OnTaskClick event handler - TaskId: ${task.id}`)}
-      onTaskDrag={(task) => alert(`OnTaskDrag event handler - TaskId: ${task.id}`)}
+      onTaskChange={(task) => alert(`OnTaskChange event handler - TaskId: ${task.id}`)}
       resolution="1hrs"
     >
       <TasksLayerInternalDecorator storyFn={storyFn} />
