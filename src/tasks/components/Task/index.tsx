@@ -1,13 +1,13 @@
 import React, { memo, useCallback, useMemo, useState } from "react";
 import { Group, Rect, useStrictMode as enableStrictMode } from "react-konva";
 import { KonvaEventObject } from "konva/lib/Node";
-import { DateTime, Duration } from "luxon";
+import { Duration } from "luxon";
 
+import { TimeRange } from "../../..";
 import { KonvaText } from "../../../@konva";
 import { findResourceByCoordinate, findResourceIndexByCoordinate } from "../../../resources/utils/resources";
 import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { KonvaDrawable, KonvaPoint } from "../../../utils/konva";
-import { logDebug } from "../../../utils/logger";
 import { getContrastColor } from "../../../utils/theme";
 import { getTaskYCoordinate, TaskData } from "../../utils/tasks";
 import TaskResizeHandler from "../TaskResizeHandler";
@@ -86,6 +86,19 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
   }, [resources, rowHeight, width, x, y]);
 
   const [taskDimensions, setTaskDimensions] = useState(initialTaskDimensions);
+
+  const fromPxToTime = useCallback(
+    (sizePx: number): number => (sizePx * sizeInUnits) / columnWidth,
+    [columnWidth, sizeInUnits]
+  );
+
+  const onEndTimeRange = useCallback((): TimeRange => {
+    const { x, width } = taskDimensions;
+    const timeOffset = fromPxToTime(x);
+    const start = interval.start!.plus({ [unit]: timeOffset }).toMillis();
+    const end = start + Duration.fromObject({ [unit]: fromPxToTime(width) }).toMillis();
+    return { start, end };
+  }, [fromPxToTime, interval.start, taskDimensions, unit]);
 
   const dragSnapInPX = useMemo(() => {
     const resolutionInSnapUnit = Duration.fromObject({ [unit]: sizeInUnits }).as(dragUnit);
@@ -170,15 +183,10 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
     [enableDrag, onOver, onTaskMouseEvent, resizing]
   );
 
-  const onDragStart = useCallback((e: KonvaEventObject<DragEvent>) => {
-    console.log("=> onDragStart", e.target);
-    setDragging(true);
-  }, []);
+  const onDragStart = useCallback((e: KonvaEventObject<DragEvent>) => setDragging(true), []);
 
   const onDragMove = useCallback(
     (e: KonvaEventObject<DragEvent>) => {
-      // e.cancelBubble = true;
-      console.log("=> onDragMove", e.target);
       const { x, y } = getDragPoint(e);
       const dragFinalX = Math.ceil(x / dragSnapInPX) * dragSnapInPX;
       const xCoordinate = dragFinalX < 0 ? 0 : dragFinalX;
@@ -194,29 +202,17 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
 
   const onDragEnd = useCallback(
     (e: KonvaEventObject<DragEvent>) => {
-      // e.cancelBubble = true;
-      console.log("=> onDragEnd", e.target);
-      const { x, y } = getDragPoint(e);
-      const timeOffset = (x * sizeInUnits) / columnWidth;
-      const newStartInMillis = interval.start!.plus({ [unit]: timeOffset }).toMillis();
-      const newEndInMillis =
-        newStartInMillis + Duration.fromObject({ [unit]: (width * sizeInUnits) / columnWidth }).toMillis();
-      const resource = findResourceByCoordinate(y, rowHeight, resources);
-      logDebug("Task", `New Start: ${x} /  ${x} / ${timeOffset} / ${newStartInMillis}`);
-      logDebug("Task", `StartTime: ${DateTime.fromMillis(newStartInMillis).toISO()}`);
-      logDebug("Task", `End: ${DateTime.fromMillis(newEndInMillis).toISO()}`);
       setDragging(false);
-      onTaskChange &&
-        onTaskChange({
-          ...data,
-          resourceId: resource.id,
-          time: {
-            end: newEndInMillis,
-            start: newStartInMillis,
-          },
-        });
+      if (!onTaskChange) {
+        return;
+      }
+
+      const { y } = getDragPoint(e);
+      const { id: resourceId } = findResourceByCoordinate(y, rowHeight, resources);
+      const time = onEndTimeRange();
+      onTaskChange({ ...data, resourceId, time });
     },
-    [columnWidth, data, interval.start, onTaskChange, getDragPoint, resources, rowHeight, sizeInUnits, unit, width]
+    [getDragPoint, onEndTimeRange, rowHeight, resources, onTaskChange, data]
   );
 
   const opacity = useMemo(() => (dragging || resizing ? 0.5 : 1), [dragging, resizing]);
@@ -233,7 +229,6 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
 
   const onResizeStart = useCallback((e: KonvaEventObject<DragEvent>) => {
     e.cancelBubble = true;
-    console.log("=> onResizeStart", e.target);
     setResizing(true);
   }, []);
 
@@ -242,7 +237,6 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
       e.cancelBubble = true;
 
       const { x: dragX } = getDragPoint(e);
-
       setTaskDimensions((taskDimensions) => {
         const { x: taskX, width: taskWidth } = taskDimensions;
         const handlerX = taskX + dragX;
@@ -251,14 +245,12 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
         switch (handler) {
           case "rx":
             if (handlerX <= taskX + TASK_BORDER_RADIUS) {
-              console.log("=> onResizeMove: abort x lower than task start");
               return { ...taskDimensions };
             }
 
             return { ...taskDimensions, width: handlerX - taskX };
           case "lx":
             if (handlerX >= taskEndX - TASK_BORDER_RADIUS) {
-              console.log("=> onResizeMove: abort x higher than task end");
               return { ...taskDimensions };
             }
 
@@ -272,23 +264,15 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
   const onResizeEnd = useCallback(
     (e: KonvaEventObject<DragEvent>) => {
       e.cancelBubble = true;
-      console.log("=> onResizeEnd", e.target);
-      const { x, width } = taskDimensions;
-      const timeOffset = (x * sizeInUnits) / columnWidth;
-      const newStartInMillis = interval.start!.plus({ [unit]: timeOffset }).toMillis();
-      const newEndInMillis =
-        newStartInMillis + Duration.fromObject({ [unit]: (width * sizeInUnits) / columnWidth }).toMillis();
       setResizing(false);
-      onTaskChange &&
-        onTaskChange({
-          ...data,
-          time: {
-            end: newEndInMillis,
-            start: newStartInMillis,
-          },
-        });
+      if (!onTaskChange) {
+        return;
+      }
+
+      const time = onEndTimeRange();
+      onTaskChange({ ...data, time });
     },
-    [columnWidth, data, interval, unit, onTaskChange, sizeInUnits, taskDimensions]
+    [onTaskChange, data, onEndTimeRange]
   );
 
   return (
