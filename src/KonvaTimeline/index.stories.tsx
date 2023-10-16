@@ -12,7 +12,7 @@ const meta = {
     onTaskClick: {
       type: "function",
     },
-    onTaskDrag: {
+    onTaskChange: {
       type: "function",
     },
   },

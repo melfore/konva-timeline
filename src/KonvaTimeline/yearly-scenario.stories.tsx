@@ -8,7 +8,7 @@ const meta = {
   component: KonvaTimeline,
   tags: ["autodocs"],
   argTypes: {
-    onTaskDrag: {
+    onTaskChange: {
       type: "function",
     },
   },
