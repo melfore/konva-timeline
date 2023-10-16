@@ -1,6 +1,7 @@
 import React, { CSSProperties, FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Stage } from "react-konva";
 import Konva from "konva";
+import { DateTime } from "luxon";
 
 import GridLayer from "../grid/Layer";
 import ResourcesLayer from "../resources/components/Layer";
@@ -23,8 +24,11 @@ const DEFAULT_STAGE_SIZE: StageSize = { height: 0, width: 0 };
 const Timeline: FC<TimelineProps> = () => {
   const {
     hideResources,
+    initialDateTime,
+    interval: { start: intervalStart },
     columnWidth,
     resourcesContentHeight,
+    resolution,
     setDrawRange,
     theme: { color: themeColor },
     timeBlocks,
@@ -89,6 +93,16 @@ const Timeline: FC<TimelineProps> = () => {
     logDebug("Timeline", "Applying effects of size changes...");
     onWindowResize();
   }, [hideResources, onWindowResize]);
+
+  useEffect(() => {
+    if (!wrapper.current || !initialDateTime) {
+      return;
+    }
+
+    const timeStart = DateTime.fromMillis(initialDateTime);
+    const startOffsetInUnit = timeStart.diff(intervalStart!).as(resolution.unit);
+    wrapper.current.scrollTo({ left: (startOffsetInUnit * columnWidth) / resolution.sizeInUnits });
+  }, [columnWidth, initialDateTime, intervalStart, resolution.sizeInUnits, resolution.unit]);
 
   const fullTimelineWidth = useMemo(() => columnWidth * timeBlocks.length, [columnWidth, timeBlocks]);
 

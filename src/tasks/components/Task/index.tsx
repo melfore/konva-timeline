@@ -9,8 +9,8 @@ import { findResourceByCoordinate, findResourceIndexByCoordinate } from "../../.
 import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { KonvaDrawable, KonvaPoint } from "../../../utils/konva";
 import { getContrastColor } from "../../../utils/theme";
-import { getTaskYCoordinate, TaskData } from "../../utils/tasks";
-import TaskResizeHandler from "../TaskResizeHandler";
+import { getTaskYCoordinate, TASK_BORDER_RADIUS, TaskData } from "../../utils/tasks";
+import TaskResizeHandle from "../TaskResizeHandle";
 
 type TaskMouseEventHandler = (taskId: string, point: KonvaPoint) => void;
 
@@ -44,8 +44,6 @@ type TaskDimensions = {
 const TASK_DEFAULT_FILL = "#FFFFFF";
 const TASK_DEFAULT_STROKE = "#000000";
 const TASK_DEFAULT_STROKE_WIDTH = 1;
-
-const TASK_BORDER_RADIUS = 4;
 
 enableStrictMode(true);
 
@@ -299,7 +297,7 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
         width={taskDimensions.width}
       />
       {enableResize && (
-        <TaskResizeHandler
+        <TaskResizeHandle
           height={taskHeight}
           onResizeStart={onResizeStart}
           onResizeMove={onResizeMove}
@@ -311,7 +309,7 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
         />
       )}
       {enableResize && (
-        <TaskResizeHandler
+        <TaskResizeHandle
           height={taskHeight}
           onResizeStart={onResizeStart}
           onResizeMove={onResizeMove}

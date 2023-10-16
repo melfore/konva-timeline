@@ -24,6 +24,8 @@ type FilteredTasks = Operation<TaskData<InternalTimeRange>>;
 
 const TASK_OFFSET_Y = 0.1;
 
+export const TASK_BORDER_RADIUS = 4;
+
 /**
  * Gets task Y coordinate
  * @param rowIndex the row index

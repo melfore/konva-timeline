@@ -66,6 +66,13 @@ export const HiddenResources: Story = {
   },
 };
 
+export const InitialDateTime: Story = {
+  args: {
+    ...Primary.args,
+    initialDateTime: (range.start + range.end) / 2,
+  },
+};
+
 export const MixedDateTimeFormats: Story = {
   args: {
     ...Primary.args,

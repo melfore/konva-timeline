@@ -1,10 +1,9 @@
 # [1.11.0](https://github.com/melfore/konva-timeline/compare/v1.10.0...v1.11.0) (2023-10-16)
 
-
 ### Features
 
-* 🎸 [Task] Added flags for task operations ([7815a7c](https://github.com/melfore/konva-timeline/commit/7815a7c8aa37ab9974146f297f55920023db3676)), closes [#113](https://github.com/melfore/konva-timeline/issues/113)
-* 🎸 [Task] Change callback onResizeEnd ([1fc102b](https://github.com/melfore/konva-timeline/commit/1fc102bec08fc7a0d9b95ffee70f38d2c81d2fec)), closes [#113](https://github.com/melfore/konva-timeline/issues/113)
+- 🎸 [Task] Added flags for task operations ([7815a7c](https://github.com/melfore/konva-timeline/commit/7815a7c8aa37ab9974146f297f55920023db3676)), closes [#113](https://github.com/melfore/konva-timeline/issues/113)
+- 🎸 [Task] Change callback onResizeEnd ([1fc102b](https://github.com/melfore/konva-timeline/commit/1fc102bec08fc7a0d9b95ffee70f38d2c81d2fec)), closes [#113](https://github.com/melfore/konva-timeline/issues/113)
 
 # [1.10.0](https://github.com/melfore/konva-timeline/compare/v1.9.0...v1.10.0) (2023-10-16)
 
