@@ -34,6 +34,10 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
    */
   enableResize?: boolean;
   /**
+   * Initial date time to scroll to
+   */
+  initialDateTime?: number | string;
+  /**
    * Callback invoked when errors are thrown
    */
   onErrors?: (errors: KonvaTimelineError[]) => void;
@@ -63,6 +67,7 @@ type TimelineContextType = Required<
   drawRange: InternalTimeRange;
   enableDrag: boolean;
   enableResize: boolean;
+  initialDateTime?: number;
   interval: Interval;
   onErrors?: (errors: KonvaTimelineError[]) => void;
   onTaskClick?: (task: TaskData) => void;
@@ -93,6 +98,7 @@ export const TimelineProvider = ({
   enableDrag = true,
   enableResize = true,
   hideResources = false,
+  initialDateTime: externalInitialDateTime,
   onErrors,
   onTaskClick,
   onTaskChange,
@@ -103,9 +109,6 @@ export const TimelineProvider = ({
   rowHeight: externalRowHeight,
   theme: externalTheme = "light",
 }: TimelineProviderProps) => {
-  // logWarn("TimelineProvider", `Debug ${debug ? "ON" : "OFF"}`);
-  // window.__MELFORE_KONVA_TIMELINE_DEBUG__ = debug;
-
   const [drawRange, setDrawRange] = useState(DEFAULT_DRAW_RANGE);
 
   useEffect(() => {
@@ -120,6 +123,15 @@ export const TimelineProvider = ({
 
     return { start, end };
   }, [externalRange]);
+
+  const initialDateTime = useMemo(() => {
+    let initial = !externalInitialDateTime ? DateTime.now().toMillis() : getValidTime(externalInitialDateTime);
+    if (initial < range.start || initial > range.end) {
+      return;
+    }
+
+    return initial;
+  }, [externalInitialDateTime, range]);
 
   const validTasks = useMemo(() => validateTasks(externalTasks, range), [externalTasks, range]);
 
@@ -235,6 +247,7 @@ export const TimelineProvider = ({
         enableDrag,
         enableResize,
         hideResources,
+        initialDateTime,
         interval,
         onErrors,
         onTaskClick,
