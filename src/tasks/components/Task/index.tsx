@@ -65,6 +65,8 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
     columnWidth,
     displayTasksLabel,
     dragResolution: { sizeInUnits: dragSizeInUnits, unit: dragUnit },
+    enableDrag,
+    enableResize,
     interval,
     onTaskClick,
     onTaskChange,
@@ -138,10 +140,13 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
         return;
       }
 
-      stage.container().style.cursor = "default";
+      if (enableDrag) {
+        stage.container().style.cursor = "default";
+      }
+
       onTaskMouseEvent(e, onLeave);
     },
-    [onLeave, onTaskMouseEvent, resizing]
+    [enableDrag, onLeave, onTaskMouseEvent, resizing]
   );
 
   const onTaskOver = useCallback(
@@ -156,10 +161,13 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
         return;
       }
 
-      stage.container().style.cursor = "move";
+      if (enableDrag) {
+        stage.container().style.cursor = "move";
+      }
+
       onTaskMouseEvent(e, onOver);
     },
-    [onOver, onTaskMouseEvent, resizing]
+    [enableDrag, onOver, onTaskMouseEvent, resizing]
   );
 
   const onDragStart = useCallback((e: KonvaEventObject<DragEvent>) => {
@@ -271,7 +279,7 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
     <Group
       x={taskDimensions.x}
       y={taskDimensions.y}
-      draggable={!!onTaskChange}
+      draggable={enableDrag}
       onClick={onClick}
       onDragEnd={onDragEnd}
       onDragMove={onDragMove}
@@ -290,26 +298,30 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
         strokeWidth={TASK_DEFAULT_STROKE_WIDTH}
         width={taskDimensions.width}
       />
-      <TaskResizeHandler
-        height={taskHeight}
-        onResizeStart={onResizeStart}
-        onResizeMove={onResizeMove}
-        onResizeEnd={onResizeEnd}
-        opacity={opacity}
-        position="lx"
-        taskId={taskId}
-        xCoordinate={-1}
-      />
-      <TaskResizeHandler
-        height={taskHeight}
-        onResizeStart={onResizeStart}
-        onResizeMove={onResizeMove}
-        onResizeEnd={onResizeEnd}
-        opacity={opacity}
-        position="rx"
-        taskId={taskId}
-        xCoordinate={taskDimensions.width}
-      />
+      {enableResize && (
+        <TaskResizeHandler
+          height={taskHeight}
+          onResizeStart={onResizeStart}
+          onResizeMove={onResizeMove}
+          onResizeEnd={onResizeEnd}
+          opacity={opacity}
+          position="lx"
+          taskId={taskId}
+          xCoordinate={-1}
+        />
+      )}
+      {enableResize && (
+        <TaskResizeHandler
+          height={taskHeight}
+          onResizeStart={onResizeStart}
+          onResizeMove={onResizeMove}
+          onResizeEnd={onResizeEnd}
+          opacity={opacity}
+          position="rx"
+          taskId={taskId}
+          xCoordinate={taskDimensions.width}
+        />
+      )}
       {displayTasksLabel && (
         <KonvaText
           fill={textStroke}

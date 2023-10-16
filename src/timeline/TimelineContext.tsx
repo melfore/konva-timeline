@@ -26,6 +26,14 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
    */
   debug?: boolean;
   /**
+   * Enables drag&drop operation on tasks
+   */
+  enableDrag?: boolean;
+  /**
+   * Enables resize operation on tasks
+   */
+  enableResize?: boolean;
+  /**
    * Callback invoked when errors are thrown
    */
   onErrors?: (errors: KonvaTimelineError[]) => void;
@@ -53,6 +61,8 @@ type TimelineContextType = Required<
   blocksOffset: number;
   dragResolution: ResolutionData;
   drawRange: InternalTimeRange;
+  enableDrag: boolean;
+  enableResize: boolean;
   interval: Interval;
   onErrors?: (errors: KonvaTimelineError[]) => void;
   onTaskClick?: (task: TaskData) => void;
@@ -80,6 +90,8 @@ export const TimelineProvider = ({
   debug = false,
   displayTasksLabel = false,
   dragResolution: externalDragResolution,
+  enableDrag = true,
+  enableResize = true,
   hideResources = false,
   onErrors,
   onTaskClick,
@@ -220,6 +232,8 @@ export const TimelineProvider = ({
         displayTasksLabel,
         dragResolution,
         drawRange,
+        enableDrag,
+        enableResize,
         hideResources,
         interval,
         onErrors,
