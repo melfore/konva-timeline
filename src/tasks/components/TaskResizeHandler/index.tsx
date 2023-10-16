@@ -31,7 +31,7 @@ const TaskResizeHandler = ({
     <Rect
       id={`${taskId}-resize-${position}`}
       draggable
-      fill="yellow"
+      fill="transparent"
       height={height}
       onDragStart={onResizeStart}
       onDragMove={(e) => onResizeMove(e, position)}
