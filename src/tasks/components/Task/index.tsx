@@ -269,11 +269,27 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
     [getDragPoint]
   );
 
-  const onResizeEnd = useCallback((e: KonvaEventObject<DragEvent>) => {
-    e.cancelBubble = true;
-    console.log("=> onResizeEnd", e.target);
-    setResizing(false);
-  }, []);
+  const onResizeEnd = useCallback(
+    (e: KonvaEventObject<DragEvent>) => {
+      e.cancelBubble = true;
+      console.log("=> onResizeEnd", e.target);
+      const { x, width } = taskDimensions;
+      const timeOffset = (x * sizeInUnits) / columnWidth;
+      const newStartInMillis = interval.start!.plus({ [unit]: timeOffset }).toMillis();
+      const newEndInMillis =
+        newStartInMillis + Duration.fromObject({ [unit]: (width * sizeInUnits) / columnWidth }).toMillis();
+      setResizing(false);
+      onTaskChange &&
+        onTaskChange({
+          ...data,
+          time: {
+            end: newEndInMillis,
+            start: newStartInMillis,
+          },
+        });
+    },
+    [columnWidth, data, interval, unit, onTaskChange, sizeInUnits, taskDimensions]
+  );
 
   return (
     <Group
