@@ -22,6 +22,16 @@ export interface TaskData<T extends TimeRange = TimeRange> {
 
 type FilteredTasks = Operation<TaskData<InternalTimeRange>>;
 
+const TASK_OFFSET_Y = 0.1;
+
+/**
+ * Gets task Y coordinate
+ * @param rowIndex the row index
+ * @param rowHeight the row height
+ */
+export const getTaskYCoordinate = (rowIndex: number, rowHeight: number) =>
+  rowHeight * rowIndex + rowHeight * TASK_OFFSET_Y;
+
 /**
  * Filters valid tasks to be shown in the chart
  * @param tasks list of tasks as passed to the component

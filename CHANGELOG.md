@@ -1,9 +1,8 @@
 # [1.9.0](https://github.com/melfore/konva-timeline/compare/v1.8.0...v1.9.0) (2023-09-29)
 
-
 ### Features
 
-* 🎸 [Timeline] Allowing both number and string format ([fba691c](https://github.com/melfore/konva-timeline/commit/fba691c61824087616db029f769de022418550e2)), closes [#105](https://github.com/melfore/konva-timeline/issues/105)
+- 🎸 [Timeline] Allowing both number and string format ([fba691c](https://github.com/melfore/konva-timeline/commit/fba691c61824087616db029f769de022418550e2)), closes [#105](https://github.com/melfore/konva-timeline/issues/105)
 
 # [1.8.0](https://github.com/melfore/konva-timeline/compare/v1.7.7...v1.8.0) (2023-09-28)
 
