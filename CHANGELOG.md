@@ -1,9 +1,8 @@
 # [1.12.0](https://github.com/melfore/konva-timeline/compare/v1.11.0...v1.12.0) (2023-10-16)
 
-
 ### Features
 
-* 🎸 [Timeline] Added initialDateTime prop to auto scroll ([4500178](https://github.com/melfore/konva-timeline/commit/4500178c5006f52555aa411a33ade89fefb3b10f)), closes [#77](https://github.com/melfore/konva-timeline/issues/77)
+- 🎸 [Timeline] Added initialDateTime prop to auto scroll ([4500178](https://github.com/melfore/konva-timeline/commit/4500178c5006f52555aa411a33ade89fefb3b10f)), closes [#77](https://github.com/melfore/konva-timeline/issues/77)
 
 # [1.11.0](https://github.com/melfore/konva-timeline/compare/v1.10.0...v1.11.0) (2023-10-16)
 
