@@ -26,7 +26,7 @@ export const getValidTime = (date: number | string): number => {
   }
 
   if (typeof date === "string") {
-    const dateTime = DateTime.fromISO(date, { zone: "utc" });
+    const dateTime = DateTime.fromISO(date);
     if (dateTime.toISO() === date) {
       return dateTime.toMillis();
     }
