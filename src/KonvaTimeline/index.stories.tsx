@@ -45,6 +45,13 @@ export const CustomColumnWidth: Story = {
   },
 };
 
+export const CustomHeaderLabel: Story = {
+  args: {
+    ...Primary.args,
+    headerLabel: "Test",
+  },
+};
+
 export const CustomResolution: Story = {
   args: {
     ...Primary.args,
