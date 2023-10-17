@@ -39,7 +39,7 @@ export const getTaskYCoordinate = (rowIndex: number, rowHeight: number) =>
  * @param tasks list of tasks as passed to the component
  * @param intervals intervals as passed to the component
  */
-export const validateTasks = (tasks: TaskData[], range: InternalTimeRange | null): FilteredTasks => {
+export const validateTasks = (tasks: TaskData[], range: InternalTimeRange | null, timezone: string): FilteredTasks => {
   if (!range || !range.start || !range.end) {
     return { items: [], errors: [{ entity: "task", level: "warn", message: "Invalid range" }] };
   }
@@ -54,8 +54,8 @@ export const validateTasks = (tasks: TaskData[], range: InternalTimeRange | null
       (task): TaskData<InternalTimeRange> => ({
         ...task,
         time: {
-          start: getValidTime(task.time.start),
-          end: getValidTime(task.time.end),
+          start: getValidTime(task.time.start, timezone),
+          end: getValidTime(task.time.end, timezone),
         },
       })
     )

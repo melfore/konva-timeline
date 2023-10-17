@@ -54,6 +54,10 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
    */
   onTaskChange?: (task: TaskData) => void;
   /**
+   * Timezone used for display (defaults to UTC)
+   */
+  timezone?: string;
+  /**
    * Theme color in use
    */
   theme?: TimelineThemeMode;
@@ -84,6 +88,7 @@ type TimelineContextType = Required<
   tasks: TaskData<InternalTimeRange>[];
   theme: TimelineTheme;
   timeBlocks: Interval[];
+  timezone: string;
   visibleTimeBlocks: Interval[];
 };
 
@@ -113,6 +118,7 @@ export const TimelineProvider = ({
   resolution: externalResolution,
   resources: externalResources,
   rowHeight: externalRowHeight,
+  timezone = "utc",
   theme: externalTheme = "light",
 }: TimelineProviderProps) => {
   const [drawRange, setDrawRange] = useState(DEFAULT_DRAW_RANGE);
@@ -124,26 +130,31 @@ export const TimelineProvider = ({
 
   const range = useMemo((): InternalTimeRange => {
     const { start: externalStart, end: externalEnd } = externalRange;
-    const start = getValidTime(externalStart);
-    const end = getValidTime(externalEnd);
+    const start = getValidTime(externalStart, timezone);
+    const end = getValidTime(externalEnd, timezone);
 
     return { start, end };
-  }, [externalRange]);
+  }, [externalRange, timezone]);
 
   const initialDateTime = useMemo(() => {
-    let initial = !externalInitialDateTime ? DateTime.now().toMillis() : getValidTime(externalInitialDateTime);
+    let initial = !externalInitialDateTime
+      ? DateTime.now().toMillis()
+      : getValidTime(externalInitialDateTime, timezone);
     if (initial < range.start || initial > range.end) {
       return;
     }
 
     return initial;
-  }, [externalInitialDateTime, range]);
+  }, [externalInitialDateTime, range, timezone]);
 
-  const validTasks = useMemo(() => validateTasks(externalTasks, range), [externalTasks, range]);
+  const validTasks = useMemo(() => validateTasks(externalTasks, range, timezone), [externalTasks, range, timezone]);
 
   const interval = useMemo(
-    () => executeWithPerfomanceCheck("TimelineProvider", "interval", () => getIntervalFromInternalTimeRange(range)),
-    [range]
+    () =>
+      executeWithPerfomanceCheck("TimelineProvider", "interval", () =>
+        getIntervalFromInternalTimeRange(range, timezone)
+      ),
+    [range, timezone]
   );
 
   const resolution = useMemo(
@@ -267,6 +278,7 @@ export const TimelineProvider = ({
         tasks,
         theme,
         timeBlocks,
+        timezone,
         visibleTimeBlocks,
         blocksOffset: timeblocksOffset,
       }}
