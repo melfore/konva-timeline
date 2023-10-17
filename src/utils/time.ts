@@ -21,18 +21,12 @@ export interface InternalTimeRange {
  * @param date the input date (number or string formats)
  */
 export const getValidTime = (date: number | string): number => {
-  if (typeof date === "number" && !Number.isNaN(date)) {
-    return date;
+  const dateInMillis = typeof date === "number" ? date : new Date(date).getTime();
+  if (Number.isNaN(dateInMillis)) {
+    return new Date().getTime();
   }
 
-  if (typeof date === "string") {
-    const dateTime = DateTime.fromISO(date);
-    if (dateTime.toISO() === date) {
-      return dateTime.toMillis();
-    }
-  }
-
-  return DateTime.now().toMillis();
+  return dateInMillis;
 };
 
 /**

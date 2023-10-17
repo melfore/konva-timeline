@@ -1,14 +1,12 @@
 # [1.13.0](https://github.com/melfore/konva-timeline/compare/v1.12.0...v1.13.0) (2023-10-17)
 
-
 ### Bug Fixes
 
-* 🐛 [Timeline] Allow tz in initialDateTime and task ranges ([361acae](https://github.com/melfore/konva-timeline/commit/361acaeaec1cdbda5b3f29e5f2a5547430587246))
-
+- 🐛 [Timeline] Allow tz in initialDateTime and task ranges ([361acae](https://github.com/melfore/konva-timeline/commit/361acaeaec1cdbda5b3f29e5f2a5547430587246))
 
 ### Features
 
-* 🎸 [Timeline] Added custom header label prop ([6482931](https://github.com/melfore/konva-timeline/commit/648293105579e8c388f732fa3d5eefa76a1c435f))
+- 🎸 [Timeline] Added custom header label prop ([6482931](https://github.com/melfore/konva-timeline/commit/648293105579e8c388f732fa3d5eefa76a1c435f))
 
 # [1.12.0](https://github.com/melfore/konva-timeline/compare/v1.11.0...v1.12.0) (2023-10-16)
 
