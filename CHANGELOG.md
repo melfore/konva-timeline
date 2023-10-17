@@ -1,3 +1,10 @@
+## [1.13.1](https://github.com/melfore/konva-timeline/compare/v1.13.0...v1.13.1) (2023-10-17)
+
+
+### Bug Fixes
+
+* 🐛 [Time] Validation improve ([bdc0817](https://github.com/melfore/konva-timeline/commit/bdc08174a14bd323744dfa7a5079190e26728448))
+
 # [1.13.0](https://github.com/melfore/konva-timeline/compare/v1.12.0...v1.13.0) (2023-10-17)
 
 ### Bug Fixes
