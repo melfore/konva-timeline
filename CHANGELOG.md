@@ -1,3 +1,10 @@
+# [1.14.0](https://github.com/melfore/konva-timeline/compare/v1.13.1...v1.14.0) (2023-10-17)
+
+
+### Features
+
+* 🎸 [Timeline] Added timezone prop ([3d16621](https://github.com/melfore/konva-timeline/commit/3d16621c20308907117373b2941f4a10ef84a257)), closes [#91](https://github.com/melfore/konva-timeline/issues/91)
+
 ## [1.13.1](https://github.com/melfore/konva-timeline/compare/v1.13.0...v1.13.1) (2023-10-17)
 
 ### Bug Fixes
