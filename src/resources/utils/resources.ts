@@ -27,7 +27,10 @@ export const RESOURCE_TEXT_OFFSET = 12;
  * Adds header resource to incoming list of resources
  * @param resources the list of all resources
  */
-export const addHeaderResource = (resources: Resource[]): Resource[] => [RESOURCE_HEADER, ...resources];
+export const addHeaderResource = (resources: Resource[], headerLabel?: string): Resource[] => [
+  { ...RESOURCE_HEADER, label: headerLabel || RESOURCE_HEADER.label },
+  ...resources,
+];
 
 /**
  * Finds resource index given a y coordinate. Used when determining the resource from pointer position.

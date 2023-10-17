@@ -34,6 +34,10 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
    */
   enableResize?: boolean;
   /**
+   * Label to display in header column
+   */
+  headerLabel?: string;
+  /**
    * Initial date time to scroll to
    */
   initialDateTime?: number | string;
@@ -67,6 +71,7 @@ type TimelineContextType = Required<
   drawRange: InternalTimeRange;
   enableDrag: boolean;
   enableResize: boolean;
+  headerLabel?: string;
   initialDateTime?: number;
   interval: Interval;
   onErrors?: (errors: KonvaTimelineError[]) => void;
@@ -97,6 +102,7 @@ export const TimelineProvider = ({
   dragResolution: externalDragResolution,
   enableDrag = true,
   enableResize = true,
+  headerLabel,
   hideResources = false,
   initialDateTime: externalInitialDateTime,
   onErrors,
@@ -212,7 +218,7 @@ export const TimelineProvider = ({
     return resData;
   }, [externalDragResolution, externalResolution]);
 
-  const resources = useMemo(() => addHeaderResource(externalResources), [externalResources]);
+  const resources = useMemo(() => addHeaderResource(externalResources, headerLabel), [externalResources, headerLabel]);
 
   const rowHeight = useMemo(() => {
     logDebug("TimelineProvider", "Calculating rowHeight...");
