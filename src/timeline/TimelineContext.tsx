@@ -147,7 +147,13 @@ export const TimelineProvider = ({
     return initial;
   }, [externalInitialDateTime, range, timezone]);
 
-  const validTasks = useMemo(() => validateTasks(externalTasks, range, timezone), [externalTasks, range, timezone]);
+  const validTasks = useMemo(
+    () =>
+      executeWithPerfomanceCheck("TimelineProvider", "validateTasks", () =>
+        validateTasks(externalTasks, range, timezone)
+      ),
+    [externalTasks, range, timezone]
+  );
 
   const interval = useMemo(
     () =>
@@ -216,7 +222,8 @@ export const TimelineProvider = ({
   }, [visibleTimeBlocks]);
 
   const tasks = useMemo(
-    () => executeWithPerfomanceCheck("TimelineProvider", "tasks", () => filterTasks(validTasks.items, visibleRange)),
+    () =>
+      executeWithPerfomanceCheck("TimelineProvider", "filterTasks", () => filterTasks(validTasks.items, visibleRange)),
     [validTasks, visibleRange]
   );
 

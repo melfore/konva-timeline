@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Group, Rect, useStrictMode as enableStrictMode } from "react-konva";
 import { KonvaEventObject } from "konva/lib/Node";
 import { Duration } from "luxon";
@@ -84,6 +84,11 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
   }, [resources, rowHeight, width, x, y]);
 
   const [taskDimensions, setTaskDimensions] = useState(initialTaskDimensions);
+
+  useEffect(() => {
+    const row = findResourceIndexByCoordinate(y, rowHeight, resources);
+    setTaskDimensions({ row, width, x, y });
+  }, [resources, rowHeight, width, x, y]);
 
   const fromPxToTime = useCallback(
     (sizePx: number): number => (sizePx * sizeInUnits) / columnWidth,
