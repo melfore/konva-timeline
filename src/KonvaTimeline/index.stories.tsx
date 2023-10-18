@@ -90,3 +90,26 @@ export const MixedDateTimeFormats: Story = {
     },
   },
 };
+
+export const NonPreciseRange: Story = {
+  args: {
+    ...Primary.args,
+    range: {
+      start: 1697632200000,
+      end: 1698244200000,
+    },
+    tasks: [
+      {
+        id: "1",
+        label: "Task 1",
+        resourceId: "1",
+        time: {
+          start: 1697632200000,
+          end: 1697639400000,
+        },
+      },
+    ],
+    resolution: "1day",
+    timezone: "Europe/Rome",
+  },
+};
