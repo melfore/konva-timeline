@@ -1,9 +1,8 @@
 ## [1.14.1](https://github.com/melfore/konva-timeline/compare/v1.14.0...v1.14.1) (2023-10-17)
 
-
 ### Bug Fixes
 
-* 🐛 [Task] Receive changes from outside and update state ([e2d0528](https://github.com/melfore/konva-timeline/commit/e2d052872169a79458d64b9fd529ceb3d6784153))
+- 🐛 [Task] Receive changes from outside and update state ([e2d0528](https://github.com/melfore/konva-timeline/commit/e2d052872169a79458d64b9fd529ceb3d6784153))
 
 # [1.14.0](https://github.com/melfore/konva-timeline/compare/v1.13.1...v1.14.0) (2023-10-17)
 
