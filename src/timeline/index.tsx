@@ -25,7 +25,7 @@ const Timeline: FC<TimelineProps> = () => {
   const {
     hideResources,
     initialDateTime,
-    interval: { start: intervalStart },
+    interval,
     columnWidth,
     resourcesContentHeight,
     resolution,
@@ -100,9 +100,10 @@ const Timeline: FC<TimelineProps> = () => {
     }
 
     const timeStart = DateTime.fromMillis(initialDateTime);
-    const startOffsetInUnit = timeStart.diff(intervalStart!).as(resolution.unit);
+    console.log("=> Timeline", interval, timeStart.toMillis());
+    const startOffsetInUnit = timeStart.diff(interval.start!).as(resolution.unit);
     wrapper.current.scrollTo({ left: (startOffsetInUnit * columnWidth) / resolution.sizeInUnits });
-  }, [columnWidth, initialDateTime, intervalStart, resolution.sizeInUnits, resolution.unit]);
+  }, [columnWidth, initialDateTime, interval, resolution.sizeInUnits, resolution.unit]);
 
   const fullTimelineWidth = useMemo(() => columnWidth * timeBlocks.length, [columnWidth, timeBlocks]);
 

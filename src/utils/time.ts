@@ -1,5 +1,7 @@
 import { DateTime, Interval } from "luxon";
 
+import { ResolutionData } from "./time-resolution";
+
 export interface TimeRange {
   /**
    * Start of time range interval
@@ -21,7 +23,8 @@ export interface InternalTimeRange {
  * @param date the input date (number or string formats)
  */
 export const getValidTime = (date: number | string, timezone: string | undefined): number => {
-  const dateInMillis = typeof date === "number" ? date : DateTime.fromISO(date, { zone: timezone }).toMillis();
+  const tz = timezone || "system";
+  const dateInMillis = typeof date === "number" ? date : DateTime.fromISO(date, { zone: tz }).toMillis();
   if (Number.isNaN(dateInMillis)) {
     return new Date().getTime();
   }
@@ -35,10 +38,12 @@ export const getValidTime = (date: number | string, timezone: string | undefined
  */
 export const getIntervalFromInternalTimeRange = (
   { start, end }: InternalTimeRange,
+  resolution: ResolutionData,
   timezone: string | undefined
 ): Interval => {
-  return Interval.fromDateTimes(
-    DateTime.fromMillis(start, { zone: timezone }),
-    DateTime.fromMillis(end, { zone: timezone })
-  );
+  const tz = timezone || "system";
+  const startDateTime = DateTime.fromMillis(start, { zone: tz }).startOf(resolution.unit);
+  const endDateTime = DateTime.fromMillis(end, { zone: tz }).endOf(resolution.unit);
+  console.log("=> getIntervalFromInternalTimeRange", start, startDateTime, end, endDateTime);
+  return Interval.fromDateTimes(startDateTime, endDateTime);
 };

@@ -118,9 +118,24 @@ export const TimelineProvider = ({
   resolution: externalResolution,
   resources: externalResources,
   rowHeight: externalRowHeight,
-  timezone = "utc",
+  timezone: externalTimezone,
   theme: externalTheme = "light",
 }: TimelineProviderProps) => {
+  console.log("=> TimelineContext");
+
+  const timezone = useMemo(() => {
+    if (!externalTimezone) {
+      return "system";
+    }
+
+    const dateCheck = DateTime.fromMillis(0, { zone: externalTimezone });
+    if (!dateCheck.isValid) {
+      return "system";
+    }
+
+    return externalTimezone;
+  }, [externalTimezone]);
+
   const [drawRange, setDrawRange] = useState(DEFAULT_DRAW_RANGE);
 
   useEffect(() => {
@@ -135,6 +150,19 @@ export const TimelineProvider = ({
 
     return { start, end };
   }, [externalRange, timezone]);
+
+  const resolution = useMemo(
+    () => executeWithPerfomanceCheck("TimelineProvider", "resolution", () => getResolutionData(externalResolution)),
+    [externalResolution]
+  );
+
+  const interval = useMemo(
+    () =>
+      executeWithPerfomanceCheck("TimelineProvider", "interval", () =>
+        getIntervalFromInternalTimeRange(range, resolution, timezone)
+      ),
+    [range, resolution, timezone]
+  );
 
   const initialDateTime = useMemo(() => {
     let initial = !externalInitialDateTime
@@ -153,19 +181,6 @@ export const TimelineProvider = ({
         validateTasks(externalTasks, range, timezone)
       ),
     [externalTasks, range, timezone]
-  );
-
-  const interval = useMemo(
-    () =>
-      executeWithPerfomanceCheck("TimelineProvider", "interval", () =>
-        getIntervalFromInternalTimeRange(range, timezone)
-      ),
-    [range, timezone]
-  );
-
-  const resolution = useMemo(
-    () => executeWithPerfomanceCheck("TimelineProvider", "resolution", () => getResolutionData(externalResolution)),
-    [externalResolution]
   );
 
   const timeBlocks = useMemo(
@@ -285,7 +300,7 @@ export const TimelineProvider = ({
         tasks,
         theme,
         timeBlocks,
-        timezone,
+        timezone: timezone || "system",
         visibleTimeBlocks,
         blocksOffset: timeblocksOffset,
       }}
