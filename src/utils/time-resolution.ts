@@ -2,7 +2,7 @@ import { Interval } from "luxon";
 
 import { DEFAULT_GRID_COLUMN_WIDTH } from "./dimensions";
 
-type Scale = "minute" | "hour" | "day" | "week" | "month" | "year";
+export type Scale = "minute" | "hour" | "day" | "week" | "month" | "year";
 
 export type Resolution =
   | "1min"
@@ -131,6 +131,32 @@ export const RESOLUTIONS: Resolution[] = [
   "1week",
   "2weeks",
 ];
+
+/**
+ * Util to display an interval in a human readable format
+ * @param interval the interval to display
+ * @param unit the unit in which to display the interval
+ */
+export const displayAboveInterval = (interval: Interval, unit: Scale): string => {
+  const { start } = interval;
+  if (!start) {
+    return "-";
+  }
+
+  switch (unit) {
+    case "minute":
+    case "hour":
+      return start.toFormat("dd/MM/yy HH:mm");
+    case "day":
+      return start.toFormat("ccc dd MMM yyyy");
+    case "week":
+      return `${start.toFormat("MMM yyyy")} CW ${start.toFormat("WW")}`;
+    case "month":
+      return start.toFormat("yyyy");
+    default:
+      return "N/A";
+  }
+};
 
 /**
  * Util to display an interval in a human readable format

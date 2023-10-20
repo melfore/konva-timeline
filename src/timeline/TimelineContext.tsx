@@ -70,6 +70,7 @@ type TimelineTheme = {
 type TimelineContextType = Required<
   Pick<TimelineInput, "columnWidth" | "displayTasksLabel" | "hideResources" | "resources" | "rowHeight">
 > & {
+  aboveTimeBlocks: Interval[];
   blocksOffset: number;
   dragResolution: ResolutionData;
   drawRange: InternalTimeRange;
@@ -191,6 +192,8 @@ export const TimelineProvider = ({
     [interval, resolution]
   );
 
+  const aboveTimeBlocks = useMemo(() => interval.splitBy({ [resolution.unitAbove]: 1 }), [interval, resolution]);
+
   const columnWidth = useMemo(() => {
     logDebug("TimelineProvider", "Calculating columnWidth...");
     return !externalColumnWidth || externalColumnWidth < DEFAULT_GRID_COLUMN_WIDTH
@@ -279,6 +282,7 @@ export const TimelineProvider = ({
   return (
     <TimelineContext.Provider
       value={{
+        aboveTimeBlocks,
         columnWidth,
         displayTasksLabel,
         dragResolution,
