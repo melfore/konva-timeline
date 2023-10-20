@@ -1,9 +1,8 @@
 ## [1.14.2](https://github.com/melfore/konva-timeline/compare/v1.14.1...v1.14.2) (2023-10-18)
 
-
 ### Bug Fixes
 
-* 🐛 [Timeline] Check valid timezone ([4c21145](https://github.com/melfore/konva-timeline/commit/4c211451266b354a4e94192f27b9b6aef10b2e49))
+- 🐛 [Timeline] Check valid timezone ([4c21145](https://github.com/melfore/konva-timeline/commit/4c211451266b354a4e94192f27b9b6aef10b2e49))
 
 ## [1.14.1](https://github.com/melfore/konva-timeline/compare/v1.14.0...v1.14.1) (2023-10-17)
 

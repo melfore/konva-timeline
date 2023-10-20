@@ -100,7 +100,6 @@ const Timeline: FC<TimelineProps> = () => {
     }
 
     const timeStart = DateTime.fromMillis(initialDateTime);
-    console.log("=> Timeline", interval, timeStart.toMillis());
     const startOffsetInUnit = timeStart.diff(interval.start!).as(resolution.unit);
     wrapper.current.scrollTo({ left: (startOffsetInUnit * columnWidth) / resolution.sizeInUnits });
   }, [columnWidth, initialDateTime, interval, resolution.sizeInUnits, resolution.unit]);

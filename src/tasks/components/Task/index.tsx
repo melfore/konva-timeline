@@ -139,10 +139,7 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
     [taskId]
   );
 
-  const onClick = useCallback(
-    (e: KonvaEventObject<MouseEvent>) => onTaskClick && onTaskClick(data),
-    [data, onTaskClick]
-  );
+  const onClick = useCallback(() => onTaskClick && onTaskClick(data), [data, onTaskClick]);
 
   const onTaskLeave = useCallback(
     (e: KonvaEventObject<MouseEvent>) => {
@@ -186,7 +183,7 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
     [enableDrag, onOver, onTaskMouseEvent, resizing]
   );
 
-  const onDragStart = useCallback((e: KonvaEventObject<DragEvent>) => setDragging(true), []);
+  const onDragStart = useCallback(() => setDragging(true), []);
 
   const onDragMove = useCallback(
     (e: KonvaEventObject<DragEvent>) => {

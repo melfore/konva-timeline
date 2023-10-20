@@ -22,17 +22,17 @@ export type TimelineInput = {
    */
   hideResources?: boolean;
   /**
-   * Resolution to display data in konva-timeline
+   * Resolution to display data in konva-timeline (defaults to 1hrs)
    */
-  resolution: Resolution;
+  resolution?: Resolution;
   /**
    * Custom row height (defaults to 50px)
    */
   rowHeight?: number;
   /**
-   * List of tasks to be displayed
+   * List of tasks to be displayed (defaults to [])
    */
-  tasks: TaskData[];
+  tasks?: TaskData[];
   /**
    * Time range to be displayed
    */

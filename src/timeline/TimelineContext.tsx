@@ -54,7 +54,7 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
    */
   onTaskChange?: (task: TaskData) => void;
   /**
-   * Timezone used for display (defaults to UTC)
+   * Timezone used for display (defaults to 'system')
    */
   timezone?: string;
   /**
@@ -113,16 +113,14 @@ export const TimelineProvider = ({
   onErrors,
   onTaskClick,
   onTaskChange,
-  tasks: externalTasks,
+  tasks: externalTasks = [],
   range: externalRange,
-  resolution: externalResolution,
+  resolution: externalResolution = "1hrs",
   resources: externalResources,
   rowHeight: externalRowHeight,
   timezone: externalTimezone,
   theme: externalTheme = "light",
 }: TimelineProviderProps) => {
-  console.log("=> TimelineContext");
-
   const timezone = useMemo(() => {
     if (!externalTimezone) {
       return "system";
@@ -165,11 +163,13 @@ export const TimelineProvider = ({
   );
 
   const initialDateTime = useMemo(() => {
-    let initial = !externalInitialDateTime
-      ? DateTime.now().toMillis()
-      : getValidTime(externalInitialDateTime, timezone);
+    let initial = DateTime.now().toMillis();
+    if (externalInitialDateTime) {
+      initial = getValidTime(externalInitialDateTime, timezone);
+    }
+
     if (initial < range.start || initial > range.end) {
-      return;
+      return range.start;
     }
 
     return initial;

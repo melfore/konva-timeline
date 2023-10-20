@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import { Layer, Stage } from "react-konva";
+import { Decorator } from "@storybook/react";
 
 import { generateStoryData } from "../KonvaTimeline/stories-data";
 import { TimelineProvider, useTimelineContext } from "../timeline/TimelineContext";
@@ -17,11 +18,11 @@ export const STORY_DATA = generateStoryData({
   timeRangeInDays: 1,
 });
 
-export const LayerDecorator = (storyFn: any) => {
+export const LayerDecorator: Decorator = (storyFn) => {
   return <Layer>{storyFn()}</Layer>;
 };
 
-export const TaskDecorator = (storyFn: any) => {
+export const TaskDecorator: Decorator = (storyFn) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const [width, setWidth] = React.useState(0);
@@ -51,7 +52,8 @@ export const TaskDecorator = (storyFn: any) => {
   );
 };
 
-const TasksLayerInternalDecorator = ({ storyFn }: any) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const TasksLayerInternalDecorator = (storyFn: any) => {
   const { setDrawRange } = useTimelineContext();
 
   const stageWidth = useMemo(() => 60 * 24, []);
@@ -69,7 +71,7 @@ const TasksLayerInternalDecorator = ({ storyFn }: any) => {
   );
 };
 
-export const TasksLayerDecorator = (storyFn: any) => {
+export const TasksLayerDecorator: Decorator = (storyFn) => {
   return (
     <TimelineProvider
       {...STORY_DATA}
