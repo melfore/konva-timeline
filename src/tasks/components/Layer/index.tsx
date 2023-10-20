@@ -89,7 +89,7 @@ const TasksLayer: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip }) => {
 
   return (
     <Layer>
-      {tasks.map((taskData, index) => {
+      {tasks.map((taskData) => {
         const { resourceId, time } = taskData;
         const resourceIndex = getResourceById(resourceId);
         if (resourceIndex < 0) {

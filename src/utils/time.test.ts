@@ -25,7 +25,8 @@ describe("getValidTime", () => {
 
   it("load - numbers", () => {
     const now = new Date().getTime();
-    const dates = new Array(10000).fill(0).map((d) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const dates = new Array(10000).fill(0).map((_d) => {
       return Math.floor(Math.random() * now);
     });
 
@@ -39,7 +40,8 @@ describe("getValidTime", () => {
 
   it("load - strings", () => {
     const now = new Date().getTime();
-    const dates = new Array(10000).fill(0).map((d) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const dates = new Array(10000).fill(0).map((_d) => {
       const millis = Math.floor(Math.random() * now);
       return new Date(millis).toISOString();
     });

@@ -94,7 +94,7 @@ export const filterTasks = (
     return [];
   }
 
-  return tasks.filter(({ id: taskId, time: { start: taskStart, end: taskEnd } }) => {
+  return tasks.filter(({ time: { start: taskStart, end: taskEnd } }) => {
     if (taskStart >= taskEnd) {
       return false;
     }
