@@ -53,7 +53,7 @@ export const TaskDecorator: Decorator = (storyFn) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const TasksLayerInternalDecorator = (storyFn: any) => {
+const TasksLayerInternalDecorator = ({ storyFn }: any) => {
   const { setDrawRange } = useTimelineContext();
 
   const stageWidth = useMemo(() => 60 * 24, []);
