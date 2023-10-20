@@ -83,7 +83,7 @@ export const InitialDateTime: Story = {
 export const MixedDateTimeFormats: Story = {
   args: {
     ...Primary.args,
-    onErrors: (errors) => errors.forEach((error) => console.log({ error })),
+    onErrors: (errors) => errors.forEach((error) => console.error({ error })),
     range: {
       start: DateTime.fromMillis(range.start).toUTC().toISO()!,
       end: DateTime.fromMillis(range.end).toUTC().toISO()!,

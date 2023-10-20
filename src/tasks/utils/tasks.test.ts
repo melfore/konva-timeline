@@ -89,11 +89,10 @@ describe("validateTasks", () => {
     });
 
     const start = new Date().valueOf();
-    validateTasks(allTasks, range);
+    validateTasks(allTasks, range, "Europe/Rome");
     const end = new Date().valueOf();
     const operationLength = end - start;
-    console.log(`Filter tasks: ${operationLength} ms`);
-
+    console.warn(`Filter tasks: ${operationLength} ms`);
     expect(operationLength).toBeLessThan(100);
   });
 });

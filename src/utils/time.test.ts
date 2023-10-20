@@ -33,8 +33,7 @@ describe("getValidTime", () => {
     dates.forEach((d) => getValidTime(d, "utc"));
     const end = new Date().valueOf();
     const operationLength = end - start;
-    console.log(`Validate dates: ${operationLength} ms`);
-
+    console.warn(`Validate dates: ${operationLength} ms`);
     expect(operationLength).toBeLessThan(500);
   });
 
@@ -49,8 +48,7 @@ describe("getValidTime", () => {
     dates.forEach((d) => getValidTime(d, "utc"));
     const end = new Date().valueOf();
     const operationLength = end - start;
-    console.log(`Validate dates: ${operationLength} ms`);
-
+    console.warn(`Validate dates: ${operationLength} ms`);
     expect(operationLength).toBeLessThan(500);
   });
 });

@@ -44,6 +44,5 @@ export const getIntervalFromInternalTimeRange = (
   const tz = timezone || "system";
   const startDateTime = DateTime.fromMillis(start, { zone: tz }).startOf(resolution.unit);
   const endDateTime = DateTime.fromMillis(end, { zone: tz }).endOf(resolution.unit);
-  console.log("=> getIntervalFromInternalTimeRange", start, startDateTime, end, endDateTime);
   return Interval.fromDateTimes(startDateTime, endDateTime);
 };

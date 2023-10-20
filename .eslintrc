@@ -5,6 +5,7 @@
     {
       "files": ["*.js", "*.jsx", "*.ts", "*.tsx"],
       "rules": {
+        "no-console": ["error", { "allow": ["error", "warn"] }],
         "simple-import-sort/imports": [
           "error",
           {

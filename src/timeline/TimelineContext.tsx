@@ -121,8 +121,6 @@ export const TimelineProvider = ({
   timezone: externalTimezone,
   theme: externalTheme = "light",
 }: TimelineProviderProps) => {
-  console.log("=> TimelineContext");
-
   const timezone = useMemo(() => {
     if (!externalTimezone) {
       return "system";
