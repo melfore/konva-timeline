@@ -1,3 +1,5 @@
+## [1.14.3](https://github.com/melfore/konva-timeline/compare/v1.14.2...v1.14.3) (2023-10-20)
+
 ## [1.14.2](https://github.com/melfore/konva-timeline/compare/v1.14.1...v1.14.2) (2023-10-18)
 
 ### Bug Fixes
