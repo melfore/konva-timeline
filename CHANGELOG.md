@@ -1,3 +1,10 @@
+# [1.15.0](https://github.com/melfore/konva-timeline/compare/v1.14.3...v1.15.0) (2023-10-20)
+
+
+### Features
+
+* 🎸 [Timeline] Added display of unit above ([c7c5b37](https://github.com/melfore/konva-timeline/commit/c7c5b378531b8982fa3c36d82c76aaadc1e26bd7)), closes [#82](https://github.com/melfore/konva-timeline/issues/82)
+
 ## [1.14.3](https://github.com/melfore/konva-timeline/compare/v1.14.2...v1.14.3) (2023-10-20)
 
 ## [1.14.2](https://github.com/melfore/konva-timeline/compare/v1.14.1...v1.14.2) (2023-10-18)
