@@ -6,6 +6,7 @@ import { getTaskYCoordinate, validateTasks } from "./tasks";
 // From: Sunday, 1 January 2023 00:00:00 GMT+01:00
 // To: Monday, 2 January 2023 00:00:00 GMT+01:00
 const range: InternalTimeRange = { start: 1672527600000, end: 1672614000000 };
+const timezone = "Europe/Rome";
 
 describe("getTaskYCoordinate", () => {
   it("valid", () => {
@@ -18,7 +19,7 @@ describe("getTaskYCoordinate", () => {
 
 describe("validateTasks", () => {
   it("empty", () => {
-    const tasks = validateTasks([], range);
+    const tasks = validateTasks([], range, timezone);
     expect(tasks).toEqual({
       errors: [{ entity: "task", level: "warn", message: "No data" }],
       items: [],
@@ -28,7 +29,8 @@ describe("validateTasks", () => {
   it("task invalid", () => {
     const tasks = validateTasks(
       [{ id: "1", label: "Task #1", resourceId: "1", time: { start: 1672578000000, end: 1672563600000 } }],
-      range
+      range,
+      timezone
     );
 
     expect(tasks).toEqual({
@@ -40,7 +42,8 @@ describe("validateTasks", () => {
   it("task out of interval", () => {
     const tasks = validateTasks(
       [{ id: "1", label: "Task #1", resourceId: "1", time: { start: 1672470000000, end: 1672477200000 } }],
-      range
+      range,
+      timezone
     );
 
     expect(tasks).toEqual({
@@ -52,7 +55,8 @@ describe("validateTasks", () => {
   it("valid", () => {
     const tasks = validateTasks(
       [{ id: "1", label: "Task #1", resourceId: "1", time: { start: 1672556400000, end: 1672578000000 } }],
-      range
+      range,
+      timezone
     );
 
     expect(tasks).toEqual({
@@ -68,7 +72,8 @@ describe("validateTasks", () => {
         { id: "2", label: "Task #2", resourceId: "1", time: { start: 1672470000000, end: 1672477200000 } },
         { id: "3", label: "Task #3", resourceId: "1", time: { start: 1672578000000, end: 1672563600000 } },
       ],
-      range
+      range,
+      timezone
     );
 
     expect(tasks).toEqual({
@@ -89,7 +94,7 @@ describe("validateTasks", () => {
     });
 
     const start = new Date().valueOf();
-    validateTasks(allTasks, range, "Europe/Rome");
+    validateTasks(allTasks, range, timezone);
     const end = new Date().valueOf();
     const operationLength = end - start;
     console.warn(`Filter tasks: ${operationLength} ms`);
