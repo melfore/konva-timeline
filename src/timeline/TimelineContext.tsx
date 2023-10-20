@@ -163,11 +163,13 @@ export const TimelineProvider = ({
   );
 
   const initialDateTime = useMemo(() => {
-    let initial = !externalInitialDateTime
-      ? DateTime.now().toMillis()
-      : getValidTime(externalInitialDateTime, timezone);
+    let initial = DateTime.now().toMillis();
+    if (externalInitialDateTime) {
+      initial = getValidTime(externalInitialDateTime, timezone);
+    }
+
     if (initial < range.start || initial > range.end) {
-      return;
+      return range.start;
     }
 
     return initial;
