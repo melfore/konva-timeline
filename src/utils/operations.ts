@@ -1,10 +1,10 @@
-type DataEntity = "interval" | "task";
+type Entity = "interval" | "task" | "timeline";
 
-type ErrorLevel = "error" | "warn";
+type Level = "error" | "warn";
 
 export interface KonvaTimelineError {
-  entity: DataEntity;
-  level: ErrorLevel;
+  entity: Entity;
+  level: Level;
   message: string;
   refId?: string;
 }
