@@ -46,11 +46,11 @@ export const validateTasks = (
 ): FilteredTasks => {
   const tz = timezone || "system";
   if (!range || !range.start || !range.end) {
-    return { items: [], errors: [{ entity: "task", level: "warn", message: "Invalid range" }] };
+    return { items: [], errors: [{ entity: "timeline", level: "warn", message: "Invalid range" }] };
   }
 
   if (!tasks || !tasks.length) {
-    return { items: [], errors: [{ entity: "task", level: "warn", message: "No data" }] };
+    return { items: [], errors: [{ entity: "timeline", level: "warn", message: "No data" }] };
   }
 
   const errors: KonvaTimelineError[] = [];
