@@ -1,9 +1,8 @@
 ## [1.15.1](https://github.com/melfore/konva-timeline/compare/v1.15.0...v1.15.1) (2023-10-23)
 
-
 ### Bug Fixes
 
-* 🐛 [Timeline] Assign correct entity to errors thrown ([3033076](https://github.com/melfore/konva-timeline/commit/30330764d6ac752ce7fde1a33be4e419f53588c3)), closes [#133](https://github.com/melfore/konva-timeline/issues/133)
+- 🐛 [Timeline] Assign correct entity to errors thrown ([3033076](https://github.com/melfore/konva-timeline/commit/30330764d6ac752ce7fde1a33be4e419f53588c3)), closes [#133](https://github.com/melfore/konva-timeline/issues/133)
 
 # [1.15.0](https://github.com/melfore/konva-timeline/compare/v1.14.3...v1.15.0) (2023-10-20)
 
