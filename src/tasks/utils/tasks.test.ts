@@ -21,7 +21,7 @@ describe("validateTasks", () => {
   it("empty", () => {
     const tasks = validateTasks([], range, timezone);
     expect(tasks).toEqual({
-      errors: [{ entity: "task", level: "warn", message: "No data" }],
+      errors: [{ entity: "timeline", level: "warn", message: "No data" }],
       items: [],
     });
   });
