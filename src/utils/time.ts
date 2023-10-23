@@ -2,15 +2,17 @@ import { DateTime, Interval } from "luxon";
 
 import { ResolutionData } from "./time-resolution";
 
+type TimeInput = number | string;
+
 export interface TimeRange {
   /**
    * Start of time range interval
    */
-  start: number | string;
+  start: TimeInput;
   /**
    * End of time range interval
    */
-  end: number | string;
+  end: TimeInput;
 }
 
 export interface InternalTimeRange {
@@ -22,7 +24,7 @@ export interface InternalTimeRange {
  * Returns valid date based on input, otherwise now
  * @param date the input date (number or string formats)
  */
-export const getValidTime = (date: number | string, timezone: string | undefined): number => {
+export const getValidTime = (date: TimeInput, timezone: string | undefined): number => {
   const tz = timezone || "system";
   const dateInMillis = typeof date === "number" ? date : DateTime.fromISO(date, { zone: tz }).toMillis();
   if (Number.isNaN(dateInMillis)) {
