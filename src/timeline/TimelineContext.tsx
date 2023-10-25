@@ -167,6 +167,9 @@ export const TimelineProvider = ({
     let initial = DateTime.now().toMillis();
     if (externalInitialDateTime) {
       initial = getValidTime(externalInitialDateTime, timezone);
+      if (Number.isNaN(initial)) {
+        initial = new Date().getTime();
+      }
     }
 
     if (initial < range.start || initial > range.end) {
