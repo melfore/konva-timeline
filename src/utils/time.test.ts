@@ -2,7 +2,7 @@ import { getValidTime } from "./time";
 
 describe("getValidTime", () => {
   it("invalid", () => {
-    expect(getValidTime(NaN, "utc")).not.toBe(NaN);
+    expect(getValidTime(NaN, "utc")).toBe(NaN);
   });
 
   it("millis", () => {
@@ -34,7 +34,7 @@ describe("getValidTime", () => {
     dates.forEach((d) => getValidTime(d, "utc"));
     const end = new Date().valueOf();
     const operationLength = end - start;
-    console.warn(`Validate dates: ${operationLength} ms`);
+    console.warn(`Validate dates Number: ${operationLength} ms`);
     expect(operationLength).toBeLessThan(500);
   });
 
@@ -50,7 +50,23 @@ describe("getValidTime", () => {
     dates.forEach((d) => getValidTime(d, "utc"));
     const end = new Date().valueOf();
     const operationLength = end - start;
-    console.warn(`Validate dates: ${operationLength} ms`);
+    console.warn(`Validate dates String: ${operationLength} ms`);
+    expect(operationLength).toBeLessThan(500);
+  });
+
+  it("load - Date", () => {
+    const now = new Date().getTime();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const dates = new Array(10000).fill(0).map((_d) => {
+      const millis = Math.floor(Math.random() * now);
+      return new Date(millis);
+    });
+
+    const start = new Date().valueOf();
+    dates.forEach((d) => getValidTime(d, "utc"));
+    const end = new Date().valueOf();
+    const operationLength = end - start;
+    console.warn(`Validate dates Date: ${operationLength} ms`);
     expect(operationLength).toBeLessThan(500);
   });
 });

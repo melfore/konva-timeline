@@ -2,7 +2,7 @@ import { DateTime, Interval } from "luxon";
 
 import { ResolutionData } from "./time-resolution";
 
-type TimeInput = number | string;
+type TimeInput = number | string | Date;
 
 export interface TimeRange {
   /**
@@ -26,10 +26,12 @@ export interface InternalTimeRange {
  */
 export const getValidTime = (date: TimeInput, timezone: string | undefined): number => {
   const tz = timezone || "system";
-  const dateInMillis = typeof date === "number" ? date : DateTime.fromISO(date, { zone: tz }).toMillis();
-  if (Number.isNaN(dateInMillis)) {
-    return new Date().getTime();
-  }
+  const dateInMillis =
+    typeof date === "number"
+      ? date
+      : typeof date === "string"
+      ? DateTime.fromISO(date, { zone: tz }).toMillis()
+      : DateTime.fromJSDate(date, { zone: tz }).toMillis();
 
   return dateInMillis;
 };
