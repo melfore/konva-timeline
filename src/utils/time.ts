@@ -26,12 +26,18 @@ export interface InternalTimeRange {
  */
 export const getValidTime = (date: TimeInput, timezone: string | undefined): number => {
   const tz = timezone || "system";
-  const dateInMillis =
-    typeof date === "number"
-      ? date
-      : typeof date === "string"
-      ? DateTime.fromISO(date, { zone: tz }).toMillis()
-      : DateTime.fromJSDate(date, { zone: tz }).toMillis();
+  let dateInMillis;
+  switch (typeof date) {
+    case "number":
+      dateInMillis = date;
+      break;
+    case "string":
+      dateInMillis = DateTime.fromISO(date, { zone: tz }).toMillis();
+      break;
+    case "object":
+      dateInMillis = DateTime.fromJSDate(date, { zone: tz }).toMillis();
+      break;
+  }
 
   return dateInMillis;
 };
