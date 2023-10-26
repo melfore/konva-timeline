@@ -4,7 +4,7 @@ import { DateTime, Interval } from "luxon";
 import { addHeaderResource } from "../resources/utils/resources";
 import { filterTasks, TaskData, validateTasks } from "../tasks/utils/tasks";
 import { DEFAULT_GRID_COLUMN_WIDTH, DEFAULT_GRID_ROW_HEIGHT, MINIMUM_GRID_ROW_HEIGHT } from "../utils/dimensions";
-import { logDebug, logWarn } from "../utils/logger";
+import { logDebug, logError, logWarn } from "../utils/logger";
 import { getValidTime, InternalTimeRange } from "../utils/time";
 import { getIntervalFromInternalTimeRange } from "../utils/time";
 import { getResolutionData, Resolution, ResolutionData } from "../utils/time-resolution";
@@ -195,7 +195,26 @@ export const TimelineProvider = ({
     [interval, resolution]
   );
 
-  const aboveTimeBlocks = useMemo(() => interval.splitBy({ [resolution.unitAbove]: 1 }), [interval, resolution]);
+  const aboveTimeBlocks = useMemo(() => {
+    const { unitAbove } = resolution;
+    const blocks: Interval[] = [];
+    const intervalStart = interval.start!;
+    const intervalEnd = interval.end!;
+
+    let blockStart = intervalStart;
+    while (blockStart < intervalEnd) {
+      let blockEnd = blockStart.endOf(unitAbove);
+      if (blockEnd > intervalEnd) {
+        blockEnd = intervalEnd;
+      }
+
+      logError("Adding Block", `${blockStart.toFormat("dd/MM/yy HH:mm")} > ${blockEnd.toFormat("dd/MM/yy HH:mm")}`);
+      blocks.push(Interval.fromDateTimes(blockStart, blockEnd));
+      blockStart = blockEnd.startOf(unitAbove).plus({ [unitAbove]: 1 });
+    }
+
+    return blocks;
+  }, [interval, resolution]);
 
   const columnWidth = useMemo(() => {
     logDebug("TimelineProvider", "Calculating columnWidth...");
