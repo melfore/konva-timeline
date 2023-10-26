@@ -7,11 +7,10 @@ import { displayAboveInterval } from "../../utils/time-resolution";
 
 interface GridCellGroupProps {
   column: Interval;
-  height: number;
   index: number;
 }
 
-const GridCellGroup = ({ column, height, index }: GridCellGroupProps) => {
+const GridCellGroup = ({ column, index }: GridCellGroupProps) => {
   const {
     columnWidth,
     resolution: { sizeInUnits, unit, unitAbove },
@@ -21,7 +20,7 @@ const GridCellGroup = ({ column, height, index }: GridCellGroupProps) => {
 
   const cellLabel = useMemo(() => displayAboveInterval(column, unitAbove), [column, unitAbove]);
 
-  const points = useMemo(() => [0, 0, 0, height], [height]);
+  const points = useMemo(() => [0, 0, 0, rowHeight], [rowHeight]);
 
   const unitAboveInUnitBelow = useMemo(
     () => Duration.fromObject({ [unitAbove]: 1 }).as(unit) / sizeInUnits,
