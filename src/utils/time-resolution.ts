@@ -152,7 +152,7 @@ export const displayAboveInterval = (interval: Interval, unit: Scale): string =>
     case "week":
       return `${start.toFormat("MMM yyyy")} CW ${start.toFormat("WW")}`;
     case "month":
-      return start.toFormat("yyyy");
+      return start.toFormat("MMM yyyy");
     default:
       return "N/A";
   }
