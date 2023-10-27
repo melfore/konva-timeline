@@ -5,7 +5,7 @@ import { addHeaderResource } from "../resources/utils/resources";
 import { filterTasks, TaskData, validateTasks } from "../tasks/utils/tasks";
 import { DEFAULT_GRID_COLUMN_WIDTH, DEFAULT_GRID_ROW_HEIGHT, MINIMUM_GRID_ROW_HEIGHT } from "../utils/dimensions";
 import { logDebug, logWarn } from "../utils/logger";
-import { getValidTime, InternalTimeRange } from "../utils/time";
+import { getValidRangeTime, getValidTime, InternalTimeRange, isValidRangeTime } from "../utils/time";
 import { getIntervalFromInternalTimeRange } from "../utils/time";
 import { getResolutionData, Resolution, ResolutionData } from "../utils/time-resolution";
 import { TimelineInput } from "../utils/timeline";
@@ -144,10 +144,21 @@ export const TimelineProvider = ({
 
   const range = useMemo((): InternalTimeRange => {
     const { start: externalStart, end: externalEnd } = externalRange;
-    const start = getValidTime(externalStart, timezone);
-    const end = getValidTime(externalEnd, timezone);
-
-    return { start, end };
+    const isStart = isValidRangeTime(externalStart, "StartRenge");
+    const isEnd = isValidRangeTime(externalEnd, "EndRange");
+    const start = getValidRangeTime(externalStart, timezone);
+    const end = getValidRangeTime(externalEnd, timezone);
+    if (isStart) {
+      if (start <= end) {
+        return { start, end };
+      }
+      return { start: start, end: start };
+    }
+    if (isEnd) {
+      return { start: end, end: end };
+    }
+    const now = DateTime.local().toMillis();
+    return { start: now, end: now };
   }, [externalRange, timezone]);
 
   const resolution = useMemo(
