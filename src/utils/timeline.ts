@@ -22,7 +22,7 @@ export type TimelineInput = {
    */
   hideResources?: boolean;
   /**
-   * Resolution to display data in konva-timeline (defaults to 1hrs)
+   * Resolution to display data in konva-timeline (defaults to 1min)
    */
   resolution?: Resolution;
   /**

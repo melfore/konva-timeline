@@ -1,9 +1,8 @@
 # [1.16.0](https://github.com/melfore/konva-timeline/compare/v1.15.4...v1.16.0) (2023-10-27)
 
-
 ### Features
 
-* 🎸 [KonvaTimeLine]Added Range validation ([7b601d4](https://github.com/melfore/konva-timeline/commit/7b601d44645fbfd21920631e6eab4472f844d4ca)), closes [#138](https://github.com/melfore/konva-timeline/issues/138)
+- 🎸 [KonvaTimeLine]Added Range validation ([7b601d4](https://github.com/melfore/konva-timeline/commit/7b601d44645fbfd21920631e6eab4472f844d4ca)), closes [#138](https://github.com/melfore/konva-timeline/issues/138)
 
 ## [1.15.4](https://github.com/melfore/konva-timeline/compare/v1.15.3...v1.15.4) (2023-10-26)
 

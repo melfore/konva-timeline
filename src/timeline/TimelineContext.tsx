@@ -116,7 +116,7 @@ export const TimelineProvider = ({
   onTaskChange,
   tasks: externalTasks = [],
   range: externalRange,
-  resolution: externalResolution = "1hrs",
+  resolution: externalResolution = "1min",
   resources: externalResources,
   rowHeight: externalRowHeight,
   timezone: externalTimezone,
