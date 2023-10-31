@@ -1,5 +1,6 @@
 import { DateTime, Interval } from "luxon";
 
+import { logError } from "./logger";
 import { ResolutionData } from "./time-resolution";
 
 type TimeInput = number | string | Date;
@@ -40,6 +41,24 @@ export const getValidTime = (date: TimeInput, timezone: string | undefined): num
   }
 
   return dateInMillis;
+};
+
+export const getValidRangeTime = (date: TimeInput, timezone: string | undefined): number => {
+  const tz = timezone || "system";
+  const validDate = new Date(date);
+  const dateInMillis = DateTime.fromJSDate(validDate, { zone: tz }).toMillis();
+
+  return dateInMillis;
+};
+
+export const isValidRangeTime = (date: TimeInput, name: string): boolean => {
+  const validDate = new Date(date);
+  const isValidDateTime = DateTime.fromJSDate(validDate).isValid;
+  if (isValidDateTime) {
+    return true;
+  }
+  logError(name, "Invalid Date");
+  return false;
 };
 
 /**
