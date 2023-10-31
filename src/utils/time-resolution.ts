@@ -1,4 +1,4 @@
-import { Interval } from "luxon";
+import { DateTime, Interval } from "luxon";
 
 import { DEFAULT_GRID_COLUMN_WIDTH } from "./dimensions";
 
@@ -148,7 +148,7 @@ export const displayAboveInterval = (interval: Interval, unit: Scale): string =>
     case "hour":
       return start.toFormat("dd/MM/yy HH:mm");
     case "day":
-      return start.toFormat("ccc dd MMM yyyy");
+      return start.toFormat("ccc dd yyyy");
     case "week":
       return `${start.toFormat("MMM yyyy")} CW ${start.toFormat("WW")}`;
     case "month":
@@ -156,6 +156,35 @@ export const displayAboveInterval = (interval: Interval, unit: Scale): string =>
     default:
       return "N/A";
   }
+};
+
+export const getMonth = (interval: Interval): string => {
+  const { start } = interval;
+  if (!start) {
+    return "-";
+  }
+
+  return start.toFormat("M");
+};
+export const getYear = (interval: Interval): string => {
+  const { start } = interval;
+  if (!start) {
+    return "-";
+  }
+
+  return start.toFormat("yyyy");
+};
+
+export const getStartMonthsDay = (start: DateTime): string => {
+  if (!start) {
+    return "-";
+  }
+
+  return start.toFormat("d");
+};
+
+export const daysInMonth = (month: number, year: number) => {
+  return new Date(year, month, 0).getDate();
 };
 
 /**

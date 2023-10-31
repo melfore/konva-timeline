@@ -212,7 +212,6 @@ export const TimelineProvider = ({
       blocks.push(Interval.fromDateTimes(blockStart, blockEnd));
       blockStart = blockEnd.startOf(unitAbove).plus({ [unitAbove]: 1 });
     }
-
     return blocks;
   }, [interval, resolution]);
 

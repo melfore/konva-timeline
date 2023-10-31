@@ -28,5 +28,6 @@ export const YearlyReport: Story = {
   args: {
     ...yearlyStoryData,
     resolution: "1day",
+    columnWidth: 120,
   },
 };

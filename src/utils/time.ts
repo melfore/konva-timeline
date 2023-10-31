@@ -52,7 +52,7 @@ export const getIntervalFromInternalTimeRange = (
   timezone: string | undefined
 ): Interval => {
   const tz = timezone || "system";
-  const startDateTime = DateTime.fromMillis(start, { zone: tz }).startOf(resolution.unit);
-  const endDateTime = DateTime.fromMillis(end, { zone: tz }).endOf(resolution.unit);
+  const startDateTime = DateTime.fromMillis(start, { zone: tz }).startOf(resolution.unitAbove);
+  const endDateTime = DateTime.fromMillis(end, { zone: tz }).endOf(resolution.unitAbove);
   return Interval.fromDateTimes(startDateTime, endDateTime);
 };
