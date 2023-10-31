@@ -71,7 +71,11 @@ export const getIntervalFromInternalTimeRange = (
   timezone: string | undefined
 ): Interval => {
   const tz = timezone || "system";
-  const startDateTime = DateTime.fromMillis(start, { zone: tz }).startOf(resolution.unitAbove);
-  const endDateTime = DateTime.fromMillis(end, { zone: tz }).endOf(resolution.unitAbove);
+  const startDateTime = DateTime.fromMillis(start, { zone: tz }).startOf(
+    resolution.unitAbove !== "month" ? resolution.unitAbove : resolution.unit
+  );
+  const endDateTime = DateTime.fromMillis(end, { zone: tz }).endOf(
+    resolution.unitAbove !== "month" ? resolution.unitAbove : resolution.unit
+  );
   return Interval.fromDateTimes(startDateTime, endDateTime);
 };
