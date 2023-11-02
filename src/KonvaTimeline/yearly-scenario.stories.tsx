@@ -27,7 +27,22 @@ const yearlyStoryData = generateStoryData({
 export const YearlyReport: Story = {
   args: {
     ...yearlyStoryData,
-    resolution: "1day",
+    resolution: "30min",
     columnWidth: 120,
+    range: {
+      start: 1698357600000,
+      end: 1698966000000,
+    },
+    tasks: [
+      {
+        id: "1",
+        label: "1Novembre",
+        resourceId: "1",
+        time: {
+          start: 1698793200000,
+          end: 1700434800000,
+        },
+      },
+    ],
   },
 };

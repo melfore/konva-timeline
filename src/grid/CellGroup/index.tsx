@@ -8,7 +8,7 @@ import { displayAboveInterval } from "../../utils/time-resolution";
 interface GridCellGroupProps {
   column: Interval;
   index: number;
-  dayInfo?: { thisMonth: number; untilNow: number }[];
+  dayInfo?: { thisMonth?: number; untilNow?: number; backHour: boolean; forNowHour: boolean }[];
 }
 
 const GridCellGroup = ({ column, index, dayInfo }: GridCellGroupProps) => {
@@ -30,7 +30,9 @@ const GridCellGroup = ({ column, index, dayInfo }: GridCellGroupProps) => {
     return Duration.fromObject({ [unitAbove]: 1 }).as(unit) / sizeInUnits;
   }, [sizeInUnits, dayInfo, index, unitAbove, unit]);
 
-  const unitAboveSpanInPx = useMemo(() => unitAboveInUnitBelow * columnWidth, [columnWidth, unitAboveInUnitBelow]);
+  const unitAboveSpanInPx = useMemo(() => {
+    return unitAboveInUnitBelow * columnWidth;
+  }, [columnWidth, unitAboveInUnitBelow]);
 
   const xPos = useMemo(() => {
     if (unitAbove === "month") {
@@ -39,6 +41,10 @@ const GridCellGroup = ({ column, index, dayInfo }: GridCellGroupProps) => {
       const a = pxUntil * columnWidth;
       return a + unitAboveSpanInPx;
     }
+    if (unitAbove === "day" && dayInfo![index].forNowHour) {
+      return index * unitAboveSpanInPx + columnWidth / sizeInUnits;
+    }
+
     return index * unitAboveSpanInPx;
   }, [index, unitAboveSpanInPx, columnWidth, sizeInUnits, dayInfo, unitAbove]);
 

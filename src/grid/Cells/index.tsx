@@ -17,22 +17,26 @@ const GridCells = ({ height }: GridCellsProps) => {
     visibleTimeBlocks,
     resolution: { unitAbove },
   } = useTimelineContext();
-  const dayInfo: { thisMonth: number; untilNow: number }[] = [];
-  if (unitAbove === "month") {
+  const dayInfo: { thisMonth?: number; untilNow?: number; backHour: boolean; forNowHour: boolean }[] = [];
+  if (unitAbove === "month" || unitAbove === "day") {
     aboveTimeBlocks.forEach((column, index) => {
+      const hrs = column.end!.diff(column.start!, "hour").hours;
       const month = getMonth(column);
       const year = getYear(column);
       const currentMonthDays = daysInMonth(Number(month), Number(year));
+      const bchour = hrs > 24 ? true : false;
       if (index === 0) {
         const startDay = getStartMonthsDay(interval.start!);
         const daysToMonthEnd = currentMonthDays - Number(startDay) + 1;
-        dayInfo.push({ thisMonth: daysToMonthEnd, untilNow: daysToMonthEnd });
+        dayInfo.push({ thisMonth: daysToMonthEnd, untilNow: daysToMonthEnd, backHour: bchour, forNowHour: false });
         return;
       }
-      const n = dayInfo[index - 1].untilNow + currentMonthDays;
-      dayInfo.push({ thisMonth: currentMonthDays, untilNow: n });
+      const forNowHour = dayInfo[index - 1].forNowHour ? true : dayInfo[index - 1].backHour ? true : false;
+      const n = dayInfo[index - 1].untilNow! + currentMonthDays;
+      dayInfo.push({ thisMonth: currentMonthDays, untilNow: n, backHour: bchour, forNowHour: forNowHour });
     });
   }
+
   return (
     <KonvaGroup>
       {aboveTimeBlocks.map((column, index) => (
