@@ -11,12 +11,14 @@ interface GridCellGroupProps {
   dayInfo?: {
     thisMonth?: number;
     untilNow?: number;
-    backHour: boolean;
-    nextHour: boolean;
   }[];
+  hourInfo?: {
+    backHour?: boolean;
+    nextHour?: boolean;
+  };
 }
 
-const GridCellGroup = ({ column, index, dayInfo }: GridCellGroupProps) => {
+const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps) => {
   const {
     columnWidth,
     resolution: { sizeInUnits, unit, unitAbove },
@@ -43,35 +45,35 @@ const GridCellGroup = ({ column, index, dayInfo }: GridCellGroupProps) => {
     if (unitAbove === "month") {
       const pxUntil =
         index !== 0 ? Duration.fromObject({ ["day"]: dayInfo![index - 1].untilNow }).as("week") / sizeInUnits : 0;
-      if (dayInfo![index].backHour) {
+      if (hourInfo!.backHour) {
         const hourInMonthPx = columnWidth / 168;
         return pxUntil * columnWidth + unitAboveSpanInPx + hourInMonthPx;
       }
-      if (dayInfo![index].nextHour) {
+      if (hourInfo!.nextHour) {
         const hourInMonthPx = columnWidth / 168;
         return pxUntil * columnWidth + unitAboveSpanInPx - hourInMonthPx;
       }
       return pxUntil * columnWidth + unitAboveSpanInPx;
     }
     if (unitAbove === "day") {
-      if (dayInfo![index].backHour) {
+      if (hourInfo!.backHour) {
         return index * unitAboveSpanInPx + columnWidth / sizeInUnits;
       }
-      if (dayInfo![index].nextHour) {
+      if (hourInfo!.nextHour) {
         return index * unitAboveSpanInPx - columnWidth / sizeInUnits;
       }
     }
     if (unitAbove === "week") {
-      if (dayInfo![index].backHour) {
+      if (hourInfo!.backHour) {
         return index * unitAboveSpanInPx + columnWidth / 24;
       }
-      if (dayInfo![index].nextHour) {
+      if (hourInfo!.nextHour) {
         return index * unitAboveSpanInPx - columnWidth / 24;
       }
     }
 
     return index * unitAboveSpanInPx;
-  }, [index, unitAboveSpanInPx, columnWidth, sizeInUnits, dayInfo, unitAbove]);
+  }, [index, unitAboveSpanInPx, columnWidth, sizeInUnits, dayInfo, unitAbove, hourInfo]);
 
   const yPos = useMemo(() => rowHeight * 0.3, [rowHeight]);
 

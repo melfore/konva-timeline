@@ -9,13 +9,13 @@ interface GridCellProps {
   column: Interval;
   height: number;
   index: number;
-  visibleDayInfo: {
+  hourInfo: {
     backHour?: boolean;
     nextHour?: boolean;
   };
 }
 
-const GridCell = ({ column, height, index, visibleDayInfo }: GridCellProps) => {
+const GridCell = ({ column, height, index, hourInfo: visibleDayInfo }: GridCellProps) => {
   const {
     blocksOffset,
     columnWidth,
