@@ -31,6 +31,7 @@ const GridCell = ({ column, height, index, hourInfo: visibleDayInfo }: GridCellP
       if (visibleDayInfo.backHour) {
         return columnWidth * (index + blocksOffset) + columnWidth / 24;
       }
+
       if (visibleDayInfo.nextHour) {
         return columnWidth * (index + blocksOffset) - columnWidth / 24;
       }
@@ -39,10 +40,12 @@ const GridCell = ({ column, height, index, hourInfo: visibleDayInfo }: GridCellP
       if (visibleDayInfo.backHour) {
         return columnWidth * (index + blocksOffset) + columnWidth / 168;
       }
+
       if (visibleDayInfo.nextHour) {
         return columnWidth * (index + blocksOffset) - columnWidth / 168;
       }
     }
+
     return columnWidth * (index + blocksOffset);
   }, [blocksOffset, columnWidth, index, visibleDayInfo, resolutionUnit]);
 

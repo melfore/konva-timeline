@@ -34,6 +34,7 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
     if (unitAbove === "month") {
       return Duration.fromObject({ ["day"]: dayInfo![index].thisMonth }).as("week") / sizeInUnits;
     }
+
     return Duration.fromObject({ [unitAbove]: 1 }).as(unit) / sizeInUnits;
   }, [sizeInUnits, dayInfo, index, unitAbove, unit]);
 
@@ -45,28 +46,35 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
     if (unitAbove === "month") {
       const pxUntil =
         index !== 0 ? Duration.fromObject({ ["day"]: dayInfo![index - 1].untilNow }).as("week") / sizeInUnits : 0;
+
       if (hourInfo!.backHour) {
         const hourInMonthPx = columnWidth / 168;
         return pxUntil * columnWidth + unitAboveSpanInPx + hourInMonthPx;
       }
+
       if (hourInfo!.nextHour) {
         const hourInMonthPx = columnWidth / 168;
         return pxUntil * columnWidth + unitAboveSpanInPx - hourInMonthPx;
       }
+
       return pxUntil * columnWidth + unitAboveSpanInPx;
     }
+
     if (unitAbove === "day") {
       if (hourInfo!.backHour) {
         return index * unitAboveSpanInPx + columnWidth / sizeInUnits;
       }
+
       if (hourInfo!.nextHour) {
         return index * unitAboveSpanInPx - columnWidth / sizeInUnits;
       }
     }
+
     if (unitAbove === "week") {
       if (hourInfo!.backHour) {
         return index * unitAboveSpanInPx + columnWidth / 24;
       }
+
       if (hourInfo!.nextHour) {
         return index * unitAboveSpanInPx - columnWidth / 24;
       }
