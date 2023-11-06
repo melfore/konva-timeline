@@ -2,13 +2,18 @@ import { Interval } from "luxon";
 
 import { daysInMonth, getMonth, getStartMonthsDay, getYear, Scale } from "../../utils/time-resolution";
 
-interface visibleDayInfoProps {
+interface VisibleHourInfoProps {
   backHour?: boolean;
   nextHour?: boolean;
 }
 
+interface DayDetailProps {
+  thisMonth?: number;
+  untilNow?: number;
+}
+
 export const timeBlockTz = (timeBlock: Interval[], initialTz?: string) => {
-  const dayInfoArray: visibleDayInfoProps[] = [];
+  const dayInfoArray: VisibleHourInfoProps[] = [];
   timeBlock.forEach((column) => {
     const tzStart = column.start!.toISO()?.slice(-6);
 
@@ -36,10 +41,7 @@ export const timeBlockTz = (timeBlock: Interval[], initialTz?: string) => {
 
 export const dayDetail = (unitAbove: Scale, aboveTimeBlocks: Interval[], interval: Interval) => {
   if (unitAbove === "month") {
-    const dayInfo: {
-      thisMonth?: number;
-      untilNow?: number;
-    }[] = [];
+    const dayInfo: DayDetailProps[] = [];
     aboveTimeBlocks.forEach((column, index) => {
       const month = getMonth(column);
       const year = getYear(column);
