@@ -1,3 +1,15 @@
+## [1.16.2](https://github.com/melfore/konva-timeline/compare/v1.16.1...v1.16.2) (2023-11-06)
+
+
+### Bug Fixes
+
+* 🐛 [Timeline] Fixed display for month unit ([a551ddf](https://github.com/melfore/konva-timeline/commit/a551ddfea89676f1c9305782ac16e2b15aa454e6))
+* 🐛 [TimeLine] Fixed display of unit above ([f67d077](https://github.com/melfore/konva-timeline/commit/f67d07743c6e07385306dd306679ee2c79c19cbb)), closes [#140](https://github.com/melfore/konva-timeline/issues/140)
+* 🐛 [TimeLine] Fixed display of visibleTimeBlock with Tz ([d6f31e5](https://github.com/melfore/konva-timeline/commit/d6f31e5a578ea18938c155921864c2087e5a6a06)), closes [#140](https://github.com/melfore/konva-timeline/issues/140)
+* 🐛 [TimeLine] fixed display unitAbove when TZ change ([6f7b7b0](https://github.com/melfore/konva-timeline/commit/6f7b7b03aa493871f21fb1090b89250bca0fd42e)), closes [#140](https://github.com/melfore/konva-timeline/issues/140)
+* 🐛 [timeLine] fixed start interval for week unit ([02c81d9](https://github.com/melfore/konva-timeline/commit/02c81d922f8980a5a3c1afd8381739a6f1a53d31)), closes [#140](https://github.com/melfore/konva-timeline/issues/140)
+* 🐛 [Timeline] Print unit above of length = rowHeight ([ea9a047](https://github.com/melfore/konva-timeline/commit/ea9a047a5756bb30591db82605d7f6c5e4891c45))
+
 ## [1.16.1](https://github.com/melfore/konva-timeline/compare/v1.16.0...v1.16.1) (2023-10-31)
 
 # [1.16.0](https://github.com/melfore/konva-timeline/compare/v1.15.4...v1.16.0) (2023-10-27)
