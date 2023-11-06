@@ -9,9 +9,13 @@ interface GridCellProps {
   column: Interval;
   height: number;
   index: number;
+  visibleDayInfo: {
+    backHour?: boolean;
+    nextHour?: boolean;
+  };
 }
 
-const GridCell = ({ column, height, index }: GridCellProps) => {
+const GridCell = ({ column, height, index, visibleDayInfo }: GridCellProps) => {
   const {
     blocksOffset,
     columnWidth,
@@ -22,7 +26,25 @@ const GridCell = ({ column, height, index }: GridCellProps) => {
 
   const cellLabel = useMemo(() => displayInterval(column, resolutionUnit), [column, resolutionUnit]);
 
-  const xPos = useMemo(() => columnWidth * (index + blocksOffset), [blocksOffset, columnWidth, index]);
+  const xPos = useMemo(() => {
+    if (resolutionUnit === "day") {
+      if (visibleDayInfo.backHour) {
+        return columnWidth * (index + blocksOffset) + columnWidth / 24;
+      }
+      if (visibleDayInfo.nextHour) {
+        return columnWidth * (index + blocksOffset) - columnWidth / 24;
+      }
+    }
+    if (resolutionUnit === "week") {
+      if (visibleDayInfo.backHour) {
+        return columnWidth * (index + blocksOffset) + columnWidth / 168;
+      }
+      if (visibleDayInfo.nextHour) {
+        return columnWidth * (index + blocksOffset) - columnWidth / 168;
+      }
+    }
+    return columnWidth * (index + blocksOffset);
+  }, [blocksOffset, columnWidth, index, visibleDayInfo, resolutionUnit]);
 
   const yPos = useMemo(() => rowHeight * 0.8, [rowHeight]);
 

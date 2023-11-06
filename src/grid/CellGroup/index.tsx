@@ -8,7 +8,12 @@ import { displayAboveInterval } from "../../utils/time-resolution";
 interface GridCellGroupProps {
   column: Interval;
   index: number;
-  dayInfo?: { thisMonth?: number; untilNow?: number; backHour: boolean; forNowHour: boolean }[];
+  dayInfo?: {
+    thisMonth?: number;
+    untilNow?: number;
+    backHour: boolean;
+    nextHour: boolean;
+  }[];
 }
 
 const GridCellGroup = ({ column, index, dayInfo }: GridCellGroupProps) => {
@@ -38,11 +43,31 @@ const GridCellGroup = ({ column, index, dayInfo }: GridCellGroupProps) => {
     if (unitAbove === "month") {
       const pxUntil =
         index !== 0 ? Duration.fromObject({ ["day"]: dayInfo![index - 1].untilNow }).as("week") / sizeInUnits : 0;
-      const a = pxUntil * columnWidth;
-      return a + unitAboveSpanInPx;
+      if (dayInfo![index].backHour) {
+        const hourInMonthPx = columnWidth / 168;
+        return pxUntil * columnWidth + unitAboveSpanInPx + hourInMonthPx;
+      }
+      if (dayInfo![index].nextHour) {
+        const hourInMonthPx = columnWidth / 168;
+        return pxUntil * columnWidth + unitAboveSpanInPx - hourInMonthPx;
+      }
+      return pxUntil * columnWidth + unitAboveSpanInPx;
     }
-    if (unitAbove === "day" && dayInfo![index].forNowHour) {
-      return index * unitAboveSpanInPx + columnWidth / sizeInUnits;
+    if (unitAbove === "day") {
+      if (dayInfo![index].backHour) {
+        return index * unitAboveSpanInPx + columnWidth / sizeInUnits;
+      }
+      if (dayInfo![index].nextHour) {
+        return index * unitAboveSpanInPx - columnWidth / sizeInUnits;
+      }
+    }
+    if (unitAbove === "week") {
+      if (dayInfo![index].backHour) {
+        return index * unitAboveSpanInPx + columnWidth / 24;
+      }
+      if (dayInfo![index].nextHour) {
+        return index * unitAboveSpanInPx - columnWidth / 24;
+      }
     }
 
     return index * unitAboveSpanInPx;

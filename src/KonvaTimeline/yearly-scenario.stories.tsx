@@ -31,7 +31,7 @@ export const YearlyReport: Story = {
     columnWidth: 120,
     range: {
       start: 1698357600000,
-      end: 1698966000000,
+      end: 1712095200000,
     },
     tasks: [
       {
@@ -41,6 +41,15 @@ export const YearlyReport: Story = {
         time: {
           start: 1698793200000,
           end: 1700434800000,
+        },
+      },
+      {
+        id: "2",
+        label: "26Marzo",
+        resourceId: "1",
+        time: {
+          start: 1711839600000,
+          end: 1711922399000,
         },
       },
     ],
