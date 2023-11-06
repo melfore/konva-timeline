@@ -105,7 +105,7 @@ export const TimelineProvider = ({
   columnWidth: externalColumnWidth,
   debug = false,
   displayTasksLabel = false,
-  dragResolution: externalDragResolution,
+  dragResolution: externalDragResolution = "1min",
   enableDrag = true,
   enableResize = true,
   headerLabel,
@@ -116,7 +116,7 @@ export const TimelineProvider = ({
   onTaskChange,
   tasks: externalTasks = [],
   range: externalRange,
-  resolution: externalResolution = "1min",
+  resolution: externalResolution = "1hrs",
   resources: externalResources,
   rowHeight: externalRowHeight,
   timezone: externalTimezone,
@@ -206,7 +206,27 @@ export const TimelineProvider = ({
     [interval, resolution]
   );
 
-  const aboveTimeBlocks = useMemo(() => interval.splitBy({ [resolution.unitAbove]: 1 }), [interval, resolution]);
+  const aboveTimeBlocks = useMemo(() => {
+    const { unitAbove } = resolution;
+    const blocks: Interval[] = [];
+    const intervalStart = interval.start!;
+    const intervalEnd = interval.end!;
+
+    let blockStart = intervalStart;
+
+    while (blockStart < intervalEnd) {
+      let blockEnd = blockStart.endOf(unitAbove);
+
+      if (blockEnd > intervalEnd) {
+        blockEnd = intervalEnd;
+      }
+
+      blocks.push(Interval.fromDateTimes(blockStart, blockEnd));
+      blockStart = blockEnd.startOf(unitAbove).plus({ [unitAbove]: 1 });
+    }
+
+    return blocks;
+  }, [interval, resolution]);
 
   const columnWidth = useMemo(() => {
     logDebug("TimelineProvider", "Calculating columnWidth...");
