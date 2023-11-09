@@ -1,3 +1,10 @@
+# [1.17.0](https://github.com/melfore/konva-timeline/compare/v1.16.2...v1.17.0) (2023-11-09)
+
+
+### Features
+
+* 🎸 [TimeLine]Added AboveTimeBlocksVisible ([1e463c7](https://github.com/melfore/konva-timeline/commit/1e463c74af471b7c6326f55dbd38e923c8111043))
+
 ## [1.16.2](https://github.com/melfore/konva-timeline/compare/v1.16.1...v1.16.2) (2023-11-06)
 
 ### Bug Fixes
