@@ -2,7 +2,7 @@ import React, { memo, useMemo } from "react";
 
 import { KonvaGroup } from "../../@konva";
 import { useTimelineContext } from "../../timeline/TimelineContext";
-import { dayDetail, timeBlockTz } from "../../utils/timeBlockArray";
+import { getAboveTimeBlocksVisible, getDaysNumberOfMonths, getTimeBlocksTzInfo } from "../../utils/timeBlockArray";
 import GridCell from "../Cell";
 import GridCellGroup from "../CellGroup";
 
@@ -21,24 +21,47 @@ const GridCells = ({ height }: GridCellsProps) => {
   const tz = useMemo(() => interval.start!.toISO()!.slice(-6), [interval]);
 
   const dayInfo = useMemo(
-    () => dayDetail(unitAbove, aboveTimeBlocks, interval),
+    () => getDaysNumberOfMonths(unitAbove, aboveTimeBlocks, interval),
     [unitAbove, aboveTimeBlocks, interval]
   );
 
-  const aboveHourInfo = useMemo(() => timeBlockTz(aboveTimeBlocks, tz), [tz, aboveTimeBlocks]);
-  const visibileHourInfo = useMemo(() => timeBlockTz(visibleTimeBlocks, tz), [tz, visibleTimeBlocks]);
+  const aboveHourInfo = useMemo(() => getTimeBlocksTzInfo(aboveTimeBlocks, tz), [tz, aboveTimeBlocks]);
+  const visibileHourInfo = useMemo(() => getTimeBlocksTzInfo(visibleTimeBlocks, tz), [tz, visibleTimeBlocks]);
 
+  const startUnitAbove = useMemo(
+    () => (visibleTimeBlocks.length !== 0 ? visibleTimeBlocks[0].start!.startOf(unitAbove) : null),
+    [visibleTimeBlocks, unitAbove]
+  );
+  const endUnitAbove = useMemo(
+    () =>
+      visibleTimeBlocks.length !== 0 ? visibleTimeBlocks[visibleTimeBlocks.length - 1].end!.endOf(unitAbove) : null,
+    [visibleTimeBlocks, unitAbove]
+  );
+
+  const arrayIndex: number[] = useMemo(() => {
+    if (visibleTimeBlocks) {
+      return [];
+    }
+    return [];
+  }, [visibleTimeBlocks]);
+
+  const aboveTimeBlocksVisible = useMemo(
+    () => getAboveTimeBlocksVisible(visibleTimeBlocks, aboveTimeBlocks, startUnitAbove, endUnitAbove, arrayIndex),
+    [visibleTimeBlocks, aboveTimeBlocks, startUnitAbove, endUnitAbove, arrayIndex]
+  );
   return (
     <KonvaGroup>
-      {aboveTimeBlocks.map((column, index) => (
-        <GridCellGroup
-          key={`cell-group-${index}`}
-          column={column}
-          index={index}
-          dayInfo={dayInfo}
-          hourInfo={aboveHourInfo[index]}
-        />
-      ))}
+      {aboveTimeBlocksVisible.map((column, index) => {
+        return (
+          <GridCellGroup
+            key={`cell-group-${index}`}
+            column={column}
+            index={arrayIndex[index]}
+            dayInfo={dayInfo[arrayIndex[index]]}
+            hourInfo={aboveHourInfo[arrayIndex[index]]}
+          />
+        );
+      })}
       {visibleTimeBlocks.map((column, index) => (
         <GridCell
           key={`cell-${index}`}

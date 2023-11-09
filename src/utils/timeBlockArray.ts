@@ -1,4 +1,4 @@
-import { Interval } from "luxon";
+import { DateTime, Interval } from "luxon";
 
 import { daysInMonth, getMonth, getStartMonthsDay, getYear, Scale } from "./time-resolution";
 
@@ -12,7 +12,7 @@ interface DayDetailProps {
   untilNow?: number;
 }
 
-export const timeBlockTz = (timeBlock: Interval[], initialTz?: string) => {
+export const getTimeBlocksTzInfo = (timeBlock: Interval[], initialTz?: string) => {
   const dayInfoArray: VisibleHourInfoProps[] = [];
 
   timeBlock.forEach((column) => {
@@ -45,7 +45,7 @@ export const timeBlockTz = (timeBlock: Interval[], initialTz?: string) => {
   return dayInfoArray;
 };
 
-export const dayDetail = (unitAbove: Scale, aboveTimeBlocks: Interval[], interval: Interval) => {
+export const getDaysNumberOfMonths = (unitAbove: Scale, aboveTimeBlocks: Interval[], interval: Interval) => {
   if (unitAbove === "month") {
     const dayInfo: DayDetailProps[] = [];
 
@@ -73,6 +73,36 @@ export const dayDetail = (unitAbove: Scale, aboveTimeBlocks: Interval[], interva
     });
 
     return dayInfo;
+  }
+  return [];
+};
+
+export const getAboveTimeBlocksVisible = (
+  visibleTimeBlocks: Interval[],
+  aboveTimeBlocks: Interval[],
+  startUnitAbove: DateTime | null,
+  endUnitAbove: DateTime | null,
+  arrayIndex: number[]
+) => {
+  if (visibleTimeBlocks.length !== 0) {
+    const blocksArray: Interval[] = [];
+    aboveTimeBlocks.forEach((i, index) => {
+      const startMillis = i.start!.toMillis();
+      const endMillis = i.end!.toMillis();
+      if (endMillis > startUnitAbove!.toMillis() && endMillis < endUnitAbove!.toMillis()) {
+        arrayIndex.push(index);
+        blocksArray.push(i);
+        return;
+      }
+
+      if (startMillis > startUnitAbove!.toMillis() && startMillis < endUnitAbove!.toMillis()) {
+        arrayIndex.push(index);
+        blocksArray.push(i);
+        return;
+      }
+    });
+
+    return blocksArray;
   }
   return [];
 };
