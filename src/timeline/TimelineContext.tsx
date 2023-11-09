@@ -98,8 +98,6 @@ const TimelineContext = createContext<TimelineContextType | undefined>(undefined
 // TODO#lb: this should be another data type, specific to drawing
 const DEFAULT_DRAW_RANGE: InternalTimeRange = { start: 0, end: 0 };
 
-const TIME_BLOCKS_PRELOAD = 5;
-
 export const TimelineProvider = ({
   children,
   columnWidth: externalColumnWidth,
@@ -173,6 +171,26 @@ export const TimelineProvider = ({
       ),
     [range, resolution, timezone]
   );
+
+  const TIME_BLOCKS_PRELOAD = useMemo(() => {
+    const { unit, sizeInUnits } = resolution;
+    let timeBlocksPreload = 0;
+    switch (unit) {
+      case "minute":
+        timeBlocksPreload = 60 / sizeInUnits;
+        break;
+      case "hour":
+        timeBlocksPreload = 24 / sizeInUnits;
+        break;
+      case "day":
+        timeBlocksPreload = 7 / sizeInUnits;
+        break;
+      case "week":
+        timeBlocksPreload = 5 / sizeInUnits;
+        break;
+    }
+    return timeBlocksPreload;
+  }, [resolution]);
 
   const initialDateTime = useMemo(() => {
     let initial = DateTime.now().toMillis();
@@ -259,7 +277,7 @@ export const TimelineProvider = ({
     const end = DateTime.now().toMillis();
     logDebug("TimelineProvider", `Visible time blocks calculation took ${end - start} ms`);
     return vtbs;
-  }, [timeblocksOffset, columnWidth, drawRange, timeBlocks]);
+  }, [timeblocksOffset, columnWidth, drawRange, timeBlocks, TIME_BLOCKS_PRELOAD]);
 
   const visibleRange = useMemo(() => {
     let range = null;

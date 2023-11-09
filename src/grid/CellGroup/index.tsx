@@ -11,7 +11,7 @@ interface GridCellGroupProps {
   dayInfo?: {
     thisMonth?: number;
     untilNow?: number;
-  }[];
+  };
   hourInfo?: {
     backHour?: boolean;
     nextHour?: boolean;
@@ -32,11 +32,11 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
 
   const unitAboveInUnitBelow = useMemo(() => {
     if (unitAbove === "month") {
-      return Duration.fromObject({ ["day"]: dayInfo![index].thisMonth }).as("week") / sizeInUnits;
+      return Duration.fromObject({ ["day"]: dayInfo!.thisMonth }).as("week") / sizeInUnits;
     }
 
     return Duration.fromObject({ [unitAbove]: 1 }).as(unit) / sizeInUnits;
-  }, [sizeInUnits, dayInfo, index, unitAbove, unit]);
+  }, [sizeInUnits, dayInfo, unitAbove, unit]);
 
   const unitAboveSpanInPx = useMemo(() => {
     return unitAboveInUnitBelow * columnWidth;
@@ -45,7 +45,9 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
   const xPos = useMemo(() => {
     if (unitAbove === "month") {
       const pxUntil =
-        index !== 0 ? Duration.fromObject({ ["day"]: dayInfo![index - 1].untilNow }).as("week") / sizeInUnits : 0;
+        dayInfo!.untilNow !== dayInfo!.thisMonth
+          ? Duration.fromObject({ ["day"]: dayInfo!.untilNow! - dayInfo!.thisMonth! }).as("week") / sizeInUnits
+          : 0;
 
       if (hourInfo!.backHour) {
         const hourInMonthPx = columnWidth / 168;
@@ -89,8 +91,17 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
     if (unitAbove === "month") {
       return xPos - unitAboveSpanInPx;
     }
+    if (unitAbove === "day") {
+      if (hourInfo!.backHour) {
+        return index * unitAboveSpanInPx + columnWidth / sizeInUnits;
+      }
+
+      if (hourInfo!.nextHour) {
+        return index * unitAboveSpanInPx - columnWidth / sizeInUnits;
+      }
+    }
     return index * unitAboveSpanInPx;
-  }, [xPos, unitAboveSpanInPx, unitAbove, index]);
+  }, [xPos, unitAboveSpanInPx, unitAbove, index, columnWidth, sizeInUnits, hourInfo]);
 
   return (
     <KonvaGroup key={`timeslot-${index}`}>
