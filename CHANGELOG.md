@@ -1,3 +1,10 @@
+# [1.18.0](https://github.com/melfore/konva-timeline/compare/v1.17.0...v1.18.0) (2023-11-14)
+
+
+### Features
+
+* 🎸 [Task] Added completed percentage prop ([9cd625b](https://github.com/melfore/konva-timeline/commit/9cd625b648c862f0879137ff0cd1c392409e609f)), closes [#144](https://github.com/melfore/konva-timeline/issues/144)
+
 # [1.17.0](https://github.com/melfore/konva-timeline/compare/v1.16.2...v1.17.0) (2023-11-09)
 
 ### Features
