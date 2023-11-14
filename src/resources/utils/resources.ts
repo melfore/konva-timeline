@@ -8,9 +8,13 @@ export interface Resource {
    */
   label: string;
   /**
-   * Color assigned to the resource
+   * Color assigned to the resource, accept only HEX
    */
   color: string;
+  /**
+   * Color assigned to the resource for incomplete part of Task, accept only HEX
+   */
+  toCompleteColor?: string;
 }
 
 const RESOURCE_HEADER: Resource = {

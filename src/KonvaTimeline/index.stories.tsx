@@ -113,3 +113,46 @@ export const NonPreciseRange: Story = {
     timezone: "Europe/Rome",
   },
 };
+
+export const CompletedPercentage: Story = {
+  args: {
+    resources,
+    resolution: "1week",
+    range: {
+      start: 1698357600000,
+      end: 1702095200000,
+    },
+    tasks: [
+      {
+        id: "1",
+        label: "Task1",
+        resourceId: "1",
+        completedPercentage: 90,
+        time: {
+          start: 1698793200000,
+          end: 1699434800000,
+        },
+      },
+      {
+        id: "2",
+        label: "Task2",
+        resourceId: "2",
+        completedPercentage: 19,
+        time: {
+          start: 1700434800000,
+          end: 1700934800000,
+        },
+      },
+      {
+        id: "3",
+        label: "Task3",
+        resourceId: "3",
+        completedPercentage: 58,
+        time: {
+          start: 1699734800000,
+          end: 1700234800000,
+        },
+      },
+    ],
+  },
+};

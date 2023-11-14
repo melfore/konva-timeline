@@ -15,6 +15,10 @@ export interface TaskData<T extends TimeRange = TimeRange> {
    */
   resourceId: string;
   /**
+   * Comleted Percentage
+   */
+  completedPercentage?: number;
+  /**
    * Task time range
    */
   time: T;
