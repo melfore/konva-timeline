@@ -6,6 +6,10 @@ export interface KonvaDrawable {
    */
   fill?: string;
   /**
+   * The fill color of a canvas item
+   */
+  fillToComplete?: string;
+  /**
    * The stroke color of a canvas item
    */
   stroke?: string;

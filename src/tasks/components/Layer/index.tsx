@@ -96,7 +96,7 @@ const TasksLayer: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip }) => {
           return null;
         }
 
-        const { color: resourceColor } = resources[resourceIndex];
+        const { color: resourceColor, toCompleteColor } = resources[resourceIndex];
         const xCoordinate = getTaskXCoordinate(time.start);
         const yCoordinate = getTaskYCoordinate(resourceIndex, rowHeight);
         const width = getTaskWidth(time);
@@ -109,6 +109,7 @@ const TasksLayer: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip }) => {
             key={`task-${taskData.id}`}
             data={taskData}
             fill={resourceColor}
+            fillToComplete={toCompleteColor}
             onLeave={onTaskLeave}
             onOver={onTaskOver}
             x={xCoordinate}

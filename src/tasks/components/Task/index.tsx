@@ -8,7 +8,7 @@ import { KonvaText } from "../../../@konva";
 import { findResourceByCoordinate, findResourceIndexByCoordinate } from "../../../resources/utils/resources";
 import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { KonvaDrawable, KonvaPoint } from "../../../utils/konva";
-import { getContrastColor } from "../../../utils/theme";
+import { getContrastColor, getRGB, getRGBA } from "../../../utils/theme";
 import { getTaskYCoordinate, TASK_BORDER_RADIUS, TaskData } from "../../utils/tasks";
 import TaskResizeHandle from "../TaskResizeHandle";
 
@@ -41,9 +41,8 @@ type TaskDimensions = {
   y: number;
 };
 
-const TASK_DEFAULT_FILL = "#FFFFFF";
-const TASK_DEFAULT_STROKE = "#000000";
-const TASK_DEFAULT_STROKE_WIDTH = 1;
+const TASK_DEFAULT_FILL = "#000080";
+const TASK_DEFAULT_STROKE_WIDTH = 2;
 
 enableStrictMode(true);
 
@@ -58,7 +57,7 @@ enableStrictMode(true);
  *
  * The playground has a simulated canvas with height: 200px and width: 100%
  */
-const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: TaskProps) => {
+const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fillToComplete }: TaskProps) => {
   const {
     columnWidth,
     displayTasksLabel,
@@ -73,10 +72,19 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
     rowHeight,
   } = useTimelineContext();
 
-  const { id: taskId } = data;
+  const { id: taskId, completedPercentage } = data;
 
   const [dragging, setDragging] = useState(false);
   const [resizing, setResizing] = useState(false);
+
+  const mainColor = useMemo(() => {
+    try {
+      const rgb = getRGB(fill);
+      return ` rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+    } catch (error) {
+      return "rgb(255,0,0)";
+    }
+  }, [fill]);
 
   const initialTaskDimensions = useMemo((): TaskDimensions => {
     const row = findResourceIndexByCoordinate(y, rowHeight, resources);
@@ -223,7 +231,13 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
 
   const textSize = useMemo(() => taskHeight / 2.5, [taskHeight]);
 
-  const textStroke = useMemo(() => getContrastColor(fill), [fill]);
+  const textStroke = useMemo(() => {
+    try {
+      return getContrastColor(fill);
+    } catch (error) {
+      return "rgb(0,0,0)";
+    }
+  }, [fill]);
 
   const textWidth = useMemo(() => taskDimensions.width - textOffsets * 2, [taskDimensions, textOffsets]);
 
@@ -274,6 +288,57 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
     },
     [onTaskChange, data, onEndTimeRange]
   );
+  const percentage = useMemo(() => {
+    if (completedPercentage === 0) {
+      return 0.1;
+    }
+    if (completedPercentage) {
+      return (taskDimensions.width / 100) * completedPercentage;
+    }
+    return taskDimensions.width;
+  }, [taskDimensions, completedPercentage]);
+
+  const offsetPercentageX = useMemo(() => {
+    if (percentage < 22) {
+      return percentage;
+    }
+    if (completedPercentage! === 100) {
+      return 30;
+    }
+    return 20;
+  }, [completedPercentage, percentage]);
+
+  const offsetPercentageY = useMemo(() => taskHeight / 4, [taskHeight]);
+
+  const incompleteColor = useMemo(() => {
+    try {
+      if (fillToComplete) {
+        const colorToComplete = getRGBA(fillToComplete);
+        if (colorToComplete.a) {
+          const rgba = ` rgba(${colorToComplete.r}, ${colorToComplete.g}, ${colorToComplete.b},${colorToComplete.a})`;
+          return rgba;
+        }
+        const rgb = ` rgb(${colorToComplete.r}, ${colorToComplete.g}, ${colorToComplete.b})`;
+        return rgb;
+      }
+      const opacity = "0.6";
+      const rgb = getRGB(fill);
+      const rgba = ` rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity})`;
+      return rgba;
+    } catch (error) {
+      return "rgba(255, 0, 0, 0.6)";
+    }
+  }, [fill, fillToComplete]);
+
+  const isPercentage = useMemo(() => {
+    if (typeof completedPercentage !== "number") {
+      return false;
+    }
+    if (completedPercentage >= 0 && completedPercentage <= 100) {
+      return true;
+    }
+    return false;
+  }, [completedPercentage]);
 
   return (
     <Group
@@ -285,19 +350,45 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
       onDragMove={onDragMove}
       onDragStart={onDragStart}
     >
-      <Rect
-        id={taskId}
-        cornerRadius={TASK_BORDER_RADIUS}
-        fill={fill}
-        height={taskHeight}
-        opacity={opacity}
-        onMouseLeave={onTaskLeave}
-        onMouseMove={onTaskOver}
-        onMouseOver={onTaskOver}
-        stroke={TASK_DEFAULT_STROKE}
-        strokeWidth={TASK_DEFAULT_STROKE_WIDTH}
-        width={taskDimensions.width}
-      />
+      <Group>
+        <Rect
+          id={taskId}
+          cornerRadius={TASK_BORDER_RADIUS}
+          fillLinearGradientStartPoint={{ x: 0, y: 0 }}
+          fillLinearGradientEndPoint={{ x: percentage, y: 0 }}
+          fillLinearGradientColorStops={[1, mainColor, 1, incompleteColor]}
+          height={taskHeight}
+          opacity={opacity}
+          stroke={mainColor}
+          strokeWidth={TASK_DEFAULT_STROKE_WIDTH}
+          width={taskDimensions.width}
+        />
+        <Rect
+          id={taskId}
+          cornerRadius={TASK_BORDER_RADIUS}
+          fill="transparent"
+          height={taskHeight}
+          onMouseLeave={onTaskLeave}
+          onMouseMove={onTaskOver}
+          onMouseOver={onTaskOver}
+          opacity={1}
+          stroke="rgb(0,0,0)"
+          strokeWidth={1}
+          width={taskDimensions.width}
+        />
+      </Group>
+      {isPercentage && (
+        <KonvaText
+          fill={textStroke}
+          ellipsis
+          fontSize={10}
+          text={completedPercentage + "%"}
+          width={textWidth}
+          wrap="none"
+          x={1 + percentage - offsetPercentageX}
+          y={taskHeight - offsetPercentageY}
+        />
+      )}
       {enableResize && (
         <TaskResizeHandle
           height={taskHeight}
@@ -324,14 +415,14 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width }: 
       )}
       {displayTasksLabel && (
         <KonvaText
-          fill={textStroke}
+          fill={completedPercentage === 0 ? "black" : textStroke}
           ellipsis
           fontSize={textSize}
           text={data.label}
           width={textWidth}
           wrap="none"
           x={textOffsets}
-          y={textOffsets}
+          y={textOffsets - offsetPercentageY}
         />
       )}
     </Group>
