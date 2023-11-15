@@ -9,7 +9,7 @@ import { findResourceByCoordinate, findResourceIndexByCoordinate } from "../../.
 import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { KonvaDrawable, KonvaPoint } from "../../../utils/konva";
 import { getContrastColor, getRGB, getRGBA } from "../../../utils/theme";
-import { getTaskYCoordinate, TASK_BORDER_RADIUS, TaskData } from "../../utils/tasks";
+import { getTaskYCoordinate, TASK_BORDER_RADIUS, TASK_HEIGHT_OFFSET, TaskData } from "../../utils/tasks";
 import TaskResizeHandle from "../TaskResizeHandle";
 
 type TaskMouseEventHandler = (taskId: string, point: KonvaPoint) => void;
@@ -226,7 +226,7 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
 
   const opacity = useMemo(() => (dragging || resizing ? 0.5 : 1), [dragging, resizing]);
 
-  const taskHeight = useMemo(() => rowHeight * 0.7, [rowHeight]);
+  const taskHeight = useMemo(() => rowHeight * TASK_HEIGHT_OFFSET, [rowHeight]);
 
   const textOffsets = useMemo(() => taskHeight / 3, [taskHeight]);
 
