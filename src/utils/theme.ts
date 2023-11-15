@@ -5,6 +5,11 @@ const LUMA_FACTOR_R = 299;
 const LUMA_FACTOR_G = 587;
 const LUMA_FACTOR_B = 114;
 const LUMA_FACTOR_BW = 128;
+export const DEFAULT_ROW_LIGHT_MODE = "#F0F0F0";
+export const ALTERNATIVE_ROW = "transparent";
+export const DEFAULT_ROW_DARK_MODE = "#A8A8A8";
+export const DEFAULT_STROKE_LIGHT_MODE = "grey";
+export const DEFAULT_STROKE_DARK_MODE = "white";
 
 export const getRGB = (hex: string) => {
   if (!hex || !hex.length) {
