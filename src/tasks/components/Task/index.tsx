@@ -70,6 +70,7 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
     resolution: { sizeInUnits, unit },
     resources,
     rowHeight,
+    drawRange,
   } = useTimelineContext();
 
   const { id: taskId, completedPercentage } = data;
@@ -142,9 +143,9 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
         return;
       }
 
-      callback(taskId, point);
+      callback(taskId, { ...point, x: point.x + drawRange.start });
     },
-    [taskId]
+    [taskId, drawRange]
   );
 
   const onClick = useCallback(() => onTaskClick && onTaskClick(data), [data, onTaskClick]);
@@ -225,7 +226,7 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
 
   const opacity = useMemo(() => (dragging || resizing ? 0.5 : 1), [dragging, resizing]);
 
-  const taskHeight = useMemo(() => rowHeight * 0.8, [rowHeight]);
+  const taskHeight = useMemo(() => rowHeight * 0.7, [rowHeight]);
 
   const textOffsets = useMemo(() => taskHeight / 3, [taskHeight]);
 

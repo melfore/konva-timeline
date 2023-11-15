@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from "react";
 
-import { KonvaGroup, KonvaLine, KonvaText } from "../../../@konva";
+import { KonvaGroup, KonvaLine, KonvaRect, KonvaText } from "../../../@konva";
 import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { DEFAULT_STROKE_WIDTH, DEFAULT_TEXT_SIZE } from "../../../utils/dimensions";
 import { Resource, RESOURCE_HEADER_WIDTH, RESOURCE_TEXT_OFFSET } from "../../utils/resources";
@@ -33,6 +33,8 @@ const ResourceHeader = ({ index, isLast = false, resource }: ResourceHeaderProps
 
   const yCoordinate = useMemo(() => rowHeight * index, [index, rowHeight]);
 
+  const fill = useMemo(() => (index % 2 === 0 ? "#F0F0F0" : "rgb(255,255,255)"), [index]);
+
   return (
     <KonvaGroup y={yCoordinate}>
       <KonvaText
@@ -43,7 +45,12 @@ const ResourceHeader = ({ index, isLast = false, resource }: ResourceHeaderProps
         verticalAlign="middle"
         x={RESOURCE_TEXT_OFFSET}
       />
-      {!isLast && <KonvaLine points={rowPoints} stroke={themeColor} strokeWidth={DEFAULT_STROKE_WIDTH} />}
+      {!isLast && (
+        <KonvaGroup>
+          <KonvaLine points={rowPoints} stroke={themeColor} strokeWidth={DEFAULT_STROKE_WIDTH} />
+          <KonvaRect x={0} y={rowHeight} width={RESOURCE_HEADER_WIDTH} height={rowHeight} fill={fill} />
+        </KonvaGroup>
+      )}
     </KonvaGroup>
   );
 };
