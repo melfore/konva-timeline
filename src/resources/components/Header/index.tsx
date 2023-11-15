@@ -33,7 +33,12 @@ const ResourceHeader = ({ index, isLast = false, resource }: ResourceHeaderProps
 
   const yCoordinate = useMemo(() => rowHeight * index, [index, rowHeight]);
 
-  const fill = useMemo(() => (index % 2 === 0 ? "#F0F0F0" : "rgb(255,255,255)"), [index]);
+  const fill = useMemo(() => {
+    if (themeColor === "black") {
+      return index % 2 === 0 ? "#F0F0F0" : "rgb(255,255,255)";
+    }
+    return index % 2 === 0 ? "#A8A8A8" : "transparent";
+  }, [index, themeColor]);
 
   return (
     <KonvaGroup y={yCoordinate}>

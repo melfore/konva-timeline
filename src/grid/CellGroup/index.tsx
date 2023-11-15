@@ -102,10 +102,16 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
     }
     return index * unitAboveSpanInPx;
   }, [xPos, unitAboveSpanInPx, unitAbove, index, columnWidth, sizeInUnits, hourInfo]);
+  const stroke = useMemo(() => {
+    if (themeColor === "black") {
+      return "grey";
+    }
+    return "white";
+  }, [themeColor]);
 
   return (
     <KonvaGroup key={`timeslot-${index}`}>
-      <KonvaLine x={xPos} y={0} points={points} stroke="gray" strokeWidth={1} />
+      <KonvaLine x={xPos} y={0} points={points} stroke={stroke} strokeWidth={1} />
       <KonvaRect fill="transparent" x={xPos} y={yPos - 10} height={15} width={unitAboveSpanInPx} />
       <KonvaText
         align="center"
