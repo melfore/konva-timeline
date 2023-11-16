@@ -1,3 +1,10 @@
+# [1.20.0](https://github.com/melfore/konva-timeline/compare/v1.19.0...v1.20.0) (2023-11-16)
+
+
+### Features
+
+* 🎸 [ToolTip] on task move tooltip disappear ([8bd368e](https://github.com/melfore/konva-timeline/commit/8bd368e1f9fd677ff9c7911812eb3f14ccc90d34)), closes [#151](https://github.com/melfore/konva-timeline/issues/151)
+
 # [1.19.0](https://github.com/melfore/konva-timeline/compare/v1.18.1...v1.19.0) (2023-11-16)
 
 ### Features
