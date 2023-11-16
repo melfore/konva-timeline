@@ -1,3 +1,10 @@
+# [1.19.0](https://github.com/melfore/konva-timeline/compare/v1.18.1...v1.19.0) (2023-11-16)
+
+
+### Features
+
+* 🎸 [ToolTip] Added all task's info ([0b51cb0](https://github.com/melfore/konva-timeline/commit/0b51cb0dee16b96521b15843af7e1e88d170ba7e)), closes [#149](https://github.com/melfore/konva-timeline/issues/149)
+
 ## [1.18.1](https://github.com/melfore/konva-timeline/compare/v1.18.0...v1.18.1) (2023-11-16)
 
 ### Bug Fixes
