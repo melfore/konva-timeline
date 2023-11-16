@@ -33,12 +33,11 @@ const TaskTooltip: FC<TaskTooltipProps> = ({
   } = useTimelineContext();
   const txt = useMemo(() => {
     const label = "LABEL: " + taskLabel + "\n";
-    const resources = "RESID: " + resourceId + "\n";
-    const startDuration = "START: " + DateTime.fromMillis(Number(start)).toISO() + "\n";
-    const endDuration = "END:    " + DateTime.fromMillis(Number(end)).toISO();
+    const startDuration = "START: " + DateTime.fromMillis(Number(start)).toFormat("dd/MM/yyyy HH:mm:ss") + "\n";
+    const endDuration = "END:    " + DateTime.fromMillis(Number(end)).toFormat("dd/MM/yyyy HH:mm:ss");
     const complete = completedPercentage ? "\n" + "COMPLETED: " + completedPercentage + "%" : "";
-    return label + resources + startDuration + endDuration + complete;
-  }, [taskLabel, resourceId, completedPercentage, start, end]);
+    return label + startDuration + endDuration + complete;
+  }, [taskLabel, completedPercentage, start, end]);
 
   const pointerDir = useMemo(() => {
     const part = (drawEnd - drawStart) / 5;
@@ -69,7 +68,7 @@ const TaskTooltip: FC<TaskTooltipProps> = ({
         shadowOffsetY={TASK_TOOLTIP_SHADOW_SIZE}
         shadowOpacity={0.2}
       />
-      <Text text={txt} fill={TASK_TOOLTIP_COLOR} fontSize={15} padding={6} />
+      <Text text={txt} fill={TASK_TOOLTIP_COLOR} fontSize={13} padding={8} />
     </Label>
   );
 };

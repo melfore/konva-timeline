@@ -192,7 +192,19 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
     [enableDrag, onOver, onTaskMouseEvent, resizing]
   );
 
-  const onDragStart = useCallback(() => setDragging(true), []);
+  const onDragStart = useCallback(
+    (e: KonvaEventObject<DragEvent>) => {
+      const { x, y } = getDragPoint(e);
+      const dragFinalX = Math.ceil(x / dragSnapInPX) * dragSnapInPX;
+      const xCoordinate = dragFinalX < 0 ? 0 : dragFinalX;
+      const resourceIndex = findResourceIndexByCoordinate(y, rowHeight, resources);
+      const yCoordinate = getTaskYCoordinate(resourceIndex, rowHeight);
+      const point = { x: xCoordinate, y: yCoordinate };
+      setDragging(true);
+      onLeave(taskId, point);
+    },
+    [getDragPoint, onLeave, resources, rowHeight, taskId, dragSnapInPX]
+  );
 
   const onDragMove = useCallback(
     (e: KonvaEventObject<DragEvent>) => {
@@ -204,9 +216,8 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
       const point = { x: xCoordinate, y: yCoordinate };
 
       setTaskDimensions((dimensions) => ({ ...dimensions, ...point }));
-      onOver(taskId, point);
     },
-    [dragSnapInPX, getDragPoint, onOver, resources, rowHeight, taskId]
+    [dragSnapInPX, getDragPoint, resources, rowHeight]
   );
 
   const onDragEnd = useCallback(
