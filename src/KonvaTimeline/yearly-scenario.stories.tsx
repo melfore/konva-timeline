@@ -28,5 +28,6 @@ export const YearlyReport: Story = {
   args: {
     ...yearlyStoryData,
     resolution: "1day",
+    initialDateTime: yearlyStoryData.range.start,
   },
 };
