@@ -3,6 +3,7 @@ import { Interval } from "luxon";
 
 import { KonvaGroup, KonvaLine, KonvaRect, KonvaText } from "../../@konva";
 import { useTimelineContext } from "../../timeline/TimelineContext";
+import { DEFAULT_STROKE_DARK_MODE, DEFAULT_STROKE_LIGHT_MODE } from "../../utils/theme";
 import { displayInterval } from "../../utils/time-resolution";
 
 interface GridCellProps {
@@ -51,9 +52,16 @@ const GridCell = ({ column, height, index, hourInfo: visibleDayInfo }: GridCellP
 
   const yPos = useMemo(() => rowHeight * 0.8, [rowHeight]);
 
+  const stroke = useMemo(() => {
+    if (themeColor === "black") {
+      return DEFAULT_STROKE_LIGHT_MODE;
+    }
+    return DEFAULT_STROKE_DARK_MODE;
+  }, [themeColor]);
+
   return (
     <KonvaGroup key={`timeslot-${index}`}>
-      <KonvaLine x={xPos} y={yPos} points={[0, 0, 0, height]} stroke="gray" strokeWidth={1} />
+      <KonvaLine x={xPos} y={yPos} points={[0, 0, 0, height]} stroke={stroke} strokeWidth={1} />
       <KonvaRect fill="transparent" x={xPos - 15} y={yPos - 10} height={15} width={30} />
       <KonvaText fill={themeColor} x={xPos - 15} y={yPos - 8} text={cellLabel} />
     </KonvaGroup>

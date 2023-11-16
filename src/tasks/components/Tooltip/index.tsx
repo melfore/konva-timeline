@@ -1,7 +1,6 @@
-import React, { FC, useMemo } from "react";
+import React, { FC } from "react";
 import { Label, Tag, Text } from "react-konva";
 
-import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { KonvaPoint } from "../../../utils/konva";
 import { TaskData } from "../../utils/tasks";
 
@@ -18,14 +17,8 @@ const TASK_TOOLTIP_SHADOW_SIZE = 10;
  * This component renders a task tooltip inside a canvas.
  */
 const TaskTooltip: FC<TaskTooltipProps> = ({ task: { label: taskLabel }, x, y }) => {
-  const {
-    drawRange: { start: drawRangeStart },
-  } = useTimelineContext();
-
-  const xPos = useMemo(() => x + drawRangeStart, [drawRangeStart, x]);
-
   return (
-    <Label x={xPos} y={y} opacity={0.75}>
+    <Label x={x} y={y} opacity={0.75}>
       <Tag
         fill={TASK_TOOLTIP_BACKGROUND}
         lineJoin="round"
