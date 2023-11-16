@@ -1,3 +1,10 @@
+## [1.18.1](https://github.com/melfore/konva-timeline/compare/v1.18.0...v1.18.1) (2023-11-16)
+
+
+### Bug Fixes
+
+* 🐛 [ToolTip] Fixed position on DragAndDrop event ([02884b8](https://github.com/melfore/konva-timeline/commit/02884b8b7990b23596e2a6f0fbdaa1aae459b893)), closes [#147](https://github.com/melfore/konva-timeline/issues/147)
+
 # [1.18.0](https://github.com/melfore/konva-timeline/compare/v1.17.0...v1.18.0) (2023-11-14)
 
 ### Features
