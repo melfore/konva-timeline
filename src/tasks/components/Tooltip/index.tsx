@@ -13,7 +13,8 @@ export interface TaskTooltipProps extends KonvaPoint {
 const rightMarginOffsetX = -185;
 const standardMarginOffsetX = 15;
 const marginOffsetY = 25;
-
+const sevenHourinMillis = 25200000;
+const twoDayinMillis = 17280000;
 /**
  * This component renders a task tooltip inside a canvas.
  */
@@ -43,11 +44,11 @@ const TaskTooltip: FC<TaskTooltipProps> = ({
 
   const duration = useMemo(() => {
     const part = Number(end) - Number(start);
-    if (part < 25200000) {
+    if (part < sevenHourinMillis) {
       const min = Duration.fromObject({ ["millisecond"]: part }).as("minute");
       return { time: Math.round(min * 10) / 10, unit: "min" };
     }
-    if (part < 17280000) {
+    if (part < twoDayinMillis) {
       const hour = Duration.fromObject({ ["millisecond"]: part }).as("hour");
       return { time: Math.round(hour * 10) / 10, unit: "hour" };
     }
