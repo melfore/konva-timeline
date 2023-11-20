@@ -43,11 +43,11 @@ const TaskTooltip: FC<TaskTooltipProps> = ({
 
   const duration = useMemo(() => {
     const part = Number(end) - Number(start);
-    if (part < 252000000) {
+    if (part < 25200000) {
       const min = Duration.fromObject({ ["millisecond"]: part }).as("minute");
       return { time: Math.round(min * 10) / 10, unit: "min" };
     }
-    if (part < 172800000) {
+    if (part < 17280000) {
       const hour = Duration.fromObject({ ["millisecond"]: part }).as("hour");
       return { time: Math.round(hour * 10) / 10, unit: "hour" };
     }
