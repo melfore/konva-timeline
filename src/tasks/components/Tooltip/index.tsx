@@ -14,7 +14,7 @@ const rightMarginOffsetX = -185;
 const standardMarginOffsetX = 15;
 const marginOffsetY = 25;
 const sevenHourinMillis = 25200000;
-const twoDayinMillis = 17280000;
+const twoDayinMillis = 172800000;
 /**
  * This component renders a task tooltip inside a canvas.
  */
