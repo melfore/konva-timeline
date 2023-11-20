@@ -1,3 +1,10 @@
+## [1.21.2](https://github.com/melfore/konva-timeline/compare/v1.21.1...v1.21.2) (2023-11-20)
+
+
+### Bug Fixes
+
+* 🐛 fixed tooltip duration ([66472f8](https://github.com/melfore/konva-timeline/commit/66472f80b10d9b9093398ef82995dff255c8a5ec))
+
 ## [1.21.1](https://github.com/melfore/konva-timeline/compare/v1.21.0...v1.21.1) (2023-11-20)
 
 # [1.21.0](https://github.com/melfore/konva-timeline/compare/v1.20.1...v1.21.0) (2023-11-20)
