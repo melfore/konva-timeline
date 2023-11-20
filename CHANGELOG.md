@@ -1,9 +1,8 @@
 # [1.21.0](https://github.com/melfore/konva-timeline/compare/v1.20.1...v1.21.0) (2023-11-20)
 
-
 ### Features
 
-* 🎸 [ToolTip] Added style ([237b3ad](https://github.com/melfore/konva-timeline/commit/237b3adda4b6c0250016c45a4d40188afb8adc5d)), closes [#154](https://github.com/melfore/konva-timeline/issues/154)
+- 🎸 [ToolTip] Added style ([237b3ad](https://github.com/melfore/konva-timeline/commit/237b3adda4b6c0250016c45a4d40188afb8adc5d)), closes [#154](https://github.com/melfore/konva-timeline/issues/154)
 
 ## [1.20.1](https://github.com/melfore/konva-timeline/compare/v1.20.0...v1.20.1) (2023-11-16)
 
