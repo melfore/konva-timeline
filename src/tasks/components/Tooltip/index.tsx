@@ -10,6 +10,9 @@ import { TaskData } from "../../utils/tasks";
 export interface TaskTooltipProps extends KonvaPoint {
   task: TaskData;
 }
+const rightMarginOffsetX = -185;
+const standardMarginOffsetX = 15;
+const marginOffsetY = 25;
 
 /**
  * This component renders a task tooltip inside a canvas.
@@ -55,24 +58,24 @@ const TaskTooltip: FC<TaskTooltipProps> = ({
   const offsetToolTip = useMemo(() => {
     const duration = drawEnd - drawStart;
     const gridDivision = duration / 4;
-    if (resourceId === "1") {
+    if (resourceId === resources[1].id) {
       if (x > drawEnd - gridDivision) {
-        return { x: -185, y: 25 };
+        return { x: rightMarginOffsetX, y: marginOffsetY };
       }
-      return { x: 15, y: 25 };
+      return { x: standardMarginOffsetX, y: marginOffsetY };
     }
 
-    if (Number(resourceId) === resources.length - 1) {
+    if (resourceId === resources[resources.length - 1].id) {
       if (x > drawEnd - gridDivision) {
-        return { x: -185, y: 100 };
+        return { x: rightMarginOffsetX, y: marginOffsetY * 4 };
       }
-      return { x: 15, y: 100 };
+      return { x: standardMarginOffsetX, y: marginOffsetY * 4 };
     }
 
     if (x > drawEnd - gridDivision) {
-      return { x: -185, y: 50 };
+      return { x: rightMarginOffsetX, y: marginOffsetY * 2 };
     }
-    return { x: 15, y: 50 };
+    return { x: standardMarginOffsetX, y: marginOffsetY * 2 };
   }, [drawEnd, drawStart, resourceId, x, resources]);
   return (
     <Label x={x + offsetToolTip.x} y={y - offsetToolTip.y} opacity={1}>
@@ -88,7 +91,8 @@ const TaskTooltip: FC<TaskTooltipProps> = ({
           }}
         >
           <b style={{ font: "menu", fontSize: 16, fontWeight: 700 }}>{label}</b>
-          <br></br>
+          <br />
+
           <div style={{ display: "inline-flex" }}>
             <b style={{ fontSize: 10, font: "menu", fontWeight: 700 }}>Start: </b>&nbsp;&nbsp;&nbsp;
             <span style={{ font: "menu" }}>{startDuration}</span>
