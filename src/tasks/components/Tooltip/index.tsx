@@ -1,6 +1,7 @@
 import React, { FC, useMemo } from "react";
-import { Label, Tag, Text } from "react-konva";
-import { DateTime } from "luxon";
+import { Label } from "react-konva";
+import { Html } from "react-konva-utils";
+import { DateTime, Duration } from "luxon";
 
 import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { KonvaPoint } from "../../../utils/konva";
@@ -9,66 +10,115 @@ import { TaskData } from "../../utils/tasks";
 export interface TaskTooltipProps extends KonvaPoint {
   task: TaskData;
 }
-
-const TASK_TOOLTIP_BACKGROUND = "black";
-const TASK_TOOLTIP_COLOR = "black";
-const TASK_TOOLTIP_POINTER_SIZE = 15;
-const TASK_TOOLTIP_SHADOW_SIZE = 10;
+const rightMarginOffsetX = -185;
+const standardMarginOffsetX = 15;
+const marginOffsetY = 25;
 
 /**
  * This component renders a task tooltip inside a canvas.
  */
 const TaskTooltip: FC<TaskTooltipProps> = ({
   task: {
-    label: taskLabel,
-    resourceId,
+    label,
     completedPercentage,
     time: { start, end },
+    resourceId,
   },
   x,
   y,
 }) => {
   const {
     drawRange: { start: drawStart, end: drawEnd },
+    resources,
   } = useTimelineContext();
-  const txt = useMemo(() => {
-    const label = "LABEL: " + taskLabel + "\n";
-    const startDuration = "START: " + DateTime.fromMillis(Number(start)).toFormat("dd/MM/yyyy HH:mm:ss") + "\n";
-    const endDuration = "END:    " + DateTime.fromMillis(Number(end)).toFormat("dd/MM/yyyy HH:mm:ss");
-    const complete = completedPercentage ? "\n" + "COMPLETED: " + completedPercentage + "%" : "";
-    return label + startDuration + endDuration + complete;
-  }, [taskLabel, completedPercentage, start, end]);
+  const startDuration = useMemo(() => {
+    return DateTime.fromMillis(Number(start)).toFormat("dd/MM/yyyy HH:mm:ss");
+  }, [start]);
+  const endDuration = useMemo(() => {
+    return DateTime.fromMillis(Number(end)).toFormat("dd/MM/yyyy HH:mm:ss");
+  }, [end]);
+  const percentage = useMemo(() => {
+    return completedPercentage + "%";
+  }, [completedPercentage]);
 
-  const pointerDir = useMemo(() => {
-    const part = (drawEnd - drawStart) / 5;
-    if (x < drawStart + part) {
-      return "left";
+  const duration = useMemo(() => {
+    const part = Number(end) - Number(start);
+    if (part < 252000000) {
+      const min = Duration.fromObject({ ["millisecond"]: part }).as("minute");
+      return { time: Math.round(min * 10) / 10, unit: "min" };
     }
-    if (x > drawEnd - part) {
-      return "right";
+    if (part < 172800000) {
+      const hour = Duration.fromObject({ ["millisecond"]: part }).as("hour");
+      return { time: Math.round(hour * 10) / 10, unit: "hour" };
     }
-    if (resourceId === "1") {
-      return "up";
+    const day = Duration.fromObject({ ["millisecond"]: part }).as("day");
+    return { time: Math.round(day * 10) / 10, unit: "Day" };
+  }, [start, end]);
+
+  const offsetToolTip = useMemo(() => {
+    const duration = drawEnd - drawStart;
+    const gridDivision = duration / 4;
+    if (resourceId === resources[1].id) {
+      if (x > drawEnd - gridDivision) {
+        return { x: rightMarginOffsetX, y: marginOffsetY };
+      }
+      return { x: standardMarginOffsetX, y: marginOffsetY };
     }
-    return "down";
-  }, [resourceId, drawEnd, drawStart, x]);
+
+    if (resourceId === resources[resources.length - 1].id) {
+      if (x > drawEnd - gridDivision) {
+        return { x: rightMarginOffsetX, y: marginOffsetY * 4 };
+      }
+      return { x: standardMarginOffsetX, y: marginOffsetY * 4 };
+    }
+
+    if (x > drawEnd - gridDivision) {
+      return { x: rightMarginOffsetX, y: marginOffsetY * 2 };
+    }
+    return { x: standardMarginOffsetX, y: marginOffsetY * 2 };
+  }, [drawEnd, drawStart, resourceId, x, resources]);
   return (
-    <Label x={x} y={y} opacity={1}>
-      <Tag
-        fill="white"
-        lineJoin="round"
-        stroke="black"
-        strokeWidth={1}
-        pointerDirection={pointerDir}
-        pointerHeight={TASK_TOOLTIP_POINTER_SIZE}
-        pointerWidth={TASK_TOOLTIP_POINTER_SIZE}
-        shadowBlur={TASK_TOOLTIP_SHADOW_SIZE}
-        shadowColor={TASK_TOOLTIP_BACKGROUND}
-        shadowOffsetX={TASK_TOOLTIP_SHADOW_SIZE}
-        shadowOffsetY={TASK_TOOLTIP_SHADOW_SIZE}
-        shadowOpacity={0.2}
-      />
-      <Text text={txt} fill={TASK_TOOLTIP_COLOR} fontSize={13} padding={8} />
+    <Label x={x + offsetToolTip.x} y={y - offsetToolTip.y} opacity={1}>
+      <Html>
+        <div
+          style={{
+            backgroundColor: "white",
+            border: "ridge",
+            borderColor: "black",
+            borderWidth: "1px",
+            padding: 8,
+            boxShadow: "2px 2px 8px black",
+          }}
+        >
+          <b style={{ font: "menu", fontSize: 16, fontWeight: 700 }}>{label}</b>
+          <br />
+
+          <div style={{ display: "inline-flex" }}>
+            <b style={{ fontSize: 10, font: "menu", fontWeight: 700 }}>Start: </b>&nbsp;&nbsp;&nbsp;
+            <span style={{ font: "menu" }}>{startDuration}</span>
+          </div>
+          <br></br>
+          <div style={{ display: "inline-flex" }}>
+            <b style={{ fontSize: 10, font: "menu", fontWeight: 700 }}>End: </b>&nbsp;&nbsp;&nbsp;
+            <span style={{ font: "menu" }}>{endDuration}</span>
+          </div>
+          <br></br>
+
+          <div style={{ display: "inline-flex" }}>
+            <b style={{ fontSize: 10, font: "menu", fontWeight: 700 }}>Duration: </b>&nbsp;&nbsp;&nbsp;
+            <span style={{ font: "menu" }}>
+              {duration.time} {duration.unit}(s)
+            </span>
+          </div>
+          <br></br>
+          {completedPercentage && (
+            <div style={{ display: "inline-flex" }}>
+              <b style={{ fontSize: 10, font: "menu", fontWeight: 700 }}>Complete: </b>&nbsp;&nbsp;&nbsp;
+              <span style={{ font: "menu" }}>{percentage}</span>
+            </div>
+          )}
+        </div>
+      </Html>
     </Label>
   );
 };
