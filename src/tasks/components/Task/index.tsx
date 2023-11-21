@@ -213,8 +213,8 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
       const { x, y } = getDragPoint(e);
       const dragFinalX = Math.ceil(x / dragSnapInPX) * dragSnapInPX;
       const xCoordinate = dragFinalX < 0 ? 0 : dragFinalX;
-      const minY = rowHeight + taskHeight * TASK_OFFSET_Y;
-      const maxY = rowHeight * resources.length - taskHeight - taskHeight * TASK_OFFSET_Y;
+      const minY = rowHeight + rowHeight * TASK_OFFSET_Y;
+      const maxY = rowHeight * (resources.length - 1) + rowHeight * TASK_OFFSET_Y;
       let controledY = y;
       if (controledY < minY) {
         controledY = minY;
@@ -226,7 +226,7 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
 
       setTaskDimensions((dimensions) => ({ ...dimensions, ...point }));
     },
-    [dragSnapInPX, getDragPoint, rowHeight, resources, taskHeight]
+    [dragSnapInPX, getDragPoint, rowHeight, resources]
   );
 
   const onDragEnd = useCallback(
