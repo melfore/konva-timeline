@@ -9,7 +9,7 @@ import { findResourceByCoordinate, findResourceIndexByCoordinate } from "../../.
 import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { KonvaDrawable, KonvaPoint } from "../../../utils/konva";
 import { getContrastColor, getRGB, getRGBA } from "../../../utils/theme";
-import { getTaskYCoordinate, TASK_BORDER_RADIUS, TASK_HEIGHT_OFFSET, TaskData } from "../../utils/tasks";
+import { getTaskYCoordinate, TASK_BORDER_RADIUS, TASK_HEIGHT_OFFSET, TASK_OFFSET_Y, TaskData } from "../../utils/tasks";
 import TaskResizeHandle from "../TaskResizeHandle";
 
 type TaskMouseEventHandler = (taskId: string, point: KonvaPoint) => void;
@@ -91,6 +91,8 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
     const row = findResourceIndexByCoordinate(y, rowHeight, resources);
     return { row, width, x, y };
   }, [resources, rowHeight, width, x, y]);
+
+  const taskHeight = useMemo(() => rowHeight * TASK_HEIGHT_OFFSET, [rowHeight]);
 
   const [taskDimensions, setTaskDimensions] = useState(initialTaskDimensions);
 
@@ -211,13 +213,20 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
       const { x, y } = getDragPoint(e);
       const dragFinalX = Math.ceil(x / dragSnapInPX) * dragSnapInPX;
       const xCoordinate = dragFinalX < 0 ? 0 : dragFinalX;
-      const resourceIndex = findResourceIndexByCoordinate(y, rowHeight, resources);
-      const yCoordinate = getTaskYCoordinate(resourceIndex, rowHeight);
-      const point = { x: xCoordinate, y: yCoordinate };
+      const minY = rowHeight + rowHeight * TASK_OFFSET_Y;
+      const maxY = rowHeight * (resources.length - 1) + rowHeight * TASK_OFFSET_Y;
+      let controledY = y;
+      if (controledY < minY) {
+        controledY = minY;
+      }
+      if (controledY > maxY) {
+        controledY = maxY;
+      }
+      const point = { x: xCoordinate, y: controledY };
 
       setTaskDimensions((dimensions) => ({ ...dimensions, ...point }));
     },
-    [dragSnapInPX, getDragPoint, resources, rowHeight]
+    [dragSnapInPX, getDragPoint, rowHeight, resources]
   );
 
   const onDragEnd = useCallback(
@@ -227,17 +236,22 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
         return;
       }
 
-      const { y } = getDragPoint(e);
+      const { x, y } = getDragPoint(e);
+      const dragFinalX = Math.ceil(x / dragSnapInPX) * dragSnapInPX;
+      const xCoordinate = dragFinalX < 0 ? 0 : dragFinalX;
+      const resourceIndex = findResourceIndexByCoordinate(y + taskHeight / 2, rowHeight, resources);
+      const yCoordinate = getTaskYCoordinate(resourceIndex, rowHeight);
+      const point = { x: xCoordinate, y: yCoordinate };
+      setTaskDimensions((dimensions) => ({ ...dimensions, ...point }));
+
       const { id: resourceId } = findResourceByCoordinate(y, rowHeight, resources);
       const time = onEndTimeRange();
       onTaskChange({ ...data, resourceId, time });
     },
-    [getDragPoint, onEndTimeRange, rowHeight, resources, onTaskChange, data]
+    [onEndTimeRange, rowHeight, resources, onTaskChange, data, dragSnapInPX, getDragPoint, taskHeight]
   );
 
   const opacity = useMemo(() => (dragging || resizing ? 0.5 : 1), [dragging, resizing]);
-
-  const taskHeight = useMemo(() => rowHeight * TASK_HEIGHT_OFFSET, [rowHeight]);
 
   const textOffsets = useMemo(() => taskHeight / 3, [taskHeight]);
 

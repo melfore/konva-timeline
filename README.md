@@ -19,7 +19,8 @@ This library has the following required peerDependencies:
 "luxon": ">= 3.3.0 < 4",
 "react": ">= 18.2.0 < 19",
 "react-dom": ">= 18.2.0 < 19",
-"react-konva": ">= 18.2.9 < 19"
+"react-konva": ">= 18.2.9 < 19",
+"react-konva-utils": ">= 1.0.5 < 2"
 ```
 
 ### ⚠️ Installing with npm < 7

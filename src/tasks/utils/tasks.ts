@@ -26,7 +26,7 @@ export interface TaskData<T extends TimeRange = TimeRange> {
 
 type FilteredTasks = Operation<TaskData<InternalTimeRange>>;
 
-const TASK_OFFSET_Y = 0.15;
+export const TASK_OFFSET_Y = 0.15;
 
 export const TASK_BORDER_RADIUS = 4;
 export const TASK_HEIGHT_OFFSET = 0.7;
