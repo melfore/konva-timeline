@@ -9,7 +9,7 @@ import { findResourceByCoordinate, findResourceIndexByCoordinate } from "../../.
 import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { KonvaDrawable, KonvaPoint } from "../../../utils/konva";
 import { getContrastColor, getRGB, getRGBA } from "../../../utils/theme";
-import { getTaskYCoordinate, TASK_BORDER_RADIUS, TASK_HEIGHT_OFFSET, TaskData } from "../../utils/tasks";
+import { getTaskYCoordinate, TASK_BORDER_RADIUS, TASK_HEIGHT_OFFSET, TASK_OFFSET_Y, TaskData } from "../../utils/tasks";
 import TaskResizeHandle from "../TaskResizeHandle";
 
 type TaskMouseEventHandler = (taskId: string, point: KonvaPoint) => void;
@@ -213,11 +213,20 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
       const { x, y } = getDragPoint(e);
       const dragFinalX = Math.ceil(x / dragSnapInPX) * dragSnapInPX;
       const xCoordinate = dragFinalX < 0 ? 0 : dragFinalX;
-      const point = { x: xCoordinate, y: y };
+      const minY = rowHeight + taskHeight * TASK_OFFSET_Y;
+      const maxY = rowHeight * resources.length - taskHeight - taskHeight * TASK_OFFSET_Y;
+      let controledY = y;
+      if (controledY < minY) {
+        controledY = minY;
+      }
+      if (controledY > maxY) {
+        controledY = maxY;
+      }
+      const point = { x: xCoordinate, y: controledY };
 
       setTaskDimensions((dimensions) => ({ ...dimensions, ...point }));
     },
-    [dragSnapInPX, getDragPoint]
+    [dragSnapInPX, getDragPoint, rowHeight, resources, taskHeight]
   );
 
   const onDragEnd = useCallback(
