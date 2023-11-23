@@ -10,7 +10,7 @@ import { TaskData } from "../../utils/tasks";
 export interface TaskTooltipProps extends KonvaPoint {
   task: TaskData;
 }
-const rightMarginOffsetX = -185;
+const rightMarginOffsetX = -230;
 const standardMarginOffsetX = 15;
 const marginOffsetY = 25;
 const sevenHourinMillis = 25200000;
@@ -29,7 +29,7 @@ const TaskTooltip: FC<TaskTooltipProps> = ({
   y,
 }) => {
   const {
-    drawRange: { start: drawStart, end: drawEnd },
+    drawRange: { end: drawEnd },
     resources,
   } = useTimelineContext();
   const startDuration = useMemo(() => {
@@ -57,27 +57,25 @@ const TaskTooltip: FC<TaskTooltipProps> = ({
   }, [start, end]);
 
   const offsetToolTip = useMemo(() => {
-    const duration = drawEnd - drawStart;
-    const gridDivision = duration / 4;
     if (resourceId === resources[1].id) {
-      if (x > drawEnd - gridDivision) {
+      if (x > drawEnd + rightMarginOffsetX) {
         return { x: rightMarginOffsetX, y: marginOffsetY };
       }
       return { x: standardMarginOffsetX, y: marginOffsetY };
     }
 
     if (resourceId === resources[resources.length - 1].id) {
-      if (x > drawEnd - gridDivision) {
+      if (x > drawEnd + rightMarginOffsetX) {
         return { x: rightMarginOffsetX, y: marginOffsetY * 4 };
       }
       return { x: standardMarginOffsetX, y: marginOffsetY * 4 };
     }
 
-    if (x > drawEnd - gridDivision) {
+    if (x > drawEnd + rightMarginOffsetX) {
       return { x: rightMarginOffsetX, y: marginOffsetY * 2 };
     }
     return { x: standardMarginOffsetX, y: marginOffsetY * 2 };
-  }, [drawEnd, drawStart, resourceId, x, resources]);
+  }, [drawEnd, resourceId, x, resources]);
   return (
     <Label x={x + offsetToolTip.x} y={y - offsetToolTip.y} opacity={1}>
       <Html>
@@ -91,31 +89,32 @@ const TaskTooltip: FC<TaskTooltipProps> = ({
             boxShadow: "2px 2px 8px black",
           }}
         >
-          <b style={{ font: "menu", fontSize: 16, fontWeight: 700 }}>{label}</b>
+          <b style={{ fontFamily: "Times New Roman", fontSize: 16, fontWeight: 700 }}>{label}</b>
           <br />
 
-          <div style={{ display: "inline-flex" }}>
-            <b style={{ fontSize: 10, font: "menu", fontWeight: 700 }}>Start: </b>&nbsp;&nbsp;&nbsp;
-            <span style={{ font: "menu" }}>{startDuration}</span>
+          <div style={{ display: "inline-flex", alignItems: "center" }}>
+            <b style={{ fontSize: 14, fontFamily: "Times New Roman", fontWeight: 700 }}>Start: </b>&nbsp;&nbsp;&nbsp;
+            <span style={{ fontFamily: "Courier New", fontSize: 13 }}>{startDuration}</span>
           </div>
           <br></br>
-          <div style={{ display: "inline-flex" }}>
-            <b style={{ fontSize: 10, font: "menu", fontWeight: 700 }}>End: </b>&nbsp;&nbsp;&nbsp;
-            <span style={{ font: "menu" }}>{endDuration}</span>
+          <div style={{ display: "inline-flex", alignItems: "center" }}>
+            <b style={{ fontSize: 14, fontFamily: "Times New Roman", fontWeight: 700 }}>End: </b>&nbsp;&nbsp;&nbsp;
+            <span style={{ fontFamily: "Courier New", fontSize: 13 }}>{endDuration}</span>
           </div>
           <br></br>
 
-          <div style={{ display: "inline-flex" }}>
-            <b style={{ fontSize: 10, font: "menu", fontWeight: 700 }}>Duration: </b>&nbsp;&nbsp;&nbsp;
-            <span style={{ font: "menu" }}>
+          <div style={{ display: "inline-flex", alignItems: "center" }}>
+            <b style={{ fontFamily: "Times New Roman", fontSize: 14, fontWeight: 700 }}>Duration: </b>&nbsp;&nbsp;&nbsp;
+            <span style={{ fontFamily: "Courier New", fontSize: 13 }}>
               {duration.time} {duration.unit}(s)
             </span>
           </div>
           <br></br>
           {completedPercentage && (
-            <div style={{ display: "inline-flex" }}>
-              <b style={{ fontSize: 10, font: "menu", fontWeight: 700 }}>Complete: </b>&nbsp;&nbsp;&nbsp;
-              <span style={{ font: "menu" }}>{percentage}</span>
+            <div style={{ display: "inline-flex", alignItems: "center" }}>
+              <b style={{ fontFamily: "Times New Roman", fontSize: 14, fontWeight: 700 }}>Complete: </b>
+              &nbsp;&nbsp;&nbsp;
+              <span style={{ fontFamily: "Courier New", fontSize: 13 }}>{percentage}</span>
             </div>
           )}
         </div>
