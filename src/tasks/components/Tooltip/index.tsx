@@ -87,9 +87,20 @@ const TaskTooltip: FC<TaskTooltipProps> = ({
             borderWidth: "1px",
             padding: 8,
             boxShadow: "2px 2px 8px black",
+            maxWidth: 200,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
           }}
         >
-          <b style={{ fontFamily: "Times New Roman", fontSize: 16, fontWeight: 700 }}>{label}</b>
+          <b
+            style={{
+              fontFamily: "Times New Roman",
+              fontSize: 16,
+              fontWeight: 700,
+            }}
+          >
+            {label}
+          </b>
           <br />
 
           <div style={{ display: "inline-flex", alignItems: "center" }}>
