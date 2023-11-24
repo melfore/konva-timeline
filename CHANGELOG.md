@@ -1,10 +1,9 @@
 # [1.22.0](https://github.com/melfore/konva-timeline/compare/v1.21.2...v1.22.0) (2023-11-21)
 
-
 ### Features
 
-* 🎸 [Task] Added range for task Y cordinate ([c623547](https://github.com/melfore/konva-timeline/commit/c62354778cda4c9a7210d3faf74d288fe5a5829d)), closes [#103](https://github.com/melfore/konva-timeline/issues/103)
-* 🎸 [Task] Changed Vertical dragAndDrop ([722fdf0](https://github.com/melfore/konva-timeline/commit/722fdf040bb241984b65ee67a601eefd0e7ed1ac)), closes [#103](https://github.com/melfore/konva-timeline/issues/103)
+- 🎸 [Task] Added range for task Y cordinate ([c623547](https://github.com/melfore/konva-timeline/commit/c62354778cda4c9a7210d3faf74d288fe5a5829d)), closes [#103](https://github.com/melfore/konva-timeline/issues/103)
+- 🎸 [Task] Changed Vertical dragAndDrop ([722fdf0](https://github.com/melfore/konva-timeline/commit/722fdf040bb241984b65ee67a601eefd0e7ed1ac)), closes [#103](https://github.com/melfore/konva-timeline/issues/103)
 
 ## [1.21.2](https://github.com/melfore/konva-timeline/compare/v1.21.1...v1.21.2) (2023-11-20)
 
