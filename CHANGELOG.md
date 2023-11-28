@@ -1,9 +1,8 @@
 ## [1.22.1](https://github.com/melfore/konva-timeline/compare/v1.22.0...v1.22.1) (2023-11-24)
 
-
 ### Bug Fixes
 
-* 🐛 [Tooltip] fixed position ([b29e60a](https://github.com/melfore/konva-timeline/commit/b29e60af4fdba55fa696f24952b2d5cea4c4559a)), closes [#161](https://github.com/melfore/konva-timeline/issues/161)
+- 🐛 [Tooltip] fixed position ([b29e60a](https://github.com/melfore/konva-timeline/commit/b29e60af4fdba55fa696f24952b2d5cea4c4559a)), closes [#161](https://github.com/melfore/konva-timeline/issues/161)
 
 # [1.22.0](https://github.com/melfore/konva-timeline/compare/v1.21.2...v1.22.0) (2023-11-21)
 
