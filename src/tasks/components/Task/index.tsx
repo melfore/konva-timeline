@@ -60,6 +60,7 @@ enableStrictMode(true);
 const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fillToComplete }: TaskProps) => {
   const {
     columnWidth,
+    timeBlocks,
     displayTasksLabel,
     dragResolution: { sizeInUnits: dragSizeInUnits, unit: dragUnit },
     enableDrag,
@@ -95,6 +96,9 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
   const taskHeight = useMemo(() => rowHeight * TASK_HEIGHT_OFFSET, [rowHeight]);
 
   const [taskDimensions, setTaskDimensions] = useState(initialTaskDimensions);
+
+  const endDraw = useMemo(() => timeBlocks.length * columnWidth, [timeBlocks, columnWidth]);
+  const finalPoint = useMemo(() => endDraw - taskDimensions.width, [endDraw, taskDimensions]);
 
   useEffect(() => {
     const row = findResourceIndexByCoordinate(y, rowHeight, resources);
@@ -216,17 +220,25 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
       const minY = rowHeight + rowHeight * TASK_OFFSET_Y;
       const maxY = rowHeight * (resources.length - 1) + rowHeight * TASK_OFFSET_Y;
       let controledY = y;
+      let controledX = xCoordinate;
       if (controledY < minY) {
         controledY = minY;
       }
       if (controledY > maxY) {
         controledY = maxY;
       }
-      const point = { x: xCoordinate, y: controledY };
+
+      if (dragFinalX >= finalPoint) {
+        if (controledX > taskDimensions.x) {
+          controledX = finalPoint;
+        }
+      }
+
+      const point = { x: controledX, y: controledY };
 
       setTaskDimensions((dimensions) => ({ ...dimensions, ...point }));
     },
-    [dragSnapInPX, getDragPoint, rowHeight, resources]
+    [dragSnapInPX, getDragPoint, resources, taskDimensions, finalPoint, rowHeight]
   );
 
   const onDragEnd = useCallback(
