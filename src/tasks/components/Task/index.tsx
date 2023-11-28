@@ -97,8 +97,10 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
 
   const [taskDimensions, setTaskDimensions] = useState(initialTaskDimensions);
 
-  const endDraw = useMemo(() => timeBlocks.length * columnWidth, [timeBlocks, columnWidth]);
-  const finalPoint = useMemo(() => endDraw - taskDimensions.width, [endDraw, taskDimensions]);
+  const finalPoint = useMemo(
+    () => timeBlocks.length * columnWidth - taskDimensions.width,
+    [timeBlocks, columnWidth, taskDimensions]
+  );
 
   useEffect(() => {
     const row = findResourceIndexByCoordinate(y, rowHeight, resources);
@@ -229,16 +231,14 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
       }
 
       if (dragFinalX >= finalPoint) {
-        if (controledX > taskDimensions.x) {
-          controledX = finalPoint;
-        }
+        controledX = finalPoint;
       }
 
       const point = { x: controledX, y: controledY };
 
       setTaskDimensions((dimensions) => ({ ...dimensions, ...point }));
     },
-    [dragSnapInPX, getDragPoint, resources, taskDimensions, finalPoint, rowHeight]
+    [dragSnapInPX, getDragPoint, resources, finalPoint, rowHeight]
   );
 
   const onDragEnd = useCallback(
