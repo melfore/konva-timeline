@@ -117,7 +117,7 @@ export const NonPreciseRange: Story = {
 export const CompletedPercentage: Story = {
   args: {
     resources,
-    resolution: "1week",
+    resolution: "2weeks",
     range: {
       start: 1698357600000,
       end: 1702095200000,
@@ -151,6 +151,26 @@ export const CompletedPercentage: Story = {
         time: {
           start: 1699734800000,
           end: 1700234800000,
+        },
+      },
+      {
+        id: "4",
+        label: "Task4",
+        resourceId: "2",
+        completedPercentage: 28,
+        time: {
+          start: 1698047900000,
+          end: 1698557900000,
+        },
+      },
+      {
+        id: "5",
+        label: "Task5",
+        resourceId: "1",
+        completedPercentage: 74,
+        time: {
+          start: 1701505200000,
+          end: 1702105200000,
         },
       },
     ],
