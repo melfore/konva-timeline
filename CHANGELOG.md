@@ -1,9 +1,8 @@
 ## [1.22.2](https://github.com/melfore/konva-timeline/compare/v1.22.1...v1.22.2) (2023-11-28)
 
-
 ### Bug Fixes
 
-* 🐛 [Task] Added limit to dragg ([0045d90](https://github.com/melfore/konva-timeline/commit/0045d90958dbeb336572b8f58d1d4344f34e2e7f)), closes [#73](https://github.com/melfore/konva-timeline/issues/73)
+- 🐛 [Task] Added limit to dragg ([0045d90](https://github.com/melfore/konva-timeline/commit/0045d90958dbeb336572b8f58d1d4344f34e2e7f)), closes [#73](https://github.com/melfore/konva-timeline/issues/73)
 
 ## [1.22.1](https://github.com/melfore/konva-timeline/compare/v1.22.0...v1.22.1) (2023-11-24)
 
