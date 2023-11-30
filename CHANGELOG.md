@@ -1,3 +1,10 @@
+# [1.23.0](https://github.com/melfore/konva-timeline/compare/v1.22.2...v1.23.0) (2023-11-30)
+
+
+### Features
+
+* 🎸 [Task]added resize range ([524c9ee](https://github.com/melfore/konva-timeline/commit/524c9ee737a2acf8551a5d53ff648c2c5f6301c3)), closes [#164](https://github.com/melfore/konva-timeline/issues/164)
+
 ## [1.22.2](https://github.com/melfore/konva-timeline/compare/v1.22.1...v1.22.2) (2023-11-28)
 
 ### Bug Fixes
