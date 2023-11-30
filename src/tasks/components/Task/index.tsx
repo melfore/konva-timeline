@@ -97,10 +97,7 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
 
   const [taskDimensions, setTaskDimensions] = useState(initialTaskDimensions);
 
-  const finalPoint = useMemo(
-    () => timeBlocks.length * columnWidth - taskDimensions.width,
-    [timeBlocks, columnWidth, taskDimensions]
-  );
+  const finalPoint = useMemo(() => timeBlocks.length * columnWidth, [timeBlocks, columnWidth]);
 
   useEffect(() => {
     const row = findResourceIndexByCoordinate(y, rowHeight, resources);
@@ -221,6 +218,7 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
       const xCoordinate = dragFinalX < 0 ? 0 : dragFinalX;
       const minY = rowHeight + rowHeight * TASK_OFFSET_Y;
       const maxY = rowHeight * (resources.length - 1) + rowHeight * TASK_OFFSET_Y;
+      const taskFinalPoint = finalPoint - taskDimensions.width;
       let controledY = y;
       let controledX = xCoordinate;
       if (controledY < minY) {
@@ -230,15 +228,15 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
         controledY = maxY;
       }
 
-      if (dragFinalX >= finalPoint) {
-        controledX = finalPoint;
+      if (dragFinalX >= taskFinalPoint) {
+        controledX = taskFinalPoint;
       }
 
       const point = { x: controledX, y: controledY };
 
       setTaskDimensions((dimensions) => ({ ...dimensions, ...point }));
     },
-    [dragSnapInPX, getDragPoint, resources, finalPoint, rowHeight]
+    [dragSnapInPX, getDragPoint, resources, finalPoint, rowHeight, taskDimensions]
   );
 
   const onDragEnd = useCallback(
@@ -299,18 +297,24 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
             if (handlerX <= taskX + TASK_BORDER_RADIUS) {
               return { ...taskDimensions };
             }
+            if (handlerX >= finalPoint) {
+              return { ...taskDimensions, width: finalPoint - taskX };
+            }
 
             return { ...taskDimensions, width: handlerX - taskX };
           case "lx":
             if (handlerX >= taskEndX - TASK_BORDER_RADIUS) {
               return { ...taskDimensions };
             }
+            if (handlerX <= 0) {
+              return { ...taskDimensions, x: 0, width: taskEndX };
+            }
 
             return { ...taskDimensions, x: handlerX, width: taskEndX - handlerX };
         }
       });
     },
-    [getDragPoint]
+    [getDragPoint, finalPoint]
   );
 
   const onResizeEnd = useCallback(
