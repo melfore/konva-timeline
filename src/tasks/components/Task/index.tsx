@@ -128,6 +128,13 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
     return dragSnapInPx;
   }, [columnWidth, dragUnit, dragSizeInUnits, sizeInUnits, unit]);
 
+  const taskHandlerBorder = useMemo(() => {
+    if (taskDimensions.x + taskDimensions.width >= finalPoint) {
+      return 2;
+    }
+    return 0;
+  }, [taskDimensions, finalPoint]);
+
   const getDragPoint = useCallback((e: KonvaEventObject<DragEvent>): KonvaPoint => {
     const { target } = e;
     const dragX = target.x();
@@ -147,7 +154,6 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
       if (!point) {
         return;
       }
-
       callback(taskId, { ...point, x: point.x + drawRange.start });
     },
     [taskId, drawRange]
@@ -206,6 +212,7 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
       const yCoordinate = getTaskYCoordinate(resourceIndex, rowHeight);
       const point = { x: xCoordinate, y: yCoordinate };
       setDragging(true);
+      ///ToolTip disappears
       onLeave(taskId, point);
     },
     [getDragPoint, onLeave, resources, rowHeight, taskId, dragSnapInPX]
@@ -277,15 +284,24 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
 
   const textWidth = useMemo(() => taskDimensions.width - textOffsets * 2, [taskDimensions, textOffsets]);
 
-  const onResizeStart = useCallback((e: KonvaEventObject<DragEvent>) => {
-    e.cancelBubble = true;
-    setResizing(true);
-  }, []);
+  const onResizeStart = useCallback(
+    (e: KonvaEventObject<DragEvent>) => {
+      e.cancelBubble = true;
+      const { x, y } = getDragPoint(e);
+      const dragFinalX = Math.ceil(x / dragSnapInPX) * dragSnapInPX;
+      const xCoordinate = dragFinalX < 0 ? 0 : dragFinalX;
+      const resourceIndex = findResourceIndexByCoordinate(y, rowHeight, resources);
+      const yCoordinate = getTaskYCoordinate(resourceIndex, rowHeight);
+      const point = { x: xCoordinate, y: yCoordinate };
+      onLeave(taskId, point);
+      setResizing(true);
+    },
+    [dragSnapInPX, getDragPoint, onLeave, resources, rowHeight, taskId]
+  );
 
   const onResizeMove = useCallback(
     (e: KonvaEventObject<DragEvent>, handler: "lx" | "rx") => {
       e.cancelBubble = true;
-
       const { x: dragX } = getDragPoint(e);
       setTaskDimensions((taskDimensions) => {
         const { x: taskX, width: taskWidth } = taskDimensions;
@@ -452,7 +468,7 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
           opacity={opacity}
           position="rx"
           taskId={taskId}
-          xCoordinate={taskDimensions.width}
+          xCoordinate={taskDimensions.width - taskHandlerBorder}
         />
       )}
       {displayTasksLabel && (

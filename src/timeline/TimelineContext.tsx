@@ -19,6 +19,12 @@ declare global {
 }
 
 type TimelineThemeMode = "dark" | "light";
+type Localized = {
+  start: string;
+  end: string;
+  duration: string;
+  percentage: string;
+};
 
 export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
   /**
@@ -61,6 +67,10 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
    * Theme color in use
    */
   theme?: TimelineThemeMode;
+  /**
+   * ToolTips Labels
+   */
+  localized?: Localized;
 };
 
 type TimelineTheme = {
@@ -91,6 +101,7 @@ type TimelineContextType = Required<
   timeBlocks: Interval[];
   timezone: string;
   visibleTimeBlocks: Interval[];
+  localized: Localized;
 };
 
 const TimelineContext = createContext<TimelineContextType | undefined>(undefined);
@@ -119,6 +130,12 @@ export const TimelineProvider = ({
   rowHeight: externalRowHeight,
   timezone: externalTimezone,
   theme: externalTheme = "light",
+  localized = {
+    start: "Start",
+    end: "End",
+    duration: "Duration",
+    percentage: "Completed",
+  },
 }: TimelineProviderProps) => {
   const timezone = useMemo(() => {
     if (!externalTimezone) {
@@ -359,6 +376,7 @@ export const TimelineProvider = ({
         timezone: timezone || "system",
         visibleTimeBlocks,
         blocksOffset: timeblocksOffset,
+        localized: localized,
       }}
     >
       {children}
