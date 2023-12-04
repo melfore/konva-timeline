@@ -176,3 +176,15 @@ export const CompletedPercentage: Story = {
     ],
   },
 };
+
+export const Localized: Story = {
+  args: {
+    ...Primary.args,
+    localized: {
+      start: "Inizio",
+      end: "Fine",
+      duration: "Durata",
+      completed: "Completamento",
+    },
+  },
+};

@@ -31,6 +31,7 @@ const TaskTooltip: FC<TaskTooltipProps> = ({
   const {
     drawRange: { end: drawEnd },
     resources,
+    localized,
   } = useTimelineContext();
   const startDuration = useMemo(() => {
     return DateTime.fromMillis(Number(start)).toFormat("dd/MM/yyyy HH:mm:ss");
@@ -104,18 +105,21 @@ const TaskTooltip: FC<TaskTooltipProps> = ({
           <br />
 
           <div style={{ display: "inline-flex", alignItems: "center" }}>
-            <b style={{ fontSize: 14, fontFamily: "Times New Roman", fontWeight: 700 }}>Start: </b>&nbsp;&nbsp;&nbsp;
+            <b style={{ fontSize: 14, fontFamily: "Times New Roman", fontWeight: 700 }}>{localized.start}: </b>
+            &nbsp;&nbsp;&nbsp;
             <span style={{ fontFamily: "Courier New", fontSize: 13 }}>{startDuration}</span>
           </div>
           <br></br>
           <div style={{ display: "inline-flex", alignItems: "center" }}>
-            <b style={{ fontSize: 14, fontFamily: "Times New Roman", fontWeight: 700 }}>End: </b>&nbsp;&nbsp;&nbsp;
+            <b style={{ fontSize: 14, fontFamily: "Times New Roman", fontWeight: 700 }}>{localized.end}: </b>
+            &nbsp;&nbsp;&nbsp;
             <span style={{ fontFamily: "Courier New", fontSize: 13 }}>{endDuration}</span>
           </div>
           <br></br>
 
           <div style={{ display: "inline-flex", alignItems: "center" }}>
-            <b style={{ fontFamily: "Times New Roman", fontSize: 14, fontWeight: 700 }}>Duration: </b>&nbsp;&nbsp;&nbsp;
+            <b style={{ fontFamily: "Times New Roman", fontSize: 14, fontWeight: 700 }}>{localized.duration}: </b>
+            &nbsp;&nbsp;&nbsp;
             <span style={{ fontFamily: "Courier New", fontSize: 13 }}>
               {duration.time} {duration.unit}(s)
             </span>
@@ -123,7 +127,7 @@ const TaskTooltip: FC<TaskTooltipProps> = ({
           <br></br>
           {completedPercentage && (
             <div style={{ display: "inline-flex", alignItems: "center" }}>
-              <b style={{ fontFamily: "Times New Roman", fontSize: 14, fontWeight: 700 }}>Complete: </b>
+              <b style={{ fontFamily: "Times New Roman", fontSize: 14, fontWeight: 700 }}>{localized.completed}: </b>
               &nbsp;&nbsp;&nbsp;
               <span style={{ fontFamily: "Courier New", fontSize: 13 }}>{percentage}</span>
             </div>
