@@ -23,7 +23,7 @@ type Localized = {
   start: string;
   end: string;
   duration: string;
-  percentage: string;
+  completed: string;
 };
 
 export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
@@ -134,7 +134,7 @@ export const TimelineProvider = ({
     start: "Start",
     end: "End",
     duration: "Duration",
-    percentage: "Completed",
+    completed: "Completed",
   },
 }: TimelineProviderProps) => {
   const timezone = useMemo(() => {

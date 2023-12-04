@@ -127,7 +127,7 @@ const TaskTooltip: FC<TaskTooltipProps> = ({
           <br></br>
           {completedPercentage && (
             <div style={{ display: "inline-flex", alignItems: "center" }}>
-              <b style={{ fontFamily: "Times New Roman", fontSize: 14, fontWeight: 700 }}>{localized.percentage}: </b>
+              <b style={{ fontFamily: "Times New Roman", fontSize: 14, fontWeight: 700 }}>{localized.completed}: </b>
               &nbsp;&nbsp;&nbsp;
               <span style={{ fontFamily: "Courier New", fontSize: 13 }}>{percentage}</span>
             </div>
