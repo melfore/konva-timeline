@@ -1,9 +1,8 @@
 # [1.24.0](https://github.com/melfore/konva-timeline/compare/v1.23.0...v1.24.0) (2023-12-04)
 
-
 ### Features
 
-* 🎸 [ToolTip] Added proprs for tooltip labels ([e99a55b](https://github.com/melfore/konva-timeline/commit/e99a55b900050bbf978e5b91f3d60c1a69d845a1)), closes [#166](https://github.com/melfore/konva-timeline/issues/166)
+- 🎸 [ToolTip] Added proprs for tooltip labels ([e99a55b](https://github.com/melfore/konva-timeline/commit/e99a55b900050bbf978e5b91f3d60c1a69d845a1)), closes [#166](https://github.com/melfore/konva-timeline/issues/166)
 
 # [1.23.0](https://github.com/melfore/konva-timeline/compare/v1.22.2...v1.23.0) (2023-11-30)
 
