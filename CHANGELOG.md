@@ -1,3 +1,10 @@
+# [1.25.0](https://github.com/melfore/konva-timeline/compare/v1.24.0...v1.25.0) (2023-12-05)
+
+
+### Features
+
+* 🎸 Added props dateLocale ([df6a9d5](https://github.com/melfore/konva-timeline/commit/df6a9d5b1f47e468e8087b3c4decd61e562ea85d)), closes [#168](https://github.com/melfore/konva-timeline/issues/168)
+
 # [1.24.0](https://github.com/melfore/konva-timeline/compare/v1.23.0...v1.24.0) (2023-12-04)
 
 ### Features
