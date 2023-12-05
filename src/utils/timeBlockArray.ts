@@ -89,13 +89,13 @@ export const getAboveTimeBlocksVisible = (
     aboveTimeBlocks.forEach((i, index) => {
       const startMillis = i.start!.toMillis();
       const endMillis = i.end!.toMillis();
-      if (endMillis > startUnitAbove!.toMillis() && endMillis < endUnitAbove!.toMillis()) {
+      if (endMillis > startUnitAbove!.toMillis() && endMillis <= endUnitAbove!.toMillis()) {
         arrayIndex.push(index);
         blocksArray.push(i);
         return;
       }
 
-      if (startMillis > startUnitAbove!.toMillis() && startMillis < endUnitAbove!.toMillis()) {
+      if (startMillis >= startUnitAbove!.toMillis() && startMillis < endUnitAbove!.toMillis()) {
         arrayIndex.push(index);
         blocksArray.push(i);
         return;

@@ -177,7 +177,7 @@ export const CompletedPercentage: Story = {
   },
 };
 
-export const Localized: Story = {
+export const LocalizedTooltipLabels: Story = {
   args: {
     ...Primary.args,
     localized: {
@@ -186,5 +186,12 @@ export const Localized: Story = {
       duration: "Durata",
       completed: "Completamento",
     },
+  },
+};
+
+export const LocalizedDateFormat: Story = {
+  args: {
+    ...Primary.args,
+    dateLocale: "it",
   },
 };

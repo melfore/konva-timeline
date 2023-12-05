@@ -137,22 +137,21 @@ export const RESOLUTIONS: Resolution[] = [
  * @param interval the interval to display
  * @param unit the unit in which to display the interval
  */
-export const displayAboveInterval = (interval: Interval, unit: Scale): string => {
+export const displayAboveInterval = (interval: Interval, unit: Scale, locale: string): string => {
   const { start } = interval;
   if (!start) {
     return "-";
   }
-
   switch (unit) {
     case "minute":
     case "hour":
-      return start.toFormat("dd/MM/yy HH:mm");
+      return start.setLocale(locale).toFormat("dd/MM/yy HH:mm");
     case "day":
-      return start.toFormat("ccc dd yyyy");
+      return start.setLocale(locale).toFormat("ccc dd yyyy");
     case "week":
-      return `${start.toFormat("MMM yyyy")} CW ${start.toFormat("WW")}`;
+      return `${start.setLocale(locale).toFormat("MMM yyyy")} CW ${start.toFormat("WW")}`;
     case "month":
-      return start.toFormat("MMM yyyy");
+      return start.setLocale(locale).toFormat("MMM yyyy");
     default:
       return "N/A";
   }
