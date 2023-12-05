@@ -71,6 +71,10 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
    * ToolTips Labels
    */
   localized?: Localized;
+  /**
+   * Language used for date format
+   */
+  dateLocale?: string;
 };
 
 type TimelineTheme = {
@@ -102,6 +106,7 @@ type TimelineContextType = Required<
   timezone: string;
   visibleTimeBlocks: Interval[];
   localized: Localized;
+  dateLocale?: string;
 };
 
 const TimelineContext = createContext<TimelineContextType | undefined>(undefined);
@@ -136,6 +141,7 @@ export const TimelineProvider = ({
     duration: "Duration",
     completed: "Completed",
   },
+  dateLocale = "en",
 }: TimelineProviderProps) => {
   const timezone = useMemo(() => {
     if (!externalTimezone) {
@@ -377,6 +383,7 @@ export const TimelineProvider = ({
         visibleTimeBlocks,
         blocksOffset: timeblocksOffset,
         localized: localized,
+        dateLocale,
       }}
     >
       {children}

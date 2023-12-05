@@ -25,9 +25,13 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
     resolution: { sizeInUnits, unit, unitAbove },
     rowHeight,
     theme: { color: themeColor },
+    dateLocale,
   } = useTimelineContext();
 
-  const cellLabel = useMemo(() => displayAboveInterval(column, unitAbove), [column, unitAbove]);
+  const cellLabel = useMemo(
+    () => displayAboveInterval(column, unitAbove, dateLocale!),
+    [column, unitAbove, dateLocale]
+  );
 
   const points = useMemo(() => [0, 0, 0, rowHeight], [rowHeight]);
 
