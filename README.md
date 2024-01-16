@@ -4,6 +4,24 @@
 
 `@melfore/konva-timeline` is a TypeScript ReactJS library that uses `konva` and `react-konva` to render a timeline component using canvas.
 
+There can be from none to many items per each row and tasks can be moved across rows. The component allows tasks moving, resize and hovering. This allows usage for gantt charts, schedulers and planners.
+
+![sample](./assets/sample.gif)
+
+Its style is fully customizable:
+
+![column width](./assets/column-width.png)
+
+![row height](./assets/row-height.png)
+
+And offers ways to customize tasks appearance:
+
+![completed percentage](./assets/completed-percentage.png)
+
+Plus all static texts and dates can be easily localized:
+
+![localized](./assets/localized.png)
+
 ## Install
 
 To install the library run:
