@@ -1,3 +1,10 @@
+# [1.26.0](https://github.com/melfore/konva-timeline/compare/v1.25.2...v1.26.0) (2024-01-18)
+
+
+### Features
+
+* 🎸 [Grid] Improve display of time ([a6f352f](https://github.com/melfore/konva-timeline/commit/a6f352fbb04288a1a755a4a812d3548bba98abfa)), closes [#175](https://github.com/melfore/konva-timeline/issues/175)
+
 ## [1.25.2](https://github.com/melfore/konva-timeline/compare/v1.25.1...v1.25.2) (2024-01-17)
 
 ## [1.25.1](https://github.com/melfore/konva-timeline/compare/v1.25.0...v1.25.1) (2024-01-16)

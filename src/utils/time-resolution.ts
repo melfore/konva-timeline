@@ -147,11 +147,11 @@ export const displayAboveInterval = (interval: Interval, unit: Scale, locale: st
     case "hour":
       return start.setLocale(locale).toFormat("dd/MM/yy HH:mm");
     case "day":
-      return start.setLocale(locale).toFormat("ccc dd yyyy");
+      return start.setLocale(locale).toFormat("DDDD");
     case "week":
-      return `${start.setLocale(locale).toFormat("MMM yyyy")} CW ${start.toFormat("WW")}`;
+      return `${start.setLocale(locale).toFormat("MMMM yyyy")} CW ${start.toFormat("WW")}`;
     case "month":
-      return start.setLocale(locale).toFormat("MMM yyyy");
+      return start.setLocale(locale).toFormat("MMMM yyyy");
     default:
       return "N/A";
   }
@@ -191,7 +191,7 @@ export const daysInMonth = (month: number, year: number) => {
  * @param interval the interval to display
  * @param unit the unit in which to display the interval
  */
-export const displayInterval = (interval: Interval, unit: Scale): string => {
+export const displayInterval = (interval: Interval, unit: Scale, locale: string): string => {
   const { start } = interval;
   if (!start) {
     return "-";
@@ -199,15 +199,15 @@ export const displayInterval = (interval: Interval, unit: Scale): string => {
 
   switch (unit) {
     case "minute":
-      return start.toFormat("mm");
+      return start.setLocale(locale).toFormat("mm");
     case "hour":
-      return start.toFormat("HH:mm");
+      return start.setLocale(locale).toFormat("HH:mm");
     case "day":
-      return start.toFormat("ccc dd");
+      return start.setLocale(locale).toFormat("ccc dd");
     case "week":
-      return `CW ${start.toFormat("WW")}`;
+      return `CW ${start.setLocale(locale).toFormat("WW")}`;
     case "month":
-      return start.toFormat("MMM yyyy");
+      return start.setLocale(locale).toFormat("MMM yyyy");
     default:
       return "N/A";
   }
