@@ -28,11 +28,36 @@ Size of columns and rows can be adjusted using dedicated props:
 
 ![row height](./assets/row-height.png)
 
+Resolution of the timeline can be changed as well, choosing the right one for your scenario.
+
+Below a comparison of the same data set using 5 mins resolution:
+
+![5mins resolution](./assets/resolution-5mins.png)
+
+Now with 2 hours resolution:
+
+![2hrs resolution](./assets/resolution-2hrs.png)
+
 ### Tasks
 
 In many of the above mentioned use cases it's important to track the progress of tasks. That's why we offer a built-in visualization for percentage of completion:
 
 ![completed percentage](./assets/completed-percentage.png)
+
+Tasks can also have their label displayed:
+
+![label display](./assets/label-display.png)
+
+### Handling timezones and DST
+
+The library uses `luxon` to handle dates and date-times. This allows localization (see next paragraph) and handling of timezones and DST.
+
+The default timezone configuration is `system` (meaning the system's local zone). This can be overridden using the dedicated prop.
+
+Along with timezones, the library handles DST changes (if any).
+In the example below the switch of DST for spring 2020, happening between March 28th and March 29th.
+
+![timezones dst](./assets/timezones-dst.png)
 
 ### Localization
 
