@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Duration, Interval } from "luxon";
 
-import { KonvaGroup, KonvaLine, KonvaRect, KonvaText } from "../../@konva";
+import { KonvaGroup, KonvaLine, KonvaText } from "../../@konva";
 import { useTimelineContext } from "../../timeline/TimelineContext";
 import { DEFAULT_STROKE_DARK_MODE, DEFAULT_STROKE_LIGHT_MODE } from "../../utils/theme";
 import { displayAboveInterval } from "../../utils/time-resolution";
@@ -117,7 +117,6 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
   return (
     <KonvaGroup key={`timeslot-${index}`}>
       <KonvaLine x={xPos} y={0} points={points} stroke={stroke} strokeWidth={1} />
-      <KonvaRect fill="transparent" x={xPos} y={yPos - 10} height={15} width={unitAboveSpanInPx} />
       <KonvaText
         align="center"
         fill={themeColor}

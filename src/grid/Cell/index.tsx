@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from "react";
 import { Interval } from "luxon";
 
-import { KonvaGroup, KonvaLine, KonvaRect, KonvaText } from "../../@konva";
+import { KonvaGroup, KonvaLine, KonvaText } from "../../@konva";
 import { useTimelineContext } from "../../timeline/TimelineContext";
 import { DEFAULT_STROKE_DARK_MODE, DEFAULT_STROKE_LIGHT_MODE } from "../../utils/theme";
 import { displayInterval } from "../../utils/time-resolution";
@@ -22,10 +22,14 @@ const GridCell = ({ column, height, index, hourInfo: visibleDayInfo }: GridCellP
     columnWidth,
     resolution: { unit: resolutionUnit },
     rowHeight,
+    dateLocale,
     theme: { color: themeColor },
   } = useTimelineContext();
 
-  const cellLabel = useMemo(() => displayInterval(column, resolutionUnit), [column, resolutionUnit]);
+  const cellLabel = useMemo(
+    () => displayInterval(column, resolutionUnit, dateLocale!),
+    [column, resolutionUnit, dateLocale]
+  );
 
   const xPos = useMemo(() => {
     if (resolutionUnit === "day") {
@@ -58,12 +62,10 @@ const GridCell = ({ column, height, index, hourInfo: visibleDayInfo }: GridCellP
     }
     return DEFAULT_STROKE_DARK_MODE;
   }, [themeColor]);
-
   return (
     <KonvaGroup key={`timeslot-${index}`}>
       <KonvaLine x={xPos} y={yPos} points={[0, 0, 0, height]} stroke={stroke} strokeWidth={1} />
-      <KonvaRect fill="transparent" x={xPos - 15} y={yPos - 10} height={15} width={30} />
-      <KonvaText fill={themeColor} x={xPos - 15} y={yPos - 8} text={cellLabel} />
+      <KonvaText fill={themeColor} x={xPos} y={yPos - 8} text={cellLabel} width={columnWidth} align="center" />
     </KonvaGroup>
   );
 };
