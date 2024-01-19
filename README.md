@@ -112,17 +112,17 @@ Provide the minimum set of required props.
     }}
     resources={[
       {
-        color: '#74ff93',
+        color: '#f00bda',
         id: '1',
         label: 'Resource #1'
       },
       {
-        color: '#7de7dd',
+        color: '#b66f77',
         id: '2',
         label: 'Resource #2'
       },
       {
-        color: '#a6bbec',
+        color: '#273e3e',
         id: '3',
         label: 'Resource #3'
       }
@@ -165,8 +165,8 @@ Add an array of tasks:
 +       label: 'Task #4',
 +       resourceId: '2',
 +       time: {
-+         end: 1577873580100,
-+         start: 1577853960100
++         end: 1577833740000,
++         start: 1577833200000
 +       }
 +     },
 +     {
@@ -174,16 +174,16 @@ Add an array of tasks:
 +       label: 'Task #2',
 +       resourceId: '1',
 +       time: {
-+         end: 1577835900000,
++         end: 1577848200000,
 +         start: 1577833200000
 +       }
 +     },
 +     {
 +       id: '1',
 +       label: 'Task #1',
-+       resourceId: '2',
++       resourceId: '3',
 +       time: {
-+         end: 1577853300000,
++         end: 1577849520000,
 +         start: 1577833200000
 +       }
 +     },
@@ -192,17 +192,17 @@ Add an array of tasks:
 +       label: 'Task #3',
 +       resourceId: '1',
 +       time: {
-+         end: 1577854980100,
-+         start: 1577837160100
++         end: 1577885040100,
++         start: 1577871660100
 +       }
 +     },
 +     {
 +       id: '5',
 +       label: 'Task #5',
-+       resourceId: '3',
++       resourceId: '2',
 +       time: {
-+         end: 1577843820000,
-+         start: 1577833200000
++         end: 1577865540100,
++         start: 1577842440100
 +       }
 +     }
 +   ]}
