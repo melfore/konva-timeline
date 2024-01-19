@@ -4,7 +4,7 @@
 
 `@melfore/konva-timeline` is a TypeScript ReactJS library that uses `konva` and `react-konva` to render a timeline component using canvas.
 
-<a href="https://github.com/melfore/konva-timeline/blob/master/CHANGELOG.md" target="_blank">**Changelog**</a> | <!--a href="https://github.com/melfore/mosaic/blob/master/CONTRIBUTING.md" target="_blank">**Contributing**</a> | <a href="https://github.com/melfore/mosaic/blob/master/MIGRATION.md" target="_blank">**Migration**</a> | --> <a href="https://melfore.github.io/mosaic/latest/" target="_blank">**Storybook**</a>
+<a href="https://github.com/melfore/konva-timeline/blob/master/CHANGELOG.md" target="_blank">**Changelog**</a> | <!--a href="https://github.com/melfore/mosaic/blob/master/CONTRIBUTING.md" target="_blank">**Contributing**</a> | <a href="https://github.com/melfore/mosaic/blob/master/MIGRATION.md" target="_blank">**Migration**</a> | --> <a href="https://melfore.github.io/konva-timeline" target="_blank">**Storybook**</a>
 
 ![sample](./assets/sample.gif)
 
@@ -28,11 +28,36 @@ Size of columns and rows can be adjusted using dedicated props:
 
 ![row height](./assets/row-height.png)
 
+Resolution of the timeline can be changed as well, choosing the right one for your scenario.
+
+Below a comparison of the same data set using 5 mins resolution:
+
+![5mins resolution](./assets/resolution-5mins.png)
+
+Now with 2 hours resolution:
+
+![2hrs resolution](./assets/resolution-2hrs.png)
+
 ### Tasks
 
 In many of the above mentioned use cases it's important to track the progress of tasks. That's why we offer a built-in visualization for percentage of completion:
 
 ![completed percentage](./assets/completed-percentage.png)
+
+Tasks can also have their label displayed:
+
+![label display](./assets/label-display.png)
+
+### Handling timezones and DST
+
+The library uses `luxon` to handle dates and date-times. This allows localization (see next paragraph) and handling of timezones and DST.
+
+The default timezone configuration is `system` (meaning the system's local zone). This can be overridden using the dedicated prop.
+
+Along with timezones, the library handles DST changes (if any).
+In the example below the switch of DST for spring 2020, happening between March 28th and March 29th.
+
+![timezones dst](./assets/timezones-dst.png)
 
 ### Localization
 
@@ -87,17 +112,17 @@ Provide the minimum set of required props.
     }}
     resources={[
       {
-        color: '#74ff93',
+        color: '#f00bda',
         id: '1',
         label: 'Resource #1'
       },
       {
-        color: '#7de7dd',
+        color: '#b66f77',
         id: '2',
         label: 'Resource #2'
       },
       {
-        color: '#a6bbec',
+        color: '#273e3e',
         id: '3',
         label: 'Resource #3'
       }
@@ -140,8 +165,8 @@ Add an array of tasks:
 +       label: 'Task #4',
 +       resourceId: '2',
 +       time: {
-+         end: 1577873580100,
-+         start: 1577853960100
++         end: 1577833740000,
++         start: 1577833200000
 +       }
 +     },
 +     {
@@ -149,16 +174,16 @@ Add an array of tasks:
 +       label: 'Task #2',
 +       resourceId: '1',
 +       time: {
-+         end: 1577835900000,
++         end: 1577848200000,
 +         start: 1577833200000
 +       }
 +     },
 +     {
 +       id: '1',
 +       label: 'Task #1',
-+       resourceId: '2',
++       resourceId: '3',
 +       time: {
-+         end: 1577853300000,
++         end: 1577849520000,
 +         start: 1577833200000
 +       }
 +     },
@@ -167,17 +192,17 @@ Add an array of tasks:
 +       label: 'Task #3',
 +       resourceId: '1',
 +       time: {
-+         end: 1577854980100,
-+         start: 1577837160100
++         end: 1577885040100,
++         start: 1577871660100
 +       }
 +     },
 +     {
 +       id: '5',
 +       label: 'Task #5',
-+       resourceId: '3',
++       resourceId: '2',
 +       time: {
-+         end: 1577843820000,
-+         start: 1577833200000
++         end: 1577865540100,
++         start: 1577842440100
 +       }
 +     }
 +   ]}
