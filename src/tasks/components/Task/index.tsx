@@ -32,6 +32,7 @@ type TaskProps = KonvaDrawable &
      * The width of the task
      */
     width: number;
+    create?: boolean;
   };
 
 type TaskDimensions = {
@@ -57,7 +58,7 @@ enableStrictMode(true);
  *
  * The playground has a simulated canvas with height: 200px and width: 100%
  */
-const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fillToComplete }: TaskProps) => {
+const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fillToComplete, create }: TaskProps) => {
   const {
     columnWidth,
     timeBlocks,
@@ -80,13 +81,23 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
   const [resizing, setResizing] = useState(false);
 
   const mainColor = useMemo(() => {
+    if (create) {
+      return "rgba(96,96,96, 0.8)";
+    }
     try {
       const rgb = getRGB(fill);
       return ` rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
     } catch (error) {
       return "rgb(255,0,0)";
     }
-  }, [fill]);
+  }, [fill, create]);
+
+  const mainStroke = useMemo(() => {
+    if (create) {
+      return "	rgba(96,96,96, 0.8)";
+    }
+    return "rgb(0,0,0)";
+  }, [create]);
 
   const initialTaskDimensions = useMemo((): TaskDimensions => {
     const row = findResourceIndexByCoordinate(y, rowHeight, resources);
@@ -184,23 +195,25 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
 
   const onTaskOver = useCallback(
     (e: KonvaEventObject<MouseEvent>) => {
-      e.cancelBubble = true;
-      if (resizing) {
-        return;
-      }
+      if (!create) {
+        e.cancelBubble = true;
+        if (resizing) {
+          return;
+        }
 
-      const stage = e.target.getStage();
-      if (!stage) {
-        return;
-      }
+        const stage = e.target.getStage();
+        if (!stage) {
+          return;
+        }
 
-      if (enableDrag) {
-        stage.container().style.cursor = "move";
-      }
+        if (enableDrag) {
+          stage.container().style.cursor = "move";
+        }
 
-      onTaskMouseEvent(e, onOver);
+        onTaskMouseEvent(e, onOver);
+      }
     },
-    [enableDrag, onOver, onTaskMouseEvent, resizing]
+    [enableDrag, onOver, onTaskMouseEvent, resizing, create]
   );
 
   const onDragStart = useCallback(
@@ -430,7 +443,7 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
           onMouseMove={onTaskOver}
           onMouseOver={onTaskOver}
           opacity={1}
-          stroke="rgb(0,0,0)"
+          stroke={mainStroke}
           strokeWidth={1}
           width={taskDimensions.width}
         />

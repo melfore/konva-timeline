@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { DateTime } from "luxon";
 
+import { TaskData } from "../tasks/utils/tasks";
+
 import { generateStoryData } from "./stories-data";
 import KonvaTimeline from ".";
 
@@ -35,6 +37,7 @@ export const Primary: Story = {
     resources,
     tasks,
     resolution: "1hrs",
+    onCreate: undefined,
   },
 };
 
@@ -116,6 +119,7 @@ export const NonPreciseRange: Story = {
 
 export const CompletedPercentage: Story = {
   args: {
+    ...Primary.args,
     resources,
     resolution: "2weeks",
     range: {
@@ -193,5 +197,12 @@ export const LocalizedDateFormat: Story = {
   args: {
     ...Primary.args,
     dateLocale: "it",
+  },
+};
+
+export const AddTask: Story = {
+  args: {
+    ...Primary.args,
+    onCreate: (data: TaskData) => data,
   },
 };

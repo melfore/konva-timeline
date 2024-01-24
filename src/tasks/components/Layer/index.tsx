@@ -12,6 +12,7 @@ import TaskTooltip, { TaskTooltipProps } from "../Tooltip";
 interface TasksLayerProps {
   taskTooltip: TaskTooltipProps | null;
   setTaskTooltip: (tooltip: TaskTooltipProps | null) => void;
+  create?: boolean;
 }
 
 /**
@@ -22,7 +23,7 @@ interface TasksLayerProps {
  * The playground has a canvas that simulates 1 day of data with 1 hour resolution.
  * Depending on your screen size you might be able to test also the horizontal scrolling behaviour.
  */
-const TasksLayer: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip }) => {
+const TasksLayer: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip, create }) => {
   const {
     columnWidth,
     drawRange,
@@ -115,6 +116,7 @@ const TasksLayer: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip }) => {
             x={xCoordinate}
             y={yCoordinate}
             width={width}
+            create={create}
           />
         );
       })}

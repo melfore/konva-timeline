@@ -1,14 +1,17 @@
 import React, { CSSProperties, FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Stage } from "react-konva";
+import { Layer, Rect, Stage } from "react-konva";
 import Konva from "konva";
-import { DateTime } from "luxon";
+import { KonvaEventObject } from "konva/lib/Node";
+import { DateTime, Duration } from "luxon";
 
 import GridLayer from "../grid/Layer";
 import ResourcesLayer from "../resources/components/Layer";
-import { RESOURCE_HEADER_WIDTH } from "../resources/utils/resources";
+import { findResourceIndexByCoordinate, RESOURCE_HEADER_WIDTH } from "../resources/utils/resources";
 import TasksLayer from "../tasks/components/Layer";
 import { TaskTooltipProps } from "../tasks/components/Tooltip";
+import { getTaskYCoordinate, TASK_BORDER_RADIUS, TASK_HEIGHT_OFFSET, TaskData } from "../tasks/utils/tasks";
 import { logDebug } from "../utils/logger";
+import { TimeRange } from "..";
 
 import { useTimelineContext } from "./TimelineContext";
 
@@ -30,12 +33,23 @@ const Timeline: FC<TimelineProps> = () => {
     resourcesContentHeight,
     resolution,
     setDrawRange,
+    resources,
+    rowHeight,
     theme: { color: themeColor },
     timeBlocks,
+    drawRange,
+    onCreate,
   } = useTimelineContext();
 
   const [scrollbarSize, setScrollbarSize] = useState(0);
   const [size, setSize] = useState<StageSize>(DEFAULT_STAGE_SIZE);
+  const [newTaskx, setNewTaskx] = useState(0);
+  const [newTasky, setNewTasky] = useState(0);
+  const [newTask, setNewTask] = useState(false);
+  const [newTaskResId, setNewTaskResId] = useState(0);
+  const [newData, setNewData] = useState<TaskData>();
+  const [newTaskWidth, setNewTaskWidth] = useState(1);
+  const [onMove, setOnMove] = useState(false);
   const stageRef = useRef<Konva.Stage>(null);
   const wrapper = useRef<HTMLDivElement>(null);
 
@@ -169,6 +183,83 @@ const Timeline: FC<TimelineProps> = () => {
     [resourcesOffset, timelineCommonStyle]
   );
 
+  const fromPxToTime = useCallback(
+    (sizePx: number): number => (sizePx * resolution.sizeInUnits) / columnWidth,
+    [columnWidth, resolution]
+  );
+
+  const onEndTimeRange = useCallback(
+    (x: number, width: number): TimeRange => {
+      const timeOffset = fromPxToTime(x);
+      const start = interval.start!.plus({ [resolution.unit]: timeOffset }).toMillis();
+      const end = start + Duration.fromObject({ [resolution.unit]: fromPxToTime(width) }).toMillis();
+      return { start, end };
+    },
+    [fromPxToTime, interval.start, resolution]
+  );
+
+  const createNewTaskData = useCallback(() => {
+    const newTaskId = "newTask" + DateTime.now().toMillis();
+    const taksRange = onEndTimeRange(newTaskx, newTaskWidth);
+    return { id: newTaskId, label: newTaskId, resourceId: newTaskResId.toString(), time: taksRange };
+  }, [newTaskx, newTaskWidth, newTaskResId, onEndTimeRange]);
+
+  const onMouseDown = useCallback(
+    (e: KonvaEventObject<MouseEvent>) => {
+      if (onCreate) {
+        const stage = e.target.getStage();
+        const clickId = e.target._id;
+        const stageId = stage!._id;
+
+        if (clickId === stageId) {
+          setNewTaskWidth(1);
+          const pointerPosition = stage!.getPointerPosition();
+          const resourceIndex = findResourceIndexByCoordinate(pointerPosition!.y, rowHeight, resources);
+          const y = getTaskYCoordinate(resourceIndex, rowHeight);
+          setNewTaskResId(resourceIndex);
+          setNewTaskx(drawRange.start + pointerPosition!.x);
+          setNewTasky(y);
+          setNewTask(true);
+          setOnMove(true);
+        }
+      }
+    },
+    [resources, rowHeight, drawRange, onCreate]
+  );
+  const onMouseUp = useCallback(
+    (e: KonvaEventObject<MouseEvent>) => {
+      if (onCreate) {
+        const newTask = createNewTaskData();
+        setNewData(newTask);
+        onCreate(newData!);
+        const stage = e.target.getStage();
+        stage!.container().style.cursor = "default";
+        setOnMove(false);
+        setNewTask(false);
+        setNewTaskWidth(1);
+      }
+    },
+    [setNewTask, onCreate, newData, createNewTaskData]
+  );
+
+  const onMouseMove = useCallback(
+    (e: KonvaEventObject<MouseEvent>) => {
+      if (onMove) {
+        const stage = e.target.getStage();
+        stage!.container().style.cursor = "crosshair";
+        const xpos = stage!.getPointerPosition()!.x + drawRange.start;
+        const width = xpos - newTaskx;
+        const controledWidth = width < 0 ? 1 : width;
+        setNewTaskWidth(controledWidth);
+      }
+    },
+    [newTaskx, setNewTaskWidth, onMove, drawRange]
+  );
+
+  const taskHeight = useMemo(() => {
+    return rowHeight * TASK_HEIGHT_OFFSET;
+  }, [rowHeight]);
+
   return (
     <div style={timelineWrapperStyle}>
       {!hideResources && (
@@ -180,9 +271,32 @@ const Timeline: FC<TimelineProps> = () => {
       )}
       <div ref={wrapper} style={gridWrapperStyle}>
         <div style={gridStageWrapperStyle}>
-          <Stage ref={stageRef} height={stageHeight} width={stageWidth}>
+          <Stage
+            ref={stageRef}
+            height={stageHeight}
+            width={stageWidth}
+            onMouseDown={onMouseDown}
+            onMouseUp={onMouseUp}
+            onMouseMove={onMouseMove}
+          >
             <GridLayer height={stageHeight} />
-            <TasksLayer taskTooltip={taskTooltip} setTaskTooltip={setTaskTooltip} />
+
+            <TasksLayer taskTooltip={taskTooltip} setTaskTooltip={setTaskTooltip} create={newTask} />
+            {newTask && (
+              <Layer>
+                <Rect
+                  x={newTaskx}
+                  y={newTasky}
+                  width={newTaskWidth}
+                  height={taskHeight}
+                  fill="rgba(0, 70, 255, 0.4)"
+                  stroke="rgba(0, 70, 255, 0.9)"
+                  strokeWidth={1}
+                  cornerRadius={TASK_BORDER_RADIUS}
+                  dash={[8, 8]}
+                />
+              </Layer>
+            )}
           </Stage>
         </div>
       </div>

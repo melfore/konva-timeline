@@ -28,5 +28,6 @@ export const MonthlyReport: Story = {
   args: {
     ...monthlyStoryData,
     resolution: "1min",
+    onCreate: undefined,
   },
 };
