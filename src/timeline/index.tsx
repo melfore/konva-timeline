@@ -10,11 +10,11 @@ import { findResourceIndexByCoordinate, RESOURCE_HEADER_WIDTH } from "../resourc
 import TasksLayer from "../tasks/components/Layer";
 import { TaskTooltipProps } from "../tasks/components/Tooltip";
 import {
+  AreaSelect,
   getTaskYCoordinate,
   onEndTimeRange,
   TASK_BORDER_RADIUS,
   TASK_HEIGHT_OFFSET,
-  TaskData,
   TaskDimensions,
 } from "../tasks/utils/tasks";
 import { logDebug } from "../utils/logger";
@@ -50,7 +50,7 @@ const Timeline: FC<TimelineProps> = () => {
   const [scrollbarSize, setScrollbarSize] = useState(0);
   const [size, setSize] = useState<StageSize>(DEFAULT_STAGE_SIZE);
   const [newTask, setNewTask] = useState(false);
-  const [newData, setNewData] = useState<TaskData>();
+  const [newData, setNewData] = useState<AreaSelect>();
   const [isMove, setIsMove] = useState(false);
   const [newTaskDimension, setNewTaskDimension] = useState<TaskDimensions>({ row: 0, width: 0, x: 0, y: 0 });
   const stageRef = useRef<Konva.Stage>(null);
@@ -187,9 +187,8 @@ const Timeline: FC<TimelineProps> = () => {
   );
 
   const createNewTaskData = useCallback(() => {
-    const newTaskId = "newTask" + DateTime.now().toMillis();
     const taksRange = onEndTimeRange(newTaskDimension, resolution, columnWidth, interval);
-    return { id: newTaskId, label: newTaskId, resourceId: newTaskDimension.row.toString(), time: taksRange };
+    return { resourceId: newTaskDimension.row.toString(), range: taksRange };
   }, [newTaskDimension, columnWidth, resolution, interval]);
 
   const onMouseDown = useCallback(

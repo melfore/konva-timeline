@@ -2,7 +2,7 @@ import React, { createContext, PropsWithChildren, useContext, useEffect, useMemo
 import { DateTime, Interval } from "luxon";
 
 import { addHeaderResource } from "../resources/utils/resources";
-import { filterTasks, TaskData, validateTasks } from "../tasks/utils/tasks";
+import { AreaSelect, filterTasks, TaskData, validateTasks } from "../tasks/utils/tasks";
 import { DEFAULT_GRID_COLUMN_WIDTH, DEFAULT_GRID_ROW_HEIGHT, MINIMUM_GRID_ROW_HEIGHT } from "../utils/dimensions";
 import { logDebug, logWarn } from "../utils/logger";
 import { getValidRangeTime, getValidTime, InternalTimeRange, isValidRangeTime } from "../utils/time";
@@ -78,7 +78,7 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
   /**
    * Event handler for task add event
    */
-  onAreaSelect?: (task: TaskData) => void;
+  onAreaSelect?: (task: AreaSelect) => void;
 };
 
 type TimelineTheme = {
@@ -111,7 +111,7 @@ type TimelineContextType = Required<
   visibleTimeBlocks: Interval[];
   localized: Localized;
   dateLocale?: string;
-  onAreaSelect?: (task: TaskData) => void;
+  onAreaSelect?: (task: AreaSelect) => void;
 };
 
 const TimelineContext = createContext<TimelineContextType | undefined>(undefined);

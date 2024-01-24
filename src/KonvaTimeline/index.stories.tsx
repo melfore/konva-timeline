@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { DateTime } from "luxon";
 
-import { TaskData } from "../tasks/utils/tasks";
+import { AreaSelect } from "../tasks/utils/tasks";
 
 import { generateStoryData } from "./stories-data";
 import KonvaTimeline from ".";
@@ -203,6 +203,6 @@ export const LocalizedDateFormat: Story = {
 export const AddTask: Story = {
   args: {
     ...Primary.args,
-    onAreaSelect: (data: TaskData) => data,
+    onAreaSelect: (data: AreaSelect) => data,
   },
 };

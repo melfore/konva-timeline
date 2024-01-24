@@ -36,6 +36,11 @@ export type TaskDimensions = {
   y: number;
 };
 
+export type AreaSelect = {
+  resourceId: string;
+  range: TimeRange;
+};
+
 export const TASK_OFFSET_Y = 0.15;
 
 export const TASK_BORDER_RADIUS = 4;
