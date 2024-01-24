@@ -43,7 +43,7 @@ jobs:
         run: |
           npm run clean:code
           git add .
-          echo "::set-output name=formatted-files::$(git status -s -uno | wc -l)"
+          echo "formatted-files=$(git status -s -uno | wc -l)" >> $GITHUB_OUTPUT
 
       - name: Commit Changes
         if: steps.code-format.outputs.formatted-files > 0
@@ -55,7 +55,7 @@ jobs:
         run: |
           npm run build:storybook
           git add .
-          echo "::set-output name=generated-docs::$(git status -s -uno | wc -l)"
+          echo "generated-docs=$(git status -s -uno | wc -l)" >> $GITHUB_OUTPUT
 
       - name: Commit Changes
         if: steps.generate-docs.outputs.generated-docs > 0
