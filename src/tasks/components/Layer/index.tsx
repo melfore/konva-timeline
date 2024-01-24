@@ -116,7 +116,7 @@ const TasksLayer: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip, create }
             x={xCoordinate}
             y={yCoordinate}
             width={width}
-            create={create}
+            disabled={create}
           />
         );
       })}

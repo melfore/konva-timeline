@@ -37,7 +37,7 @@ export const Primary: Story = {
     resources,
     tasks,
     resolution: "1hrs",
-    onCreate: undefined,
+    onAreaSelect: undefined,
   },
 };
 
@@ -203,6 +203,6 @@ export const LocalizedDateFormat: Story = {
 export const AddTask: Story = {
   args: {
     ...Primary.args,
-    onCreate: (data: TaskData) => data,
+    onAreaSelect: (data: TaskData) => data,
   },
 };
