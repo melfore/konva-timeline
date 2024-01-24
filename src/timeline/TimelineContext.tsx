@@ -2,7 +2,7 @@ import React, { createContext, PropsWithChildren, useContext, useEffect, useMemo
 import { DateTime, Interval } from "luxon";
 
 import { addHeaderResource } from "../resources/utils/resources";
-import { filterTasks, TaskData, validateTasks } from "../tasks/utils/tasks";
+import { AreaSelect, filterTasks, TaskData, validateTasks } from "../tasks/utils/tasks";
 import { DEFAULT_GRID_COLUMN_WIDTH, DEFAULT_GRID_ROW_HEIGHT, MINIMUM_GRID_ROW_HEIGHT } from "../utils/dimensions";
 import { logDebug, logWarn } from "../utils/logger";
 import { getValidRangeTime, getValidTime, InternalTimeRange, isValidRangeTime } from "../utils/time";
@@ -75,6 +75,10 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
    * Language used for date format
    */
   dateLocale?: string;
+  /**
+   * Event handler for task add event
+   */
+  onAreaSelect?: (task: AreaSelect) => void;
 };
 
 type TimelineTheme = {
@@ -107,6 +111,7 @@ type TimelineContextType = Required<
   visibleTimeBlocks: Interval[];
   localized: Localized;
   dateLocale?: string;
+  onAreaSelect?: (task: AreaSelect) => void;
 };
 
 const TimelineContext = createContext<TimelineContextType | undefined>(undefined);
@@ -142,6 +147,7 @@ export const TimelineProvider = ({
     completed: "Completed",
   },
   dateLocale = "en",
+  onAreaSelect,
 }: TimelineProviderProps) => {
   const timezone = useMemo(() => {
     if (!externalTimezone) {
@@ -384,6 +390,7 @@ export const TimelineProvider = ({
         blocksOffset: timeblocksOffset,
         localized: localized,
         dateLocale,
+        onAreaSelect,
       }}
     >
       {children}

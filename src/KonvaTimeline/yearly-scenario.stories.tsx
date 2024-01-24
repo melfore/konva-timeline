@@ -29,5 +29,6 @@ export const YearlyReport: Story = {
     ...yearlyStoryData,
     resolution: "1day",
     initialDateTime: yearlyStoryData.range.start,
+    onAreaSelect: undefined,
   },
 };

@@ -3,13 +3,20 @@ import { Group, Rect, useStrictMode as enableStrictMode } from "react-konva";
 import { KonvaEventObject } from "konva/lib/Node";
 import { Duration } from "luxon";
 
-import { TimeRange } from "../../..";
 import { KonvaText } from "../../../@konva";
 import { findResourceByCoordinate, findResourceIndexByCoordinate } from "../../../resources/utils/resources";
 import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { KonvaDrawable, KonvaPoint } from "../../../utils/konva";
 import { getContrastColor, getRGB, getRGBA } from "../../../utils/theme";
-import { getTaskYCoordinate, TASK_BORDER_RADIUS, TASK_HEIGHT_OFFSET, TASK_OFFSET_Y, TaskData } from "../../utils/tasks";
+import {
+  getTaskYCoordinate,
+  onEndTimeRange,
+  TASK_BORDER_RADIUS,
+  TASK_HEIGHT_OFFSET,
+  TASK_OFFSET_Y,
+  TaskData,
+  TaskDimensions,
+} from "../../utils/tasks";
 import TaskResizeHandle from "../TaskResizeHandle";
 
 type TaskMouseEventHandler = (taskId: string, point: KonvaPoint) => void;
@@ -32,17 +39,17 @@ type TaskProps = KonvaDrawable &
      * The width of the task
      */
     width: number;
+    /**
+     * Prop that indicate disabled item
+     */
+    disabled?: boolean;
   };
 
-type TaskDimensions = {
-  row: number;
-  width: number;
-  x: number;
-  y: number;
-};
-
 const TASK_DEFAULT_FILL = "#000080";
+const INVALIDFILL_TASK_DEFAULT_FILL = "rgb(255,0,0)";
+const DISABLED_TASK_DEFAULT_FILL = "rgba(96,96,96, 0.8)";
 const TASK_DEFAULT_STROKE_WIDTH = 2;
+const TASK_DEFAULT_STROKE_FILL = "rgb(0,0,0)";
 
 enableStrictMode(true);
 
@@ -57,7 +64,17 @@ enableStrictMode(true);
  *
  * The playground has a simulated canvas with height: 200px and width: 100%
  */
-const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fillToComplete }: TaskProps) => {
+const Task = ({
+  data,
+  fill = TASK_DEFAULT_FILL,
+  onLeave,
+  onOver,
+  x,
+  y,
+  width,
+  fillToComplete,
+  disabled,
+}: TaskProps) => {
   const {
     columnWidth,
     timeBlocks,
@@ -68,25 +85,36 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
     interval,
     onTaskClick,
     onTaskChange,
-    resolution: { sizeInUnits, unit },
+    resolution,
     resources,
     rowHeight,
     drawRange,
   } = useTimelineContext();
 
   const { id: taskId, completedPercentage } = data;
+  const { sizeInUnits, unit } = resolution;
 
   const [dragging, setDragging] = useState(false);
   const [resizing, setResizing] = useState(false);
 
   const mainColor = useMemo(() => {
+    if (disabled) {
+      return DISABLED_TASK_DEFAULT_FILL;
+    }
     try {
       const rgb = getRGB(fill);
       return ` rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
     } catch (error) {
-      return "rgb(255,0,0)";
+      return INVALIDFILL_TASK_DEFAULT_FILL;
     }
-  }, [fill]);
+  }, [fill, disabled]);
+
+  const mainStroke = useMemo(() => {
+    if (disabled) {
+      return DISABLED_TASK_DEFAULT_FILL;
+    }
+    return TASK_DEFAULT_STROKE_FILL;
+  }, [disabled]);
 
   const initialTaskDimensions = useMemo((): TaskDimensions => {
     const row = findResourceIndexByCoordinate(y, rowHeight, resources);
@@ -103,19 +131,6 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
     const row = findResourceIndexByCoordinate(y, rowHeight, resources);
     setTaskDimensions({ row, width, x, y });
   }, [resources, rowHeight, width, x, y]);
-
-  const fromPxToTime = useCallback(
-    (sizePx: number): number => (sizePx * sizeInUnits) / columnWidth,
-    [columnWidth, sizeInUnits]
-  );
-
-  const onEndTimeRange = useCallback((): TimeRange => {
-    const { x, width } = taskDimensions;
-    const timeOffset = fromPxToTime(x);
-    const start = interval.start!.plus({ [unit]: timeOffset }).toMillis();
-    const end = start + Duration.fromObject({ [unit]: fromPxToTime(width) }).toMillis();
-    return { start, end };
-  }, [fromPxToTime, interval.start, taskDimensions, unit]);
 
   const dragSnapInPX = useMemo(() => {
     const resolutionInSnapUnit = Duration.fromObject({ [unit]: sizeInUnits }).as(dragUnit);
@@ -184,6 +199,9 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
 
   const onTaskOver = useCallback(
     (e: KonvaEventObject<MouseEvent>) => {
+      if (disabled) {
+        return;
+      }
       e.cancelBubble = true;
       if (resizing) {
         return;
@@ -200,7 +218,7 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
 
       onTaskMouseEvent(e, onOver);
     },
-    [enableDrag, onOver, onTaskMouseEvent, resizing]
+    [enableDrag, onOver, onTaskMouseEvent, resizing, disabled]
   );
 
   const onDragStart = useCallback(
@@ -262,10 +280,22 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
       setTaskDimensions((dimensions) => ({ ...dimensions, ...point }));
 
       const { id: resourceId } = findResourceByCoordinate(y, rowHeight, resources);
-      const time = onEndTimeRange();
+      const time = onEndTimeRange(taskDimensions, resolution, columnWidth, interval);
       onTaskChange({ ...data, resourceId, time });
     },
-    [onEndTimeRange, rowHeight, resources, onTaskChange, data, dragSnapInPX, getDragPoint, taskHeight]
+    [
+      rowHeight,
+      resources,
+      onTaskChange,
+      data,
+      dragSnapInPX,
+      getDragPoint,
+      taskHeight,
+      taskDimensions,
+      resolution,
+      columnWidth,
+      interval,
+    ]
   );
 
   const opacity = useMemo(() => (dragging || resizing ? 0.5 : 1), [dragging, resizing]);
@@ -341,10 +371,10 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
         return;
       }
 
-      const time = onEndTimeRange();
+      const time = onEndTimeRange(taskDimensions, resolution, columnWidth, interval);
       onTaskChange({ ...data, time });
     },
-    [onTaskChange, data, onEndTimeRange]
+    [onTaskChange, data, taskDimensions, resolution, columnWidth, interval]
   );
   const percentage = useMemo(() => {
     if (completedPercentage === 0) {
@@ -430,7 +460,7 @@ const Task = ({ data, fill = TASK_DEFAULT_FILL, onLeave, onOver, x, y, width, fi
           onMouseMove={onTaskOver}
           onMouseOver={onTaskOver}
           opacity={1}
-          stroke="rgb(0,0,0)"
+          stroke={mainStroke}
           strokeWidth={1}
           width={taskDimensions.width}
         />

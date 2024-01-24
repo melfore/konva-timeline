@@ -1,5 +1,8 @@
+import { Duration, Interval } from "luxon";
+
 import { KonvaTimelineError, Operation } from "../../utils/operations";
 import { getValidTime, InternalTimeRange, TimeRange } from "../../utils/time";
+import { ResolutionData } from "../../utils/time-resolution";
 
 export interface TaskData<T extends TimeRange = TimeRange> {
   /**
@@ -25,6 +28,18 @@ export interface TaskData<T extends TimeRange = TimeRange> {
 }
 
 type FilteredTasks = Operation<TaskData<InternalTimeRange>>;
+
+export type TaskDimensions = {
+  row: number;
+  width: number;
+  x: number;
+  y: number;
+};
+
+export type AreaSelect = {
+  resourceId: string;
+  range: TimeRange;
+};
 
 export const TASK_OFFSET_Y = 0.15;
 
@@ -110,4 +125,22 @@ export const filterTasks = (
 
     return true;
   });
+};
+
+const fromPxToTime = (sizePx: number, resolution: ResolutionData, columnWidth: number): number => {
+  return (sizePx * resolution.sizeInUnits) / columnWidth;
+};
+
+export const onEndTimeRange = (
+  taskDimesion: TaskDimensions,
+  resolution: ResolutionData,
+  columnWidth: number,
+  interval: Interval
+): TimeRange => {
+  const timeOffset = fromPxToTime(taskDimesion.x, resolution, columnWidth);
+  const start = interval.start!.plus({ [resolution.unit]: timeOffset }).toMillis();
+  const end =
+    start +
+    Duration.fromObject({ [resolution.unit]: fromPxToTime(taskDimesion.width, resolution, columnWidth) }).toMillis();
+  return { start, end };
 };
