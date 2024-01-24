@@ -1,3 +1,10 @@
+# [1.27.0](https://github.com/melfore/konva-timeline/compare/v1.26.1...v1.27.0) (2024-01-24)
+
+
+### Features
+
+* 🎸 [TimeLine] Add task through selected area ([1b10d46](https://github.com/melfore/konva-timeline/commit/1b10d467da70c68635005da6c95f7cc8d8625653)), closes [#176](https://github.com/melfore/konva-timeline/issues/176)
+
 ## [1.26.1](https://github.com/melfore/konva-timeline/compare/v1.26.0...v1.26.1) (2024-01-19)
 
 # [1.26.0](https://github.com/melfore/konva-timeline/compare/v1.25.2...v1.26.0) (2024-01-18)
