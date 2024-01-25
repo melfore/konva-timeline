@@ -91,6 +91,19 @@
     "storybook": "^7.5.1",
     "typescript": "^5.2.2"
   },
+  "browserslist": {
+    "production": [
+      ">= 0.5%",
+      "last 2 versions",
+      "not dead"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 edge version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "config": {
     "commitizen": {
       "path": "git-cz"
