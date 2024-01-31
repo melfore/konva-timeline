@@ -428,6 +428,48 @@ const Task = ({
     return false;
   }, [completedPercentage]);
 
+  const arrGradientColor: (number | string)[] = useMemo(() => {
+    const colors: (number | string)[] = [];
+    const length = 300;
+    if (dragging || resizing || typeof completedPercentage !== "number") {
+      return [];
+    }
+    const mainColorLineNumber = Number((11 / (taskDimensions.width / 300)).toFixed(0));
+    const incompleteColorLineNumber = Number((16 / (taskDimensions.width / 300)).toFixed(0));
+    let mainLineColorCount = 0;
+    let incompleteLineColorCount = 0;
+    let newColor: number = 0;
+    Array(length)
+      .fill(0)
+      .forEach((_, index) => {
+        const gradientNumber = index * 0.0033;
+        if (mainLineColorCount < mainColorLineNumber && incompleteLineColorCount === 0) {
+          newColor = gradientNumber;
+          mainLineColorCount++;
+        }
+        if (incompleteLineColorCount !== 0) {
+          incompleteLineColorCount++;
+        }
+        if (mainLineColorCount === mainColorLineNumber) {
+          incompleteLineColorCount++;
+          mainLineColorCount = 0;
+        }
+        if (incompleteLineColorCount === incompleteColorLineNumber) {
+          incompleteLineColorCount = 0;
+          mainLineColorCount = 0;
+        }
+        colors.push(gradientNumber, newColor === gradientNumber ? mainColor : incompleteColor);
+      });
+    return colors;
+  }, [mainColor, incompleteColor, dragging, resizing, taskDimensions, completedPercentage]);
+
+  const finalGradientX = useMemo(() => {
+    return taskDimensions.width * Math.cos(45);
+  }, [taskDimensions]);
+  const finalGradientY = useMemo(() => {
+    return taskDimensions.width * Math.sin(45);
+  }, [taskDimensions]);
+
   return (
     <Group
       x={taskDimensions.x}
@@ -454,7 +496,9 @@ const Task = ({
         <Rect
           id={taskId}
           cornerRadius={TASK_BORDER_RADIUS}
-          fill="transparent"
+          fillLinearGradientStartPoint={{ x: 0, y: 0 }}
+          fillLinearGradientEndPoint={{ x: finalGradientX, y: finalGradientY }}
+          fillLinearGradientColorStops={arrGradientColor}
           height={taskHeight}
           onMouseLeave={onTaskLeave}
           onMouseMove={onTaskOver}
