@@ -79,6 +79,10 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
    * Event handler for task add event
    */
   onAreaSelect?: (task: AreaSelect) => void;
+  /**
+   * ToolTip display
+   */
+  toolTip?: boolean;
 };
 
 type TimelineTheme = {
@@ -112,6 +116,7 @@ type TimelineContextType = Required<
   localized: Localized;
   dateLocale?: string;
   onAreaSelect?: (task: AreaSelect) => void;
+  toolTip?: boolean;
 };
 
 const TimelineContext = createContext<TimelineContextType | undefined>(undefined);
@@ -148,6 +153,7 @@ export const TimelineProvider = ({
   },
   dateLocale = "en",
   onAreaSelect,
+  toolTip = true,
 }: TimelineProviderProps) => {
   const timezone = useMemo(() => {
     if (!externalTimezone) {
@@ -391,6 +397,7 @@ export const TimelineProvider = ({
         localized: localized,
         dateLocale,
         onAreaSelect,
+        toolTip,
       }}
     >
       {children}

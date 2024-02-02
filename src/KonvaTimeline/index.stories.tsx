@@ -200,9 +200,16 @@ export const LocalizedDateFormat: Story = {
   },
 };
 
-export const AddTask: Story = {
+export const SelectArea: Story = {
   args: {
     ...Primary.args,
     onAreaSelect: (data: AreaSelect) => data,
+  },
+};
+
+export const DisabledTooltip: Story = {
+  args: {
+    ...Primary.args,
+    toolTip: false,
   },
 };
