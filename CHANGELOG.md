@@ -1,9 +1,8 @@
 # [1.28.0](https://github.com/melfore/konva-timeline/compare/v1.27.1...v1.28.0) (2024-01-31)
 
-
 ### Features
 
-* 🎸 [Task] Created pattern for incomplete taskColor ([521ef9e](https://github.com/melfore/konva-timeline/commit/521ef9eef1c17263d29a3b95abf6a16346057a94)), closes [#174](https://github.com/melfore/konva-timeline/issues/174)
+- 🎸 [Task] Created pattern for incomplete taskColor ([521ef9e](https://github.com/melfore/konva-timeline/commit/521ef9eef1c17263d29a3b95abf6a16346057a94)), closes [#174](https://github.com/melfore/konva-timeline/issues/174)
 
 ## [1.27.1](https://github.com/melfore/konva-timeline/compare/v1.27.0...v1.27.1) (2024-01-25)
 
