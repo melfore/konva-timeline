@@ -192,7 +192,7 @@ const Timeline: FC<TimelineProps> = () => {
 
   const onMouseDown = useCallback(
     (e: KonvaEventObject<MouseEvent>) => {
-      if (!onAreaSelect && !existTask) {
+      if (!onAreaSelect && existTask) {
         return;
       }
       const stage = e.target.getStage();
@@ -238,10 +238,6 @@ const Timeline: FC<TimelineProps> = () => {
     [newTaskDimension, isMove, drawRange]
   );
 
-  const onTask = useCallback((value: boolean) => {
-    setExistTask(value);
-  }, []);
-
   const taskHeight = useMemo(() => {
     return rowHeight * TASK_HEIGHT_OFFSET;
   }, [rowHeight]);
@@ -271,7 +267,7 @@ const Timeline: FC<TimelineProps> = () => {
               taskTooltip={taskTooltip}
               setTaskTooltip={setTaskTooltip}
               create={newTask}
-              onTaskEvent={onTask}
+              onTaskEvent={setExistTask}
             />
             {newTask && (
               <Layer>
