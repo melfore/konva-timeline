@@ -409,7 +409,7 @@ const Task = ({
         const rgb = ` rgb(${colorToComplete.r}, ${colorToComplete.g}, ${colorToComplete.b})`;
         return rgb;
       }
-      const opacity = "0.6";
+      const opacity = "0.3";
       const rgb = getRGB(fill);
       const rgba = ` rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity})`;
       return rgba;

@@ -65,6 +65,12 @@ Date formats and static texts can be localized:
 
 ![localized](./assets/localized.png)
 
+### Area Select
+
+Select area to get its timeRange and resourceId:
+
+![area selected](./assets/selected-area.png)
+
 ## Getting started
 
 To install the library run:

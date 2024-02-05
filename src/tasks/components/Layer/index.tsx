@@ -32,6 +32,7 @@ const TasksLayer: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip, create }
     resources,
     rowHeight,
     tasks,
+    toolTip,
   } = useTimelineContext();
 
   const getResourceById = useCallback(
@@ -120,7 +121,7 @@ const TasksLayer: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip, create }
           />
         );
       })}
-      {taskTooltip && <TaskTooltip {...taskTooltip} />}
+      {toolTip && taskTooltip && <TaskTooltip {...taskTooltip} />}
     </Layer>
   );
 };
