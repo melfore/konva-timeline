@@ -1,3 +1,10 @@
+# [1.29.0](https://github.com/melfore/konva-timeline/compare/v1.28.0...v1.29.0) (2024-02-05)
+
+
+### Features
+
+* 🎸 [TaskLayer] add prop for tooltip display ([7048814](https://github.com/melfore/konva-timeline/commit/7048814aa62523ab824718a98cd7513d69e992ca)), closes [#173](https://github.com/melfore/konva-timeline/issues/173)
+
 # [1.28.0](https://github.com/melfore/konva-timeline/compare/v1.27.1...v1.28.0) (2024-01-31)
 
 ### Features
