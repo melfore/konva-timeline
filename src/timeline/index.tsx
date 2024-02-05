@@ -10,7 +10,6 @@ import { findResourceIndexByCoordinate, RESOURCE_HEADER_WIDTH } from "../resourc
 import TasksLayer from "../tasks/components/Layer";
 import { TaskTooltipProps } from "../tasks/components/Tooltip";
 import {
-  AreaSelect,
   getTaskYCoordinate,
   onEndTimeRange,
   TASK_BORDER_RADIUS,
@@ -50,9 +49,9 @@ const Timeline: FC<TimelineProps> = () => {
   const [scrollbarSize, setScrollbarSize] = useState(0);
   const [size, setSize] = useState<StageSize>(DEFAULT_STAGE_SIZE);
   const [newTask, setNewTask] = useState(false);
-  const [newData, setNewData] = useState<AreaSelect>();
   const [isMove, setIsMove] = useState(false);
   const [newTaskDimension, setNewTaskDimension] = useState<TaskDimensions>({ row: 0, width: 0, x: 0, y: 0 });
+  const [existTask, setExistTask] = useState<boolean>(false);
   const stageRef = useRef<Konva.Stage>(null);
   const wrapper = useRef<HTMLDivElement>(null);
 
@@ -214,8 +213,7 @@ const Timeline: FC<TimelineProps> = () => {
     (e: KonvaEventObject<MouseEvent>) => {
       if (onAreaSelect) {
         const newTask = createNewTaskData();
-        setNewData(newTask);
-        onAreaSelect(newData!);
+        onAreaSelect(newTask);
         const stage = e.target.getStage();
         stage!.container().style.cursor = "default";
         setIsMove(false);
@@ -223,7 +221,7 @@ const Timeline: FC<TimelineProps> = () => {
         setNewTaskDimension({ ...newTaskDimension, width: 1 });
       }
     },
-    [setNewTask, onAreaSelect, newData, createNewTaskData, newTaskDimension]
+    [onAreaSelect, createNewTaskData, newTaskDimension]
   );
 
   const onMouseMove = useCallback(
@@ -240,6 +238,10 @@ const Timeline: FC<TimelineProps> = () => {
     [newTaskDimension, isMove, drawRange]
   );
 
+  const onTask = useCallback((value: boolean) => {
+    setExistTask(value);
+  }, []);
+
   const taskHeight = useMemo(() => {
     return rowHeight * TASK_HEIGHT_OFFSET;
   }, [rowHeight]);
@@ -254,35 +256,70 @@ const Timeline: FC<TimelineProps> = () => {
         </div>
       )}
       <div ref={wrapper} style={gridWrapperStyle}>
-        <div style={gridStageWrapperStyle}>
-          <Stage
-            ref={stageRef}
-            height={stageHeight}
-            width={stageWidth}
-            onMouseDown={onMouseDown}
-            onMouseUp={onMouseUp}
-            onMouseMove={onMouseMove}
-          >
-            <GridLayer height={stageHeight} />
+        {!existTask ? (
+          <div style={gridStageWrapperStyle}>
+            <Stage
+              ref={stageRef}
+              height={stageHeight}
+              width={stageWidth}
+              onMouseDown={onMouseDown}
+              onMouseUp={onMouseUp}
+              onMouseMove={onMouseMove}
+            >
+              <GridLayer height={stageHeight} />
 
-            <TasksLayer taskTooltip={taskTooltip} setTaskTooltip={setTaskTooltip} create={newTask} />
-            {newTask && (
-              <Layer>
-                <Rect
-                  x={newTaskDimension.x}
-                  y={newTaskDimension.y}
-                  width={newTaskDimension.width}
-                  height={taskHeight}
-                  fill="rgba(0, 70, 255, 0.4)"
-                  stroke="rgba(0, 70, 255, 0.9)"
-                  strokeWidth={1}
-                  cornerRadius={TASK_BORDER_RADIUS}
-                  dash={[8, 8]}
-                />
-              </Layer>
-            )}
-          </Stage>
-        </div>
+              <TasksLayer
+                taskTooltip={taskTooltip}
+                setTaskTooltip={setTaskTooltip}
+                create={newTask}
+                onTaskEvent={onTask}
+              />
+              {newTask && (
+                <Layer>
+                  <Rect
+                    x={newTaskDimension.x}
+                    y={newTaskDimension.y}
+                    width={newTaskDimension.width}
+                    height={taskHeight}
+                    fill="rgba(0, 70, 255, 0.4)"
+                    stroke="rgba(0, 70, 255, 0.9)"
+                    strokeWidth={1}
+                    cornerRadius={TASK_BORDER_RADIUS}
+                    dash={[8, 8]}
+                  />
+                </Layer>
+              )}
+            </Stage>
+          </div>
+        ) : (
+          <div style={gridStageWrapperStyle}>
+            <Stage ref={stageRef} height={stageHeight} width={stageWidth}>
+              <GridLayer height={stageHeight} />
+
+              <TasksLayer
+                taskTooltip={taskTooltip}
+                setTaskTooltip={setTaskTooltip}
+                create={newTask}
+                onTaskEvent={onTask}
+              />
+              {newTask && (
+                <Layer>
+                  <Rect
+                    x={newTaskDimension.x}
+                    y={newTaskDimension.y}
+                    width={newTaskDimension.width}
+                    height={taskHeight}
+                    fill="rgba(0, 70, 255, 0.4)"
+                    stroke="rgba(0, 70, 255, 0.9)"
+                    strokeWidth={1}
+                    cornerRadius={TASK_BORDER_RADIUS}
+                    dash={[8, 8]}
+                  />
+                </Layer>
+              )}
+            </Stage>
+          </div>
+        )}
       </div>
     </div>
   );
