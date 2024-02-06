@@ -43,6 +43,10 @@ type TaskProps = KonvaDrawable &
      * Prop that indicate disabled item
      */
     disabled?: boolean;
+    /**
+     * Prop that indicate an event is executing
+     */
+    onTaskEvent: (value: boolean) => void;
   };
 
 const TASK_DEFAULT_FILL = "#000080";
@@ -74,6 +78,7 @@ const Task = ({
   width,
   fillToComplete,
   disabled,
+  onTaskEvent,
 }: TaskProps) => {
   const {
     columnWidth,
@@ -160,6 +165,7 @@ const Task = ({
 
   const onTaskMouseEvent = useCallback(
     (e: KonvaEventObject<MouseEvent>, callback: TaskMouseEventHandler) => {
+      onTaskEvent(true);
       const stage = e.target.getStage();
       if (!stage) {
         return;
@@ -171,7 +177,7 @@ const Task = ({
       }
       callback(taskId, { ...point, x: point.x + drawRange.start });
     },
-    [taskId, drawRange]
+    [taskId, drawRange, onTaskEvent]
   );
 
   const onClick = useCallback(() => onTaskClick && onTaskClick(data), [data, onTaskClick]);
@@ -193,8 +199,9 @@ const Task = ({
       }
 
       onTaskMouseEvent(e, onLeave);
+      onTaskEvent(false);
     },
-    [enableDrag, onLeave, onTaskMouseEvent, resizing]
+    [enableDrag, onLeave, onTaskMouseEvent, resizing, onTaskEvent]
   );
 
   const onTaskOver = useCallback(
@@ -316,6 +323,7 @@ const Task = ({
 
   const onResizeStart = useCallback(
     (e: KonvaEventObject<DragEvent>) => {
+      onTaskEvent(true);
       e.cancelBubble = true;
       const { x, y } = getDragPoint(e);
       const dragFinalX = Math.ceil(x / dragSnapInPX) * dragSnapInPX;
@@ -326,7 +334,7 @@ const Task = ({
       onLeave(taskId, point);
       setResizing(true);
     },
-    [dragSnapInPX, getDragPoint, onLeave, resources, rowHeight, taskId]
+    [dragSnapInPX, getDragPoint, onLeave, resources, rowHeight, taskId, onTaskEvent]
   );
 
   const onResizeMove = useCallback(
@@ -365,6 +373,7 @@ const Task = ({
 
   const onResizeEnd = useCallback(
     (e: KonvaEventObject<DragEvent>) => {
+      onTaskEvent(false);
       e.cancelBubble = true;
       setResizing(false);
       if (!onTaskChange) {
@@ -374,7 +383,7 @@ const Task = ({
       const time = onEndTimeRange(taskDimensions, resolution, columnWidth, interval);
       onTaskChange({ ...data, time });
     },
-    [onTaskChange, data, taskDimensions, resolution, columnWidth, interval]
+    [onTaskChange, data, taskDimensions, resolution, columnWidth, interval, onTaskEvent]
   );
   const percentage = useMemo(() => {
     if (completedPercentage === 0) {

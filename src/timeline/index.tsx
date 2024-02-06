@@ -10,7 +10,6 @@ import { findResourceIndexByCoordinate, RESOURCE_HEADER_WIDTH } from "../resourc
 import TasksLayer from "../tasks/components/Layer";
 import { TaskTooltipProps } from "../tasks/components/Tooltip";
 import {
-  AreaSelect,
   getTaskYCoordinate,
   onEndTimeRange,
   TASK_BORDER_RADIUS,
@@ -50,9 +49,9 @@ const Timeline: FC<TimelineProps> = () => {
   const [scrollbarSize, setScrollbarSize] = useState(0);
   const [size, setSize] = useState<StageSize>(DEFAULT_STAGE_SIZE);
   const [newTask, setNewTask] = useState(false);
-  const [newData, setNewData] = useState<AreaSelect>();
   const [isMove, setIsMove] = useState(false);
   const [newTaskDimension, setNewTaskDimension] = useState<TaskDimensions>({ row: 0, width: 0, x: 0, y: 0 });
+  const [existTask, setExistTask] = useState<boolean>(false);
   const stageRef = useRef<Konva.Stage>(null);
   const wrapper = useRef<HTMLDivElement>(null);
 
@@ -193,7 +192,7 @@ const Timeline: FC<TimelineProps> = () => {
 
   const onMouseDown = useCallback(
     (e: KonvaEventObject<MouseEvent>) => {
-      if (!onAreaSelect) {
+      if (!onAreaSelect && existTask) {
         return;
       }
       const stage = e.target.getStage();
@@ -208,14 +207,13 @@ const Timeline: FC<TimelineProps> = () => {
         setIsMove(true);
       }
     },
-    [resources, rowHeight, drawRange, onAreaSelect]
+    [resources, rowHeight, drawRange, onAreaSelect, existTask]
   );
   const onMouseUp = useCallback(
     (e: KonvaEventObject<MouseEvent>) => {
-      if (onAreaSelect) {
+      if (onAreaSelect && !existTask) {
         const newTask = createNewTaskData();
-        setNewData(newTask);
-        onAreaSelect(newData!);
+        onAreaSelect(newTask);
         const stage = e.target.getStage();
         stage!.container().style.cursor = "default";
         setIsMove(false);
@@ -223,7 +221,7 @@ const Timeline: FC<TimelineProps> = () => {
         setNewTaskDimension({ ...newTaskDimension, width: 1 });
       }
     },
-    [setNewTask, onAreaSelect, newData, createNewTaskData, newTaskDimension]
+    [onAreaSelect, createNewTaskData, newTaskDimension, existTask]
   );
 
   const onMouseMove = useCallback(
@@ -265,7 +263,12 @@ const Timeline: FC<TimelineProps> = () => {
           >
             <GridLayer height={stageHeight} />
 
-            <TasksLayer taskTooltip={taskTooltip} setTaskTooltip={setTaskTooltip} create={newTask} />
+            <TasksLayer
+              taskTooltip={taskTooltip}
+              setTaskTooltip={setTaskTooltip}
+              create={newTask}
+              onTaskEvent={setExistTask}
+            />
             {newTask && (
               <Layer>
                 <Rect
