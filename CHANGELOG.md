@@ -1,3 +1,10 @@
+## [1.29.1](https://github.com/melfore/konva-timeline/compare/v1.29.0...v1.29.1) (2024-02-06)
+
+
+### Bug Fixes
+
+* 🐛 [TimeLine]Fixed AreaSelect function ([70af6b9](https://github.com/melfore/konva-timeline/commit/70af6b952dda7f64ab723772a1ddcd823d7c526a)), closes [#185](https://github.com/melfore/konva-timeline/issues/185)
+
 # [1.29.0](https://github.com/melfore/konva-timeline/compare/v1.28.0...v1.29.0) (2024-02-05)
 
 ### Features
