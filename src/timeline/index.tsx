@@ -192,7 +192,7 @@ const Timeline: FC<TimelineProps> = () => {
 
   const onMouseDown = useCallback(
     (e: KonvaEventObject<MouseEvent>) => {
-      if (!onAreaSelect && existTask) {
+      if (!onAreaSelect || existTask) {
         return;
       }
       const stage = e.target.getStage();
@@ -211,15 +211,16 @@ const Timeline: FC<TimelineProps> = () => {
   );
   const onMouseUp = useCallback(
     (e: KonvaEventObject<MouseEvent>) => {
-      if (onAreaSelect && !existTask) {
-        const newTask = createNewTaskData();
-        onAreaSelect(newTask);
-        const stage = e.target.getStage();
-        stage!.container().style.cursor = "default";
-        setIsMove(false);
-        setNewTask(false);
-        setNewTaskDimension({ ...newTaskDimension, width: 1 });
+      if (!onAreaSelect || existTask) {
+        return;
       }
+      const newTask = createNewTaskData();
+      onAreaSelect(newTask);
+      const stage = e.target.getStage();
+      stage!.container().style.cursor = "default";
+      setIsMove(false);
+      setNewTask(false);
+      setNewTaskDimension({ ...newTaskDimension, width: 1 });
     },
     [onAreaSelect, createNewTaskData, newTaskDimension, existTask]
   );
