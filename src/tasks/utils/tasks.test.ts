@@ -1,7 +1,7 @@
 import { generateStoryData } from "../../KonvaTimeline/stories-data";
 import { InternalTimeRange } from "../../utils/time";
 
-import { getTaskYCoordinate, validateTasks } from "./tasks";
+import { getTaskYCoordinate, TASK_HEIGHT_OFFSET, validateTasks } from "./tasks";
 
 // From: Sunday, 1 January 2023 00:00:00 GMT+01:00
 // To: Monday, 2 January 2023 00:00:00 GMT+01:00
@@ -13,7 +13,7 @@ describe("getTaskYCoordinate", () => {
     const ROW_HEIGHT = 50;
     const resourceIndex = Math.ceil(Math.random() * 10);
     const yCoordinate = getTaskYCoordinate(resourceIndex, ROW_HEIGHT);
-    expect(yCoordinate % ROW_HEIGHT).toEqual(ROW_HEIGHT * 0.1);
+    expect(yCoordinate % ROW_HEIGHT).toEqual(ROW_HEIGHT * +((1 - TASK_HEIGHT_OFFSET) / 2).toFixed(2));
   });
 });
 
