@@ -1,7 +1,9 @@
+import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { DateTime } from "luxon";
 
 import { AreaSelect } from "../tasks/utils/tasks";
+import { CustomToolTipData } from "../timeline/TimelineContext";
 
 import { generateStoryData } from "./stories-data";
 import KonvaTimeline from ".";
@@ -29,6 +31,28 @@ const { range, resources, tasks } = generateStoryData({
   tasksCount: 5,
   timeRangeInDays: 1,
 });
+const customToolTip = (taskData: CustomToolTipData) => {
+  return (
+    <div
+      style={{
+        backgroundColor: "white",
+        border: "ridge",
+        borderColor: "black",
+        borderWidth: "1px",
+        margin: 0,
+        borderRadius: "50%",
+        height: 100,
+      }}
+    >
+      <h4 style={{ justifyContent: "center", alignItems: "top", display: "flex", color: "blue", margin: 1 }}>
+        {taskData.label}
+      </h4>
+      <b style={{ justifyContent: "center", alignItems: "top", display: "flex", marginBottom: 4 }}>Range:</b>
+      <span style={{ justifyContent: "center", alignItems: "top", display: "flex" }}>{taskData.start}</span>
+      <span style={{ justifyContent: "center", alignItems: "top", display: "flex", margin: 0 }}>{taskData.end}</span>
+    </div>
+  );
+};
 
 export const Primary: Story = {
   args: {
@@ -211,5 +235,12 @@ export const DisabledTooltip: Story = {
   args: {
     ...Primary.args,
     toolTip: false,
+  },
+};
+
+export const CustomTooltip: Story = {
+  args: {
+    ...Primary.args,
+    customToolTip: customToolTip,
   },
 };
