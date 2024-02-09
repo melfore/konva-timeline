@@ -409,6 +409,9 @@ const Task = ({
 
   const incompleteColor = useMemo(() => {
     try {
+      if (disabled) {
+        return DISABLED_TASK_DEFAULT_FILL;
+      }
       if (fillToComplete) {
         const colorToComplete = getRGBA(fillToComplete);
         if (colorToComplete.a) {
@@ -425,7 +428,7 @@ const Task = ({
     } catch (error) {
       return "rgba(255, 0, 0, 0.6)";
     }
-  }, [fill, fillToComplete]);
+  }, [fill, fillToComplete, disabled]);
 
   const isPercentage = useMemo(() => {
     if (typeof completedPercentage !== "number") {
@@ -440,7 +443,7 @@ const Task = ({
   const arrGradientColor: (number | string)[] = useMemo(() => {
     const colors: (number | string)[] = [];
     const length = 300;
-    if (dragging || resizing || typeof completedPercentage !== "number") {
+    if (dragging || resizing || typeof completedPercentage !== "number" || disabled) {
       return [];
     }
     const mainColorLineNumber = Number((11 / (taskDimensions.width / 300)).toFixed(0));
@@ -470,7 +473,7 @@ const Task = ({
         colors.push(gradientNumber, newColor === gradientNumber ? mainColor : incompleteColor);
       });
     return colors;
-  }, [mainColor, incompleteColor, dragging, resizing, taskDimensions, completedPercentage]);
+  }, [mainColor, incompleteColor, dragging, resizing, taskDimensions, completedPercentage, disabled]);
 
   const finalGradientX = useMemo(() => {
     return taskDimensions.width * Math.cos(45);

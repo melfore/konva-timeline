@@ -7,6 +7,8 @@ import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { KonvaPoint } from "../../../utils/konva";
 import { TaskData } from "../../utils/tasks";
 
+import DefaultToolTip from "./DefaultToolTip";
+
 export interface TaskTooltipProps extends KonvaPoint {
   task: TaskData;
 }
@@ -32,6 +34,7 @@ const TaskTooltip: FC<TaskTooltipProps> = ({
     drawRange: { end: drawEnd },
     resources,
     localized,
+    customToolTip,
   } = useTimelineContext();
   const startDuration = useMemo(() => {
     return DateTime.fromMillis(Number(start)).toFormat("dd/MM/yyyy HH:mm:ss");
@@ -77,63 +80,28 @@ const TaskTooltip: FC<TaskTooltipProps> = ({
     }
     return { x: standardMarginOffsetX, y: marginOffsetY * 2 };
   }, [drawEnd, resourceId, x, resources]);
+
+  const toolTip = useMemo(() => {
+    return !customToolTip ? (
+      <DefaultToolTip
+        duration={duration}
+        endDuration={endDuration}
+        startDuration={startDuration}
+        label={label}
+        localized={localized}
+        percentage={percentage}
+        completedPercentage={completedPercentage}
+      />
+    ) : (
+      <div style={{ minWidth: 190, maxWidth: 201, minHeight: 90, maxHeight: 101, overflow: "hidden" }}>
+        {customToolTip(startDuration, endDuration, label)}
+      </div>
+    );
+  }, [completedPercentage, duration, endDuration, label, localized, percentage, startDuration, customToolTip]);
+
   return (
     <Label x={x + offsetToolTip.x} y={y - offsetToolTip.y} opacity={1}>
-      <Html>
-        <div
-          style={{
-            backgroundColor: "white",
-            border: "ridge",
-            borderColor: "black",
-            borderWidth: "1px",
-            padding: 8,
-            boxShadow: "2px 2px 8px black",
-            maxWidth: 200,
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          <b
-            style={{
-              fontFamily: "Times New Roman",
-              fontSize: 16,
-              fontWeight: 700,
-            }}
-          >
-            {label}
-          </b>
-          <br />
-
-          <div style={{ display: "inline-flex", alignItems: "center" }}>
-            <b style={{ fontSize: 14, fontFamily: "Times New Roman", fontWeight: 700 }}>{localized.start}: </b>
-            &nbsp;&nbsp;&nbsp;
-            <span style={{ fontFamily: "Courier New", fontSize: 13 }}>{startDuration}</span>
-          </div>
-          <br></br>
-          <div style={{ display: "inline-flex", alignItems: "center" }}>
-            <b style={{ fontSize: 14, fontFamily: "Times New Roman", fontWeight: 700 }}>{localized.end}: </b>
-            &nbsp;&nbsp;&nbsp;
-            <span style={{ fontFamily: "Courier New", fontSize: 13 }}>{endDuration}</span>
-          </div>
-          <br></br>
-
-          <div style={{ display: "inline-flex", alignItems: "center" }}>
-            <b style={{ fontFamily: "Times New Roman", fontSize: 14, fontWeight: 700 }}>{localized.duration}: </b>
-            &nbsp;&nbsp;&nbsp;
-            <span style={{ fontFamily: "Courier New", fontSize: 13 }}>
-              {duration.time} {duration.unit}(s)
-            </span>
-          </div>
-          <br></br>
-          {completedPercentage && (
-            <div style={{ display: "inline-flex", alignItems: "center" }}>
-              <b style={{ fontFamily: "Times New Roman", fontSize: 14, fontWeight: 700 }}>{localized.completed}: </b>
-              &nbsp;&nbsp;&nbsp;
-              <span style={{ fontFamily: "Courier New", fontSize: 13 }}>{percentage}</span>
-            </div>
-          )}
-        </div>
-      </Html>
+      <Html>{toolTip}</Html>
     </Label>
   );
 };
