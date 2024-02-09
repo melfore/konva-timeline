@@ -75,7 +75,7 @@ Select area to get its timeRange and resourceId:
 
 It's possible to personalize the toolTip passing createToolTip callback that return jsx element
 
-![personalized toolTip](./assets/personalized-toolTip.png)
+![personalized toolTip](./assets/personalized-tooltip.png)
 
 ## Getting started
 
