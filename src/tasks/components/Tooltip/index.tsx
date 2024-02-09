@@ -20,22 +20,20 @@ const twoDayinMillis = 172800000;
 /**
  * This component renders a task tooltip inside a canvas.
  */
-const TaskTooltip: FC<TaskTooltipProps> = ({
-  task: {
-    label,
-    completedPercentage,
-    time: { start, end },
-    resourceId,
-  },
-  x,
-  y,
-}) => {
+const TaskTooltip: FC<TaskTooltipProps> = ({ task, x, y }) => {
   const {
     drawRange: { end: drawEnd },
     resources,
     localized,
     customToolTip,
   } = useTimelineContext();
+
+  const {
+    label,
+    completedPercentage,
+    time: { start, end },
+    resourceId,
+  } = task;
   const startDuration = useMemo(() => {
     return DateTime.fromMillis(Number(start)).toFormat("dd/MM/yyyy HH:mm:ss");
   }, [start]);
@@ -81,6 +79,10 @@ const TaskTooltip: FC<TaskTooltipProps> = ({
     return { x: standardMarginOffsetX, y: marginOffsetY * 2 };
   }, [drawEnd, resourceId, x, resources]);
 
+  const customToolTipData = useMemo(() => {
+    return { ...task, start: startDuration, end: endDuration };
+  }, [task, startDuration, endDuration]);
+
   const toolTip = useMemo(() => {
     return !customToolTip ? (
       <DefaultToolTip
@@ -94,10 +96,20 @@ const TaskTooltip: FC<TaskTooltipProps> = ({
       />
     ) : (
       <div style={{ minWidth: 190, maxWidth: 201, minHeight: 90, maxHeight: 101, overflow: "hidden" }}>
-        {customToolTip({ start: startDuration, end: endDuration, label: label })}
+        {customToolTip(customToolTipData)}
       </div>
     );
-  }, [completedPercentage, duration, endDuration, label, localized, percentage, startDuration, customToolTip]);
+  }, [
+    completedPercentage,
+    duration,
+    endDuration,
+    label,
+    localized,
+    startDuration,
+    percentage,
+    customToolTip,
+    customToolTipData,
+  ]);
 
   return (
     <Label x={x + offsetToolTip.x} y={y - offsetToolTip.y} opacity={1}>

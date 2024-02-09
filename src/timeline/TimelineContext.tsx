@@ -27,10 +27,9 @@ export type Localized = {
   completed: string;
 };
 
-export type CustomToolTipData = {
+export type CustomToolTipData = TaskData & {
   start: string;
   end: string;
-  label: string;
 };
 
 export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
