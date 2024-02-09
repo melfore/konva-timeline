@@ -94,7 +94,7 @@ const TaskTooltip: FC<TaskTooltipProps> = ({
       />
     ) : (
       <div style={{ minWidth: 190, maxWidth: 201, minHeight: 90, maxHeight: 101, overflow: "hidden" }}>
-        {customToolTip(startDuration, endDuration, label)}
+        {customToolTip({ start: startDuration, end: endDuration, label: label })}
       </div>
     );
   }, [completedPercentage, duration, endDuration, label, localized, percentage, startDuration, customToolTip]);

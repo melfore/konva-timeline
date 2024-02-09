@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { DateTime } from "luxon";
 
 import { AreaSelect } from "../tasks/utils/tasks";
+import { CustomToolTipData } from "../timeline/TimelineContext";
 
 import { generateStoryData } from "./stories-data";
 import KonvaTimeline from ".";
@@ -30,7 +31,7 @@ const { range, resources, tasks } = generateStoryData({
   tasksCount: 5,
   timeRangeInDays: 1,
 });
-const customToolTip = (start: string, end: string, label: string) => {
+const customToolTip = (taskData: CustomToolTipData) => {
   return (
     <div
       style={{
@@ -44,11 +45,11 @@ const customToolTip = (start: string, end: string, label: string) => {
       }}
     >
       <h4 style={{ justifyContent: "center", alignItems: "top", display: "flex", color: "blue", margin: 1 }}>
-        {label}
+        {taskData.label}
       </h4>
       <b style={{ justifyContent: "center", alignItems: "top", display: "flex", marginBottom: 4 }}>Range:</b>
-      <span style={{ justifyContent: "center", alignItems: "top", display: "flex" }}>{start}</span>
-      <span style={{ justifyContent: "center", alignItems: "top", display: "flex", margin: 0 }}>{end}</span>
+      <span style={{ justifyContent: "center", alignItems: "top", display: "flex" }}>{taskData.start}</span>
+      <span style={{ justifyContent: "center", alignItems: "top", display: "flex", margin: 0 }}>{taskData.end}</span>
     </div>
   );
 };
