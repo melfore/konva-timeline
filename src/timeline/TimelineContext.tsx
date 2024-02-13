@@ -93,6 +93,10 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
    * Callback that return a personalized tooltip( 200x100 is max possible size)
    */
   customToolTip?: (taskData: CustomToolTipData) => React.JSX.Element;
+  /**
+   * Enables pattern for incomplete part of the task (default true)
+   */
+  enableTaskPattern?: boolean;
 };
 
 type TimelineTheme = {
@@ -128,6 +132,7 @@ type TimelineContextType = Required<
   onAreaSelect?: (task: AreaSelect) => void;
   toolTip?: boolean;
   customToolTip?: (taskData: CustomToolTipData) => React.JSX.Element;
+  enableTaskPattern?: boolean;
 };
 
 const TimelineContext = createContext<TimelineContextType | undefined>(undefined);
@@ -166,6 +171,7 @@ export const TimelineProvider = ({
   onAreaSelect,
   toolTip = true,
   customToolTip,
+  enableTaskPattern = true,
 }: TimelineProviderProps) => {
   const timezone = useMemo(() => {
     if (!externalTimezone) {
@@ -411,6 +417,7 @@ export const TimelineProvider = ({
         onAreaSelect,
         toolTip,
         customToolTip,
+        enableTaskPattern,
       }}
     >
       {children}
