@@ -7,7 +7,7 @@ import { KonvaText } from "../../../@konva";
 import { findResourceByCoordinate, findResourceIndexByCoordinate } from "../../../resources/utils/resources";
 import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { KonvaDrawable, KonvaPoint } from "../../../utils/konva";
-import { getContrastColor, getRGB, getRGBA } from "../../../utils/theme";
+import { getContrastColor, getRGB, getRGBA, RGBFromRGBA } from "../../../utils/theme";
 import {
   getTaskYCoordinate,
   onEndTimeRange,
@@ -94,6 +94,7 @@ const Task = ({
     resources,
     rowHeight,
     drawRange,
+    enableTaskPattern,
   } = useTimelineContext();
 
   const { id: taskId, completedPercentage } = data;
@@ -101,6 +102,8 @@ const Task = ({
 
   const [dragging, setDragging] = useState(false);
   const [resizing, setResizing] = useState(false);
+
+  const opacity = useMemo(() => (dragging || resizing ? 0.5 : 1), [dragging, resizing]);
 
   const mainColor = useMemo(() => {
     if (disabled) {
@@ -120,6 +123,10 @@ const Task = ({
     }
     return TASK_DEFAULT_STROKE_FILL;
   }, [disabled]);
+
+  const secondaryStroke = useMemo(() => {
+    return opacity < 1 ? mainStroke : mainColor;
+  }, [opacity, mainColor, mainStroke]);
 
   const initialTaskDimensions = useMemo((): TaskDimensions => {
     const row = findResourceIndexByCoordinate(y, rowHeight, resources);
@@ -305,8 +312,6 @@ const Task = ({
     ]
   );
 
-  const opacity = useMemo(() => (dragging || resizing ? 0.5 : 1), [dragging, resizing]);
-
   const textOffsets = useMemo(() => taskHeight / 3, [taskHeight]);
 
   const textSize = useMemo(() => taskHeight / 2.5, [taskHeight]);
@@ -421,14 +426,25 @@ const Task = ({
         const rgb = ` rgb(${colorToComplete.r}, ${colorToComplete.g}, ${colorToComplete.b})`;
         return rgb;
       }
-      const opacity = "0.3";
+      const opacity = 0.6;
       const rgb = getRGB(fill);
-      const rgba = ` rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity})`;
-      return rgba;
+      //const rgba = ` rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity})`;
+      //return rgba;
+      return RGBFromRGBA(opacity, rgb);
     } catch (error) {
       return "rgba(255, 0, 0, 0.6)";
     }
   }, [fill, fillToComplete, disabled]);
+
+  const noPatternColor = useMemo(() => {
+    if (disabled) {
+      return DISABLED_TASK_DEFAULT_FILL;
+    }
+    if (dragging || resizing) {
+      return incompleteColor;
+    }
+    return enableTaskPattern ? "transparent" : incompleteColor;
+  }, [incompleteColor, enableTaskPattern, disabled, dragging, resizing]);
 
   const isPercentage = useMemo(() => {
     if (typeof completedPercentage !== "number") {
@@ -443,7 +459,7 @@ const Task = ({
   const arrGradientColor: (number | string)[] = useMemo(() => {
     const colors: (number | string)[] = [];
     const length = 300;
-    if (dragging || resizing || typeof completedPercentage !== "number" || disabled) {
+    if (dragging || resizing || typeof completedPercentage !== "number" || disabled || !enableTaskPattern) {
       return [];
     }
     const mainColorLineNumber = Number((11 / (taskDimensions.width / 300)).toFixed(0));
@@ -473,7 +489,16 @@ const Task = ({
         colors.push(gradientNumber, newColor === gradientNumber ? mainColor : incompleteColor);
       });
     return colors;
-  }, [mainColor, incompleteColor, dragging, resizing, taskDimensions, completedPercentage, disabled]);
+  }, [
+    mainColor,
+    incompleteColor,
+    dragging,
+    resizing,
+    taskDimensions,
+    completedPercentage,
+    disabled,
+    enableTaskPattern,
+  ]);
 
   const finalGradientX = useMemo(() => {
     return taskDimensions.width * Math.cos(45);
@@ -497,11 +522,11 @@ const Task = ({
           id={taskId}
           cornerRadius={TASK_BORDER_RADIUS}
           fillLinearGradientStartPoint={{ x: 0, y: 0 }}
-          fillLinearGradientEndPoint={{ x: percentage, y: 0 }}
-          fillLinearGradientColorStops={[1, mainColor, 1, incompleteColor]}
+          fillLinearGradientEndPoint={{ x: finalGradientX, y: finalGradientY }}
+          fillLinearGradientColorStops={arrGradientColor}
           height={taskHeight}
           opacity={opacity}
-          stroke={mainColor}
+          stroke={secondaryStroke}
           strokeWidth={TASK_DEFAULT_STROKE_WIDTH}
           width={taskDimensions.width}
         />
@@ -509,13 +534,13 @@ const Task = ({
           id={taskId}
           cornerRadius={TASK_BORDER_RADIUS}
           fillLinearGradientStartPoint={{ x: 0, y: 0 }}
-          fillLinearGradientEndPoint={{ x: finalGradientX, y: finalGradientY }}
-          fillLinearGradientColorStops={arrGradientColor}
+          fillLinearGradientEndPoint={{ x: percentage, y: 0 }}
+          fillLinearGradientColorStops={[1, mainColor, 1, noPatternColor]}
           height={taskHeight}
           onMouseLeave={onTaskLeave}
           onMouseMove={onTaskOver}
           onMouseOver={onTaskOver}
-          opacity={1}
+          opacity={opacity}
           stroke={mainStroke}
           strokeWidth={1}
           width={taskDimensions.width}
