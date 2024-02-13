@@ -1,3 +1,11 @@
+## [1.30.1](https://github.com/melfore/konva-timeline/compare/v1.30.0...v1.30.1) (2024-02-09)
+
+# [1.30.0](https://github.com/melfore/konva-timeline/compare/v1.29.2...v1.30.0) (2024-02-09)
+
+### Features
+
+- 🎸 [ToolTip]Add callback for custom ToolTip ([a6fbe4e](https://github.com/melfore/konva-timeline/commit/a6fbe4e5ea614b354d2017c1372e33f882f8e908)), closes [#188](https://github.com/melfore/konva-timeline/issues/188)
+
 ## [1.29.2](https://github.com/melfore/konva-timeline/compare/v1.29.1...v1.29.2) (2024-02-06)
 
 ### Bug Fixes

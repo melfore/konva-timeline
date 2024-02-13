@@ -19,11 +19,17 @@ declare global {
 }
 
 type TimelineThemeMode = "dark" | "light";
-type Localized = {
+
+export type Localized = {
   start: string;
   end: string;
   duration: string;
   completed: string;
+};
+
+export type CustomToolTipData = TaskData & {
+  start: string;
+  end: string;
 };
 
 export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
@@ -83,6 +89,10 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
    * ToolTip display
    */
   toolTip?: boolean;
+  /**
+   * Callback that return a personalized tooltip( 200x100 is max possible size)
+   */
+  customToolTip?: (taskData: CustomToolTipData) => React.JSX.Element;
 };
 
 type TimelineTheme = {
@@ -117,6 +127,7 @@ type TimelineContextType = Required<
   dateLocale?: string;
   onAreaSelect?: (task: AreaSelect) => void;
   toolTip?: boolean;
+  customToolTip?: (taskData: CustomToolTipData) => React.JSX.Element;
 };
 
 const TimelineContext = createContext<TimelineContextType | undefined>(undefined);
@@ -154,6 +165,7 @@ export const TimelineProvider = ({
   dateLocale = "en",
   onAreaSelect,
   toolTip = true,
+  customToolTip,
 }: TimelineProviderProps) => {
   const timezone = useMemo(() => {
     if (!externalTimezone) {
@@ -398,6 +410,7 @@ export const TimelineProvider = ({
         dateLocale,
         onAreaSelect,
         toolTip,
+        customToolTip,
       }}
     >
       {children}

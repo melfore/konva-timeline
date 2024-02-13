@@ -7,6 +7,8 @@ import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { KonvaPoint } from "../../../utils/konva";
 import { TaskData } from "../../utils/tasks";
 
+import DefaultToolTip from "./DefaultToolTip";
+
 export interface TaskTooltipProps extends KonvaPoint {
   task: TaskData;
 }
@@ -18,21 +20,20 @@ const twoDayinMillis = 172800000;
 /**
  * This component renders a task tooltip inside a canvas.
  */
-const TaskTooltip: FC<TaskTooltipProps> = ({
-  task: {
-    label,
-    completedPercentage,
-    time: { start, end },
-    resourceId,
-  },
-  x,
-  y,
-}) => {
+const TaskTooltip: FC<TaskTooltipProps> = ({ task, x, y }) => {
   const {
     drawRange: { end: drawEnd },
     resources,
     localized,
+    customToolTip,
   } = useTimelineContext();
+
+  const {
+    label,
+    completedPercentage,
+    time: { start, end },
+    resourceId,
+  } = task;
   const startDuration = useMemo(() => {
     return DateTime.fromMillis(Number(start)).toFormat("dd/MM/yyyy HH:mm:ss");
   }, [start]);
@@ -77,63 +78,42 @@ const TaskTooltip: FC<TaskTooltipProps> = ({
     }
     return { x: standardMarginOffsetX, y: marginOffsetY * 2 };
   }, [drawEnd, resourceId, x, resources]);
+
+  const customToolTipData = useMemo(() => {
+    return { ...task, start: startDuration, end: endDuration };
+  }, [task, startDuration, endDuration]);
+
+  const toolTip = useMemo(() => {
+    return !customToolTip ? (
+      <DefaultToolTip
+        duration={duration}
+        endDuration={endDuration}
+        startDuration={startDuration}
+        label={label}
+        localized={localized}
+        percentage={percentage}
+        completedPercentage={completedPercentage}
+      />
+    ) : (
+      <div style={{ minWidth: 190, maxWidth: 201, minHeight: 90, maxHeight: 101, overflow: "hidden" }}>
+        {customToolTip(customToolTipData)}
+      </div>
+    );
+  }, [
+    completedPercentage,
+    duration,
+    endDuration,
+    label,
+    localized,
+    startDuration,
+    percentage,
+    customToolTip,
+    customToolTipData,
+  ]);
+
   return (
     <Label x={x + offsetToolTip.x} y={y - offsetToolTip.y} opacity={1}>
-      <Html>
-        <div
-          style={{
-            backgroundColor: "white",
-            border: "ridge",
-            borderColor: "black",
-            borderWidth: "1px",
-            padding: 8,
-            boxShadow: "2px 2px 8px black",
-            maxWidth: 200,
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          <b
-            style={{
-              fontFamily: "Times New Roman",
-              fontSize: 16,
-              fontWeight: 700,
-            }}
-          >
-            {label}
-          </b>
-          <br />
-
-          <div style={{ display: "inline-flex", alignItems: "center" }}>
-            <b style={{ fontSize: 14, fontFamily: "Times New Roman", fontWeight: 700 }}>{localized.start}: </b>
-            &nbsp;&nbsp;&nbsp;
-            <span style={{ fontFamily: "Courier New", fontSize: 13 }}>{startDuration}</span>
-          </div>
-          <br></br>
-          <div style={{ display: "inline-flex", alignItems: "center" }}>
-            <b style={{ fontSize: 14, fontFamily: "Times New Roman", fontWeight: 700 }}>{localized.end}: </b>
-            &nbsp;&nbsp;&nbsp;
-            <span style={{ fontFamily: "Courier New", fontSize: 13 }}>{endDuration}</span>
-          </div>
-          <br></br>
-
-          <div style={{ display: "inline-flex", alignItems: "center" }}>
-            <b style={{ fontFamily: "Times New Roman", fontSize: 14, fontWeight: 700 }}>{localized.duration}: </b>
-            &nbsp;&nbsp;&nbsp;
-            <span style={{ fontFamily: "Courier New", fontSize: 13 }}>
-              {duration.time} {duration.unit}(s)
-            </span>
-          </div>
-          <br></br>
-          {completedPercentage && (
-            <div style={{ display: "inline-flex", alignItems: "center" }}>
-              <b style={{ fontFamily: "Times New Roman", fontSize: 14, fontWeight: 700 }}>{localized.completed}: </b>
-              &nbsp;&nbsp;&nbsp;
-              <span style={{ fontFamily: "Courier New", fontSize: 13 }}>{percentage}</span>
-            </div>
-          )}
-        </div>
-      </Html>
+      <Html>{toolTip}</Html>
     </Label>
   );
 };
