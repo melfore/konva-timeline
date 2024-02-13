@@ -5,6 +5,9 @@ const LUMA_FACTOR_R = 299;
 const LUMA_FACTOR_G = 587;
 const LUMA_FACTOR_B = 114;
 const LUMA_FACTOR_BW = 128;
+
+type RGBType = { r: number; g: number; b: number };
+
 export const DEFAULT_ROW_LIGHT_MODE = "#F0F0F0";
 export const ALTERNATIVE_ROW = "transparent";
 export const DEFAULT_ROW_DARK_MODE = "#A8A8A8";
@@ -77,4 +80,11 @@ export const getContrastColor = (hex: string) => {
   const luma = (rgb.r * LUMA_FACTOR_R + rgb.g * LUMA_FACTOR_G + rgb.b * LUMA_FACTOR_B) / 1000;
 
   return luma >= LUMA_FACTOR_BW ? "#000000" : "#FFFFFF";
+};
+
+export const RGBFromRGBA = (opacity: number, rgb: RGBType) => {
+  const r3 = Math.round((1 - opacity) * 255 + opacity * rgb.r);
+  const g3 = Math.round((1 - opacity) * 255 + opacity * rgb.g);
+  const b3 = Math.round((1 - opacity) * 255 + opacity * rgb.b);
+  return "rgb(" + r3 + "," + g3 + "," + b3 + ")";
 };

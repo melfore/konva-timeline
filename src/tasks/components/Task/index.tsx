@@ -7,7 +7,7 @@ import { KonvaText } from "../../../@konva";
 import { findResourceByCoordinate, findResourceIndexByCoordinate } from "../../../resources/utils/resources";
 import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { KonvaDrawable, KonvaPoint } from "../../../utils/konva";
-import { getContrastColor, getRGB, getRGBA } from "../../../utils/theme";
+import { getContrastColor, getRGB, getRGBA, RGBFromRGBA } from "../../../utils/theme";
 import {
   getTaskYCoordinate,
   onEndTimeRange,
@@ -430,10 +430,7 @@ const Task = ({
       const rgb = getRGB(fill);
       //const rgba = ` rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity})`;
       //return rgba;
-      const r3 = Math.round((1 - opacity) * 255 + opacity * rgb.r);
-      const g3 = Math.round((1 - opacity) * 255 + opacity * rgb.g);
-      const b3 = Math.round((1 - opacity) * 255 + opacity * rgb.b);
-      return "rgb(" + r3 + "," + g3 + "," + b3 + ")";
+      return RGBFromRGBA(opacity, rgb);
     } catch (error) {
       return "rgba(255, 0, 0, 0.6)";
     }
