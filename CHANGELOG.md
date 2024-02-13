@@ -1,3 +1,10 @@
+# [1.31.0](https://github.com/melfore/konva-timeline/compare/v1.30.2...v1.31.0) (2024-02-13)
+
+
+### Features
+
+* 🎸 [Task] new incopmlete color display, add pattern prop ([a1bdcf3](https://github.com/melfore/konva-timeline/commit/a1bdcf39fe0ed83a1ef28cab2ef7034dfe0bba99)), closes [#190](https://github.com/melfore/konva-timeline/issues/190)
+
 ## [1.30.2](https://github.com/melfore/konva-timeline/compare/v1.30.1...v1.30.2) (2024-02-13)
 
 ## [1.30.1](https://github.com/melfore/konva-timeline/compare/v1.30.0...v1.30.1) (2024-02-09)
