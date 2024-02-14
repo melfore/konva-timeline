@@ -235,11 +235,11 @@ const Timeline: FC<TimelineProps> = () => {
         const xpos = stage!.getPointerPosition()!.x + drawRange.start;
         const width = xpos - startXClick;
         let controlledX = startXClick;
-        const controledWidth = width < 0 ? -1 * width : width;
+        const controlledWidth = width < 0 ? -1 * width : width;
         if (width < 0) {
           controlledX = xpos;
         }
-        setNewTaskDimension({ ...newTaskDimension, x: controlledX, width: controledWidth });
+        setNewTaskDimension({ ...newTaskDimension, x: controlledX, width: controlledWidth });
       }
     },
     [newTaskDimension, isMove, drawRange, startXClick]

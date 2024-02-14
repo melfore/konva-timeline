@@ -258,20 +258,20 @@ const Task = ({
       const minY = rowHeight + rowHeight * TASK_OFFSET_Y;
       const maxY = rowHeight * (resources.length - 1) + rowHeight * TASK_OFFSET_Y;
       const taskFinalPoint = finalPoint - taskDimensions.width;
-      let controledY = y;
-      let controledX = xCoordinate;
-      if (controledY < minY) {
-        controledY = minY;
+      let controlledY = y;
+      let controlledX = xCoordinate;
+      if (controlledY < minY) {
+        controlledY = minY;
       }
-      if (controledY > maxY) {
-        controledY = maxY;
+      if (controlledY > maxY) {
+        controlledY = maxY;
       }
 
       if (dragFinalX >= taskFinalPoint) {
-        controledX = taskFinalPoint;
+        controlledX = taskFinalPoint;
       }
 
-      const point = { x: controledX, y: controledY };
+      const point = { x: controlledX, y: controlledY };
 
       setTaskDimensions((dimensions) => ({ ...dimensions, ...point }));
     },
