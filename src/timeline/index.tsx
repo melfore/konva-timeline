@@ -51,6 +51,7 @@ const Timeline: FC<TimelineProps> = () => {
   const [newTask, setNewTask] = useState(false);
   const [isMove, setIsMove] = useState(false);
   const [newTaskDimension, setNewTaskDimension] = useState<TaskDimensions>({ row: 0, width: 0, x: 0, y: 0 });
+  const [startXClick, setStartXClick] = useState(0);
   const [existTask, setExistTask] = useState<boolean>(false);
   const stageRef = useRef<Konva.Stage>(null);
   const wrapper = useRef<HTMLDivElement>(null);
@@ -202,6 +203,7 @@ const Timeline: FC<TimelineProps> = () => {
         const pointerPosition = stage!.getPointerPosition();
         const resourceIndex = findResourceIndexByCoordinate(pointerPosition!.y, rowHeight, resources);
         const y = getTaskYCoordinate(resourceIndex, rowHeight);
+        setStartXClick(drawRange.start + pointerPosition!.x);
         setNewTaskDimension({ row: resourceIndex, width: 1, x: drawRange.start + pointerPosition!.x, y: y });
         setNewTask(true);
         setIsMove(true);
@@ -231,12 +233,16 @@ const Timeline: FC<TimelineProps> = () => {
         const stage = e.target.getStage();
         stage!.container().style.cursor = "crosshair";
         const xpos = stage!.getPointerPosition()!.x + drawRange.start;
-        const width = xpos - newTaskDimension.x;
-        const controledWidth = width < 0 ? 1 : width;
-        setNewTaskDimension({ ...newTaskDimension, width: controledWidth });
+        const width = xpos - startXClick;
+        let controlledX = startXClick;
+        const controlledWidth = width < 0 ? -1 * width : width;
+        if (width < 0) {
+          controlledX = xpos;
+        }
+        setNewTaskDimension({ ...newTaskDimension, x: controlledX, width: controlledWidth });
       }
     },
-    [newTaskDimension, isMove, drawRange]
+    [newTaskDimension, isMove, drawRange, startXClick]
   );
 
   const taskHeight = useMemo(() => {
