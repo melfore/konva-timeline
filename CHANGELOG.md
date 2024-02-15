@@ -1,9 +1,8 @@
 # [1.32.0](https://github.com/melfore/konva-timeline/compare/v1.31.0...v1.32.0) (2024-02-14)
 
-
 ### Features
 
-* 🎸 [TimeLine]Allowed negative selection ([13cde92](https://github.com/melfore/konva-timeline/commit/13cde9270acc552cf51dea15c125ba2a3ab0d88c)), closes [#189](https://github.com/melfore/konva-timeline/issues/189)
+- 🎸 [TimeLine]Allowed negative selection ([13cde92](https://github.com/melfore/konva-timeline/commit/13cde9270acc552cf51dea15c125ba2a3ab0d88c)), closes [#189](https://github.com/melfore/konva-timeline/issues/189)
 
 # [1.31.0](https://github.com/melfore/konva-timeline/compare/v1.30.2...v1.31.0) (2024-02-13)
 
