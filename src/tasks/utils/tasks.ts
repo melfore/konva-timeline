@@ -25,6 +25,7 @@ export interface TaskData<T extends TimeRange = TimeRange> {
    * Task time range
    */
   time: T;
+  kLine?: string[];
 }
 
 type FilteredTasks = Operation<TaskData<InternalTimeRange>>;
@@ -124,6 +125,23 @@ export const filterTasks = (
     }
 
     return true;
+  });
+};
+
+export const LineFilter = (
+  tasks: TaskData<InternalTimeRange>[],
+  range: InternalTimeRange | null
+): TaskData<InternalTimeRange>[] => {
+  if (!range || !range.start || !range.end || !tasks || !tasks.length) {
+    return [];
+  }
+
+  return tasks.filter(({ kLine }) => {
+    if (kLine) {
+      return true;
+    }
+
+    return false;
   });
 };
 

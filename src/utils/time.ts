@@ -79,3 +79,14 @@ export const getIntervalFromInternalTimeRange = (
   );
   return Interval.fromDateTimes(startDateTime, endDateTime);
 };
+
+export const getXCoordinateFromTime = (
+  sizePx: number,
+  resolution: ResolutionData,
+  columnWidth: number,
+  interval: Interval
+): number => {
+  const timeOffset = (sizePx * resolution.sizeInUnits) / columnWidth;
+  const start = interval.start!.plus({ [resolution.unit]: timeOffset }).toMillis();
+  return start;
+};
