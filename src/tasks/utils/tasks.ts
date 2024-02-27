@@ -1,4 +1,4 @@
-import { Duration, Interval } from "luxon";
+import { DateTime, Duration, Interval } from "luxon";
 
 import { KonvaTimelineError, Operation } from "../../utils/operations";
 import { getValidTime, InternalTimeRange, TimeRange } from "../../utils/time";
@@ -137,10 +137,33 @@ export const onEndTimeRange = (
   columnWidth: number,
   interval: Interval
 ): TimeRange => {
+  const hrs = 3600000;
+
   const timeOffset = fromPxToTime(taskDimesion.x, resolution, columnWidth);
-  const start = interval.start!.plus({ [resolution.unit]: timeOffset }).toMillis();
+  const startTaskMillis = interval.start!.plus({ [resolution.unit]: timeOffset }).toMillis();
+  const startDate = DateTime.fromMillis(startTaskMillis);
+
+  const intervalStartTZ = interval.start?.toISO().slice(-5, -3); //Interval start TZ
+  const taskStartTZ = DateTime.fromMillis(startTaskMillis).toISO()?.slice(-5, -3); //Task start TZ
+  const diffTZ = +intervalStartTZ! - +taskStartTZ!;
+
+  const startOfDay = startDate.startOf("day").toISO()?.slice(-5, -3); //Day start TZ
+  const nexDay = startDate.plus({ day: 1 }).toISO()?.slice(-5, -3); //Next Day TZ
+  const diffTZInDay = +startOfDay! - +nexDay!;
+  const nexDayMillis = startDate.startOf("day").toMillis() + 24 * hrs;
+
+  let gap = 0;
+  if (diffTZ !== 0) {
+    gap = hrs * diffTZ;
+    if (diffTZInDay !== 0 && startTaskMillis < nexDayMillis) {
+      gap = 0;
+    }
+  }
+  const start = interval.start!.plus({ [resolution.unit]: timeOffset }).toMillis() - gap;
   const end =
     start +
-    Duration.fromObject({ [resolution.unit]: fromPxToTime(taskDimesion.width, resolution, columnWidth) }).toMillis();
+    Duration.fromObject({
+      [resolution.unit]: fromPxToTime(taskDimesion.width, resolution, columnWidth),
+    }).toMillis();
   return { start, end };
 };
