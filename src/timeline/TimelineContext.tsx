@@ -80,7 +80,7 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
   /**
    * Event handler for task change event (drag and resize)
    */
-  onTaskChange?: (task: TaskData, opts?: { arr: string[]; timeDiff: number }) => void;
+  onTaskChange?: (task: TaskData, opts?: { tasksId: string[]; addTime: number }) => void;
   /**
    * Timezone used for display (defaults to 'system')
    */
@@ -113,6 +113,9 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
    * Enables pattern for incomplete part of the task (default true)
    */
   enableTaskPattern?: boolean;
+  /**
+   * Enables connection between tasks (if kLine is set in taskData)
+   */
   enableLine?: boolean;
 };
 
@@ -134,7 +137,7 @@ type TimelineContextType = Required<
   interval: Interval;
   onErrors?: (errors: KonvaTimelineError[]) => void;
   onTaskClick?: (task: TaskData) => void;
-  onTaskChange?: (task: TaskData, opts?: { arr: string[]; timeDiff: number }) => void;
+  onTaskChange?: (task: TaskData, opts?: { tasksId: string[]; addTime: number }) => void;
   resolution: ResolutionData;
   resolutionKey: Resolution;
   resourcesContentHeight: number;

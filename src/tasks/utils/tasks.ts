@@ -18,13 +18,16 @@ export interface TaskData<T extends TimeRange = TimeRange> {
    */
   resourceId: string;
   /**
-   * Comleted Percentage
+   * Completed Percentage
    */
   completedPercentage?: number;
   /**
    * Task time range
    */
   time: T;
+  /**
+   * Id of connected Tasks
+   */
   kLine?: string[];
 }
 
@@ -184,4 +187,35 @@ export const onEndTimeRange = (
       [resolution.unit]: fromPxToTime(taskDimesion.width, resolution, columnWidth),
     }).toMillis();
   return { start, end };
+};
+
+export const connectedTasks = (taskData: TaskData, allValidTasks: TaskData[]) => {
+  let allKLine = taskData.kLine ? taskData.kLine : [];
+  let newKLine: string[] = [];
+  let noKLine = true;
+  let iOffset = 0;
+  do {
+    noKLine = false;
+    let pushCount = iOffset === 0 ? allKLine.length - 1 : 0;
+    for (let i = 0 + iOffset; i < allKLine.length; i++) {
+      const val = allValidTasks.find((item) => item.id === allKLine[i]);
+      if (val?.kLine) {
+        val.kLine.map((value) => {
+          if (!allKLine.includes(value) && !newKLine.includes(value)) {
+            newKLine.push(value);
+            pushCount++;
+          }
+        });
+      }
+    }
+    if (newKLine[0]) {
+      noKLine = true;
+    }
+    newKLine.unshift(...allKLine);
+    allKLine = [];
+    allKLine.push(...newKLine);
+    newKLine = [];
+    iOffset = iOffset + pushCount;
+  } while (noKLine);
+  return allKLine;
 };

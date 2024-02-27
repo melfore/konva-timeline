@@ -37,7 +37,6 @@ export const Line: Story = {
     resolution: "2weeks",
     enableLine: true,
     toolTip: false,
-    dragResolution: "1hrs",
     onTaskClick: (task) => task,
     initialDateTime: 1698516000000,
     range: {
@@ -50,8 +49,8 @@ export const Line: Story = {
         label: "Task4",
         resourceId: "2",
         time: {
-          start: 1698530400000,
-          end: 1698552000000,
+          start: 1698411600000,
+          end: 1698613200000,
         },
         kLine: ["1"],
       },

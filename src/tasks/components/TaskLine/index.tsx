@@ -10,6 +10,7 @@ import { KonvaDrawable, KonvaPoint } from "../../../utils/konva";
 import { getContrastColor, getRGB, getRGBA, RGBFromRGBA } from "../../../utils/theme";
 import { AnchorPoint, GetLineData, LINE_OFFSET } from "../../utils/line";
 import {
+  connectedTasks,
   getTaskYCoordinate,
   onEndTimeRange,
   TASK_BORDER_RADIUS,
@@ -191,26 +192,6 @@ const TaskLine = ({
     return { x: dragX, y: dragY };
   }, []);
 
-  const addTime = useCallback((joinArr: string[], taskData: TaskData, allValidTasks: TaskData[]) => {
-    let idToMod = taskData.kLine ? taskData.kLine : [];
-    let tempArr: string[] = [];
-    let cond = true;
-    do {
-      joinArr.push(...idToMod);
-      cond = false;
-      idToMod.map((i) => {
-        const val = allValidTasks.find((item) => item.id === i);
-        if (val?.kLine) {
-          cond = true;
-          tempArr.push(...val.kLine);
-        }
-      });
-      idToMod = [];
-      idToMod.push(...tempArr);
-      tempArr = [];
-    } while (cond);
-  }, []);
-
   const onTaskMouseEvent = useCallback(
     (e: KonvaEventObject<MouseEvent>, callback: TaskMouseEventHandler) => {
       onTaskEvent(true);
@@ -389,11 +370,9 @@ const TaskLine = ({
       setBackLine(false);
       workLine && workLine([]);
       if (data.kLine) {
-        const timeDiff = Number(time.end) - Number(data.time.end);
-        const arr: string[] = [];
-        addTime(arr, data, allValidTasks);
-        const noDuplicateArr = [...new Set(arr)];
-        onTaskChange({ ...data, resourceId, time }, { arr: noDuplicateArr, timeDiff });
+        const addTime = +time.end - +data.time.end;
+        const tasksId = connectedTasks(data, allValidTasks);
+        onTaskChange({ ...data, resourceId, time }, { tasksId, addTime });
         return;
       }
       onTaskChange({ ...data, resourceId, time });
@@ -411,7 +390,6 @@ const TaskLine = ({
       columnWidth,
       interval,
       workLine,
-      addTime,
       allValidTasks,
     ]
   );
@@ -539,11 +517,9 @@ const TaskLine = ({
       const time = onEndTimeRange(taskDimensions, resolution, columnWidth, interval);
       workLine && workLine([]);
       if (enableLine && data.kLine && frontLine) {
-        const timeDiff = +time.end - +data.time.end;
-        const arr: string[] = [];
-        addTime(arr, data, allValidTasks);
-        const noDuplicateArr = [...new Set(arr)];
-        onTaskChange({ ...data, time }, { arr: noDuplicateArr, timeDiff });
+        const addTime = +time.end - +data.time.end;
+        const tasksId = connectedTasks(data, allValidTasks);
+        onTaskChange({ ...data, time }, { tasksId, addTime });
         return;
       }
       onTaskChange({ ...data, time });
@@ -556,7 +532,6 @@ const TaskLine = ({
       columnWidth,
       interval,
       onTaskEvent,
-      addTime,
       enableLine,
       allValidTasks,
       workLine,

@@ -17,12 +17,12 @@ const DecoratorGantt: DecoratorFn = (
   }, [externalTasks]);
 
   const onTaskChange = useCallback(
-    (task: TaskData, opts: { arr: string[]; timeDiff: number }) => {
+    (task: TaskData, opts: { tasksId: string[]; addTime: number }) => {
       externalOnTaskChange && externalOnTaskChange(task, opts);
       const newTasks = tasks.map((i) => {
-        if (opts && opts.arr.includes(i.id)) {
+        if (opts && opts.tasksId.includes(i.id)) {
           const start = i.time.start;
-          return { ...i, time: { start: Number(start) + opts.timeDiff, end: Number(i.time.end) + opts.timeDiff } };
+          return { ...i, time: { start: Number(start) + opts.addTime, end: Number(i.time.end) + opts.addTime } };
         }
         if (i.id === task.id) {
           return task;
