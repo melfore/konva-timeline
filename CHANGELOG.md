@@ -1,3 +1,10 @@
+## [1.32.3](https://github.com/melfore/konva-timeline/compare/v1.32.2...v1.32.3) (2024-02-27)
+
+
+### Bug Fixes
+
+* 🐛 [Task] Time return ([7f321d2](https://github.com/melfore/konva-timeline/commit/7f321d27846449837c82cb4bd6cdbdff77408f59)), closes [#199](https://github.com/melfore/konva-timeline/issues/199)
+
 ## [1.32.2](https://github.com/melfore/konva-timeline/compare/v1.32.1...v1.32.2) (2024-02-19)
 
 ## [1.32.1](https://github.com/melfore/konva-timeline/compare/v1.32.0...v1.32.1) (2024-02-15)
