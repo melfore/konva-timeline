@@ -16,15 +16,16 @@ export const LINE_TENSION = 0.5;
 export const LINE_WIDTH = 2;
 export const LINE_OFFSET = 20;
 
-export const GetLineData = (
+export const getLineData = (
   connectLine: LineData[],
   rowHeight: number,
-  anchorArr: AnchorPoint[],
-  workLineArr: string[],
+
   getTaskXCoordinate: (startTime: number) => number,
   getTaskYCoordinate: (rowIndex: number, rowHeight: number) => number,
   type: "back" | "front"
 ) => {
+  const anchorArr: AnchorPoint[] = [];
+  const workLineArr: string[] = [];
   const taskY = type === "back" ? "startResId" : "endResId";
   const taskX = type === "back" ? "start" : "end";
   connectLine.forEach((i) => {
@@ -33,4 +34,5 @@ export const GetLineData = (
     anchorArr.push({ x: anchX, y: anchY });
     workLineArr.push(i.id);
   });
+  return { anchorArr, workLineArr };
 };

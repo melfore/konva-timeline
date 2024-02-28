@@ -28,7 +28,7 @@ export interface TaskData<T extends TimeRange = TimeRange> {
   /**
    * Id of connected Tasks
    */
-  kLine?: string[];
+  relatedTasks?: string[];
 }
 
 type FilteredTasks = Operation<TaskData<InternalTimeRange>>;
@@ -131,7 +131,7 @@ export const filterTasks = (
   });
 };
 
-export const LineFilter = (
+export const lineFilter = (
   tasks: TaskData<InternalTimeRange>[],
   range: InternalTimeRange | null
 ): TaskData<InternalTimeRange>[] => {
@@ -139,7 +139,7 @@ export const LineFilter = (
     return [];
   }
 
-  return tasks.filter(({ kLine }) => {
+  return tasks.filter(({ relatedTasks: kLine }) => {
     if (kLine) {
       return true;
     }
@@ -190,7 +190,7 @@ export const onEndTimeRange = (
 };
 
 export const connectedTasks = (taskData: TaskData, allValidTasks: TaskData[]) => {
-  let allKLine = taskData.kLine ? taskData.kLine : [];
+  let allKLine = taskData.relatedTasks ? taskData.relatedTasks : [];
   let newKLine: string[] = [];
   let noKLine = true;
   let iOffset = 0;
@@ -199,8 +199,8 @@ export const connectedTasks = (taskData: TaskData, allValidTasks: TaskData[]) =>
     let pushCount = iOffset === 0 ? allKLine.length - 1 : 0;
     for (let i = 0 + iOffset; i < allKLine.length; i++) {
       const val = allValidTasks.find((item) => item.id === allKLine[i]);
-      if (val?.kLine) {
-        val.kLine.map((value) => {
+      if (val?.relatedTasks) {
+        val.relatedTasks.map((value) => {
           if (!allKLine.includes(value) && !newKLine.includes(value)) {
             newKLine.push(value);
             pushCount++;

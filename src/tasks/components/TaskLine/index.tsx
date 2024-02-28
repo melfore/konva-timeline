@@ -8,7 +8,7 @@ import { findResourceByCoordinate, findResourceIndexByCoordinate } from "../../.
 import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { KonvaDrawable, KonvaPoint } from "../../../utils/konva";
 import { getContrastColor, getRGB, getRGBA, RGBFromRGBA } from "../../../utils/theme";
-import { AnchorPoint, GetLineData, LINE_OFFSET } from "../../utils/line";
+import { AnchorPoint, getLineData, LINE_OFFSET } from "../../utils/line";
 import {
   connectedTasks,
   getTaskYCoordinate,
@@ -101,7 +101,7 @@ const TaskLine = ({
     drawRange,
     enableTaskPattern,
     allValidTasks,
-    enableLine,
+    enableLines,
     validLine,
   } = useTimelineContext();
 
@@ -282,28 +282,18 @@ const TaskLine = ({
       ///ToolTip disappears
       onLeave(taskId, point);
       setDragging(true);
-      const workLineArr: string[] = [];
+      const workLineArr = [];
       if (connectFrontLine) {
         setFrontLine(true);
-        const anchorArr: AnchorPoint[] = [];
-        GetLineData(
-          connectFrontLine,
-          rowHeight,
-          anchorArr,
-          workLineArr,
-          getTaskXCoordinate,
-          getTaskYCoordinate,
-          "front"
-        );
-        setAnchorPointFront(anchorArr);
+        const lineData = getLineData(connectFrontLine, rowHeight, getTaskXCoordinate, getTaskYCoordinate, "front");
+        setAnchorPointFront(lineData.anchorArr);
+        workLineArr.push(...lineData.workLineArr);
       }
       if (connectBackLine) {
         setBackLine(true);
-        const anchorArr: AnchorPoint[] = [];
-        GetLineData(connectBackLine, rowHeight, anchorArr, workLineArr, getTaskXCoordinate, getTaskYCoordinate, "back");
-        setAnchorPointBack(anchorArr);
-        workLine(workLineArr);
-        return;
+        const lineData = getLineData(connectBackLine, rowHeight, getTaskXCoordinate, getTaskYCoordinate, "back");
+        setAnchorPointBack(lineData.anchorArr);
+        workLineArr.push(...lineData.workLineArr);
       }
       workLine(workLineArr);
     },
@@ -369,7 +359,7 @@ const TaskLine = ({
       setFrontLine(false);
       setBackLine(false);
       workLine && workLine([]);
-      if (data.kLine) {
+      if (data.relatedTasks) {
         const addTime = +time.end - +data.time.end;
         const tasksId = connectedTasks(data, allValidTasks);
         onTaskChange({ ...data, resourceId, time }, { tasksId, addTime });
@@ -420,38 +410,19 @@ const TaskLine = ({
       const point = { x: xCoordinate, y: yCoordinate };
       onLeave(taskId, point);
       setResizing(true);
-      const workLineArr: string[] = [];
       if (x > 0) {
         if (connectFrontLine) {
           setFrontLine(true);
-          const anchorArr: AnchorPoint[] = [];
-          GetLineData(
-            connectFrontLine,
-            rowHeight,
-            anchorArr,
-            workLineArr,
-            getTaskXCoordinate,
-            getTaskYCoordinate,
-            "front"
-          );
-          setAnchorPointFront(anchorArr);
-          workLine(workLineArr);
+          const lineData = getLineData(connectFrontLine, rowHeight, getTaskXCoordinate, getTaskYCoordinate, "front");
+          setAnchorPointFront(lineData.anchorArr);
+          workLine(lineData.workLineArr);
         }
       } else {
         if (connectBackLine) {
           setBackLine(true);
-          const anchorArr: AnchorPoint[] = [];
-          GetLineData(
-            connectBackLine,
-            rowHeight,
-            anchorArr,
-            workLineArr,
-            getTaskXCoordinate,
-            getTaskYCoordinate,
-            "back"
-          );
-          setAnchorPointBack(anchorArr);
-          workLine(workLineArr);
+          const lineData = getLineData(connectBackLine, rowHeight, getTaskXCoordinate, getTaskYCoordinate, "back");
+          setAnchorPointBack(lineData.anchorArr);
+          workLine(lineData.workLineArr);
         }
       }
     },
@@ -516,7 +487,7 @@ const TaskLine = ({
       }
       const time = onEndTimeRange(taskDimensions, resolution, columnWidth, interval);
       workLine && workLine([]);
-      if (enableLine && data.kLine && frontLine) {
+      if (enableLines && data.relatedTasks && frontLine) {
         const addTime = +time.end - +data.time.end;
         const tasksId = connectedTasks(data, allValidTasks);
         onTaskChange({ ...data, time }, { tasksId, addTime });
@@ -532,7 +503,7 @@ const TaskLine = ({
       columnWidth,
       interval,
       onTaskEvent,
-      enableLine,
+      enableLines,
       allValidTasks,
       workLine,
       frontLine,

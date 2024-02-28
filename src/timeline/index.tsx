@@ -45,7 +45,7 @@ const Timeline: FC<TimelineProps> = () => {
     timeBlocks,
     drawRange,
     onAreaSelect,
-    enableLine,
+    enableLines,
   } = useTimelineContext();
 
   const [scrollbarSize, setScrollbarSize] = useState(0);
@@ -271,7 +271,7 @@ const Timeline: FC<TimelineProps> = () => {
             onMouseMove={onMouseMove}
           >
             <GridLayer height={stageHeight} />
-            {!enableLine ? (
+            {!enableLines ? (
               <TasksLayer
                 taskTooltip={taskTooltip}
                 setTaskTooltip={setTaskTooltip}

@@ -86,7 +86,6 @@ const LayerLine: FC<TasksLayerProps> = ({ setTaskTooltip, taskTooltip, create, o
   if (drawRange.end - drawRange.start <= 0) {
     return null;
   }
-
   return (
     <Layer>
       {validLine &&

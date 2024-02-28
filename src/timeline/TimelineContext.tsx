@@ -116,7 +116,7 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
   /**
    * Enables connection between tasks (if kLine is set in taskData)
    */
-  enableLine?: boolean;
+  enableLines?: boolean;
 };
 
 type TimelineTheme = {
@@ -153,7 +153,7 @@ type TimelineContextType = Required<
   toolTip?: boolean;
   customToolTip?: (taskData: CustomToolTipData) => React.JSX.Element;
   enableTaskPattern?: boolean;
-  enableLine?: boolean;
+  enableLines?: boolean;
   validLine?: LineData[];
   allValidTasks: TaskData<InternalTimeRange>[];
 };
@@ -195,7 +195,7 @@ export const TimelineProvider = ({
   toolTip = true,
   customToolTip,
   enableTaskPattern = true,
-  enableLine,
+  enableLines,
 }: TimelineProviderProps) => {
   const timezone = useMemo(() => {
     if (!externalTimezone) {
@@ -386,8 +386,8 @@ export const TimelineProvider = ({
     const startInMillis = getXCoordinateFromTime(drawRange.start, resolution, columnWidth, interval);
     const endInMillis = getXCoordinateFromTime(drawRange.end, resolution, columnWidth, interval);
     allValidTasks.forEach((item) => {
-      if (item.kLine) {
-        item.kLine.forEach((kLine) => {
+      if (item.relatedTasks) {
+        item.relatedTasks.forEach((kLine) => {
           const lineEndId = allValidTasks.find((i) => kLine === i.id);
           if (lineEndId) {
             if (startInMillis > lineEndId.time.start && startInMillis > item.time.end) {
@@ -480,7 +480,7 @@ export const TimelineProvider = ({
         toolTip,
         customToolTip,
         enableTaskPattern,
-        enableLine,
+        enableLines,
         validLine,
         allValidTasks,
       }}

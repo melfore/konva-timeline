@@ -35,7 +35,7 @@ export const Line: Story = {
     onAreaSelect: undefined,
     resources,
     resolution: "2weeks",
-    enableLine: true,
+    enableLines: true,
     toolTip: false,
     onTaskClick: (task) => task,
     initialDateTime: 1698516000000,
@@ -52,7 +52,7 @@ export const Line: Story = {
           start: 1698411600000,
           end: 1698613200000,
         },
-        kLine: ["1"],
+        relatedTasks: ["1"],
       },
       {
         id: "1",
@@ -62,7 +62,7 @@ export const Line: Story = {
           start: 1698793200000,
           end: 1699434800000,
         },
-        kLine: ["3", "2"],
+        relatedTasks: ["3", "2"],
       },
       {
         id: "3",
@@ -81,7 +81,7 @@ export const Line: Story = {
           start: 1700434800000,
           end: 1700934800000,
         },
-        kLine: ["5"],
+        relatedTasks: ["5"],
       },
       {
         id: "5",
