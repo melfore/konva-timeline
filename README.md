@@ -20,6 +20,18 @@ There can be from none to many tasks per each resource and tasks can be moved ac
 
 For each user interaction with tasks there is a dedicated hook function exposed by the component's props. This enables various use cases like displaying the details of a task inside a modal or calling an API each time the task is moved.
 
+### Gantt
+
+In order to create and display connection between tasks is neccesary setting dedicated props:
+RelatedTasks is a string array prop of TaskData that contains Ids of related Tasks.
+EnableLines is a global prop for the visualization of the connections.
+
+In this case OnTasksChange return also array of all tasks id that are inpacted by changed end of a the task at hand, and value of time in milliseconds of this variation.
+
+###By realtedTasks is mean these tasks that their start can depends of the end of the task in question.
+
+![gantt](./assets/gantt.png)
+
 ### Custom display
 
 Size of columns and rows can be adjusted using dedicated props:
