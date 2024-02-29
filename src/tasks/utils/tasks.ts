@@ -174,10 +174,12 @@ export const onEndTimeRange = (
   const nexDayMillis = startDate.startOf("day").toMillis() + 24 * hrs;
 
   let gap = 0;
-  if (diffTZ !== 0) {
-    gap = hrs * diffTZ;
-    if (diffTZInDay !== 0 && startTaskMillis < nexDayMillis) {
-      gap = 0;
+  if (resolution.unit === "day" || resolution.unit === "week") {
+    if (diffTZ !== 0) {
+      gap = hrs * diffTZ;
+      if (diffTZInDay !== 0 && startTaskMillis < nexDayMillis) {
+        gap = 0;
+      }
     }
   }
   const start = interval.start!.plus({ [resolution.unit]: timeOffset }).toMillis() - gap;
