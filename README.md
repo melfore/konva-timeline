@@ -23,6 +23,7 @@ For each user interaction with tasks there is a dedicated hook function exposed 
 ### Gantt
 
 In order to create and display connection between tasks is neccesary setting dedicated props:
+
 - relatedTasks is a string array prop of TaskData that contains Ids of related Tasks.
 - enableLines is a global prop for the visualization of the connections.
 
