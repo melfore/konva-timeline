@@ -8,6 +8,7 @@ import GridLayer from "../grid/Layer";
 import ResourcesLayer from "../resources/components/Layer";
 import { findResourceIndexByCoordinate, RESOURCE_HEADER_WIDTH } from "../resources/utils/resources";
 import TasksLayer from "../tasks/components/Layer";
+import LayerLine from "../tasks/components/LayerLine";
 import { TaskTooltipProps } from "../tasks/components/Tooltip";
 import {
   getTaskYCoordinate,
@@ -44,6 +45,7 @@ const Timeline: FC<TimelineProps> = () => {
     timeBlocks,
     drawRange,
     onAreaSelect,
+    enableLines,
   } = useTimelineContext();
 
   const [scrollbarSize, setScrollbarSize] = useState(0);
@@ -269,13 +271,21 @@ const Timeline: FC<TimelineProps> = () => {
             onMouseMove={onMouseMove}
           >
             <GridLayer height={stageHeight} />
-
-            <TasksLayer
-              taskTooltip={taskTooltip}
-              setTaskTooltip={setTaskTooltip}
-              create={newTask}
-              onTaskEvent={setExistTask}
-            />
+            {!enableLines ? (
+              <TasksLayer
+                taskTooltip={taskTooltip}
+                setTaskTooltip={setTaskTooltip}
+                create={newTask}
+                onTaskEvent={setExistTask}
+              />
+            ) : (
+              <LayerLine
+                taskTooltip={taskTooltip}
+                setTaskTooltip={setTaskTooltip}
+                create={newTask}
+                onTaskEvent={setExistTask}
+              />
+            )}
             {newTask && (
               <Layer>
                 <Rect

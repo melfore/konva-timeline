@@ -113,7 +113,6 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
     }
     return DEFAULT_STROKE_DARK_MODE;
   }, [themeColor]);
-
   return (
     <KonvaGroup key={`timeslot-${index}`}>
       <KonvaLine x={xPos} y={0} points={points} stroke={stroke} strokeWidth={1} />

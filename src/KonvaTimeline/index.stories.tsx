@@ -152,6 +152,16 @@ export const CompletedPercentage: Story = {
     },
     tasks: [
       {
+        id: "4",
+        label: "Task4",
+        resourceId: "2",
+        completedPercentage: 28,
+        time: {
+          start: 1698047900000,
+          end: 1698557900000,
+        },
+      },
+      {
         id: "1",
         label: "Task1",
         resourceId: "1",
@@ -159,16 +169,6 @@ export const CompletedPercentage: Story = {
         time: {
           start: 1698793200000,
           end: 1699434800000,
-        },
-      },
-      {
-        id: "2",
-        label: "Task2",
-        resourceId: "2",
-        completedPercentage: 19,
-        time: {
-          start: 1700434800000,
-          end: 1700934800000,
         },
       },
       {
@@ -182,13 +182,13 @@ export const CompletedPercentage: Story = {
         },
       },
       {
-        id: "4",
-        label: "Task4",
+        id: "2",
+        label: "Task2",
         resourceId: "2",
-        completedPercentage: 28,
+        completedPercentage: 19,
         time: {
-          start: 1698047900000,
-          end: 1698557900000,
+          start: 1700434800000,
+          end: 1700934800000,
         },
       },
       {

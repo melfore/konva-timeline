@@ -5,7 +5,13 @@ import { addHeaderResource } from "../resources/utils/resources";
 import { AreaSelect, filterTasks, TaskData, validateTasks } from "../tasks/utils/tasks";
 import { DEFAULT_GRID_COLUMN_WIDTH, DEFAULT_GRID_ROW_HEIGHT, MINIMUM_GRID_ROW_HEIGHT } from "../utils/dimensions";
 import { logDebug, logWarn } from "../utils/logger";
-import { getValidRangeTime, getValidTime, InternalTimeRange, isValidRangeTime } from "../utils/time";
+import {
+  getValidRangeTime,
+  getValidTime,
+  getXCoordinateFromTime,
+  InternalTimeRange,
+  isValidRangeTime,
+} from "../utils/time";
 import { getIntervalFromInternalTimeRange } from "../utils/time";
 import { getResolutionData, Resolution, ResolutionData } from "../utils/time-resolution";
 import { TimelineInput } from "../utils/timeline";
@@ -30,6 +36,16 @@ export type Localized = {
 export type CustomToolTipData = TaskData & {
   start: string;
   end: string;
+};
+
+export type LineData = {
+  id: string;
+  startId: string;
+  endId: string;
+  startResId: string;
+  endResId: string;
+  start: number;
+  end: number;
 };
 
 export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
@@ -64,7 +80,7 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
   /**
    * Event handler for task change event (drag and resize)
    */
-  onTaskChange?: (task: TaskData) => void;
+  onTaskChange?: (task: TaskData, opts?: { tasksId: string[]; addTime: number }) => void;
   /**
    * Timezone used for display (defaults to 'system')
    */
@@ -97,6 +113,10 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
    * Enables pattern for incomplete part of the task (default true)
    */
   enableTaskPattern?: boolean;
+  /**
+   * Enables connection between tasks (if kLine is set in taskData)
+   */
+  enableLines?: boolean;
 };
 
 type TimelineTheme = {
@@ -117,7 +137,7 @@ type TimelineContextType = Required<
   interval: Interval;
   onErrors?: (errors: KonvaTimelineError[]) => void;
   onTaskClick?: (task: TaskData) => void;
-  onTaskChange?: (task: TaskData) => void;
+  onTaskChange?: (task: TaskData, opts?: { tasksId: string[]; addTime: number }) => void;
   resolution: ResolutionData;
   resolutionKey: Resolution;
   resourcesContentHeight: number;
@@ -133,6 +153,9 @@ type TimelineContextType = Required<
   toolTip?: boolean;
   customToolTip?: (taskData: CustomToolTipData) => React.JSX.Element;
   enableTaskPattern?: boolean;
+  enableLines?: boolean;
+  validLine?: LineData[];
+  allValidTasks: TaskData<InternalTimeRange>[];
 };
 
 const TimelineContext = createContext<TimelineContextType | undefined>(undefined);
@@ -172,6 +195,7 @@ export const TimelineProvider = ({
   toolTip = true,
   customToolTip,
   enableTaskPattern = true,
+  enableLines,
 }: TimelineProviderProps) => {
   const timezone = useMemo(() => {
     if (!externalTimezone) {
@@ -350,6 +374,44 @@ export const TimelineProvider = ({
     [validTasks, visibleRange]
   );
 
+  /*const lineTasks = useMemo(
+    () => onLine && LineFilter(validTasks.items, visibleRange),
+    [validTasks, visibleRange, onLine]
+  );*/
+
+  const allValidTasks = useMemo(() => validTasks.items, [validTasks]);
+
+  const validLine = useMemo(() => {
+    const arrLine: LineData[] = [];
+    const startInMillis = getXCoordinateFromTime(drawRange.start, resolution, columnWidth, interval);
+    const endInMillis = getXCoordinateFromTime(drawRange.end, resolution, columnWidth, interval);
+    allValidTasks.forEach((item) => {
+      if (item.relatedTasks) {
+        item.relatedTasks.forEach((kLine) => {
+          const lineEndId = allValidTasks.find((i) => kLine === i.id);
+          if (lineEndId) {
+            if (startInMillis > lineEndId.time.start && startInMillis > item.time.end) {
+              return;
+            }
+            if (endInMillis < item.time.end && endInMillis < lineEndId.time.start) {
+              return;
+            }
+            arrLine.push({
+              id: item.id + lineEndId.id,
+              startId: item.id,
+              endId: lineEndId!.id,
+              startResId: item.resourceId,
+              endResId: lineEndId!.resourceId,
+              start: item.time.end,
+              end: lineEndId.time.start,
+            });
+          }
+        });
+      }
+    });
+    return arrLine;
+  }, [allValidTasks, drawRange, columnWidth, resolution, interval]);
+
   const dragResolution = useMemo(() => {
     logDebug("TimelineProvider", "Calculating drag resolution...");
     const start = DateTime.now().toMillis();
@@ -418,6 +480,9 @@ export const TimelineProvider = ({
         toolTip,
         customToolTip,
         enableTaskPattern,
+        enableLines,
+        validLine,
+        allValidTasks,
       }}
     >
       {children}

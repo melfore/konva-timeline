@@ -18,13 +18,17 @@ export interface TaskData<T extends TimeRange = TimeRange> {
    */
   resourceId: string;
   /**
-   * Comleted Percentage
+   * Completed Percentage
    */
   completedPercentage?: number;
   /**
    * Task time range
    */
   time: T;
+  /**
+   * Id of connected Tasks
+   */
+  relatedTasks?: string[];
 }
 
 type FilteredTasks = Operation<TaskData<InternalTimeRange>>;
@@ -127,6 +131,23 @@ export const filterTasks = (
   });
 };
 
+export const lineFilter = (
+  tasks: TaskData<InternalTimeRange>[],
+  range: InternalTimeRange | null
+): TaskData<InternalTimeRange>[] => {
+  if (!range || !range.start || !range.end || !tasks || !tasks.length) {
+    return [];
+  }
+
+  return tasks.filter(({ relatedTasks: kLine }) => {
+    if (kLine) {
+      return true;
+    }
+
+    return false;
+  });
+};
+
 const fromPxToTime = (sizePx: number, resolution: ResolutionData, columnWidth: number): number => {
   return (sizePx * resolution.sizeInUnits) / columnWidth;
 };
@@ -153,10 +174,12 @@ export const onEndTimeRange = (
   const nexDayMillis = startDate.startOf("day").toMillis() + 24 * hrs;
 
   let gap = 0;
-  if (diffTZ !== 0) {
-    gap = hrs * diffTZ;
-    if (diffTZInDay !== 0 && startTaskMillis < nexDayMillis) {
-      gap = 0;
+  if (resolution.unit === "day" || resolution.unit === "week") {
+    if (diffTZ !== 0) {
+      gap = hrs * diffTZ;
+      if (diffTZInDay !== 0 && startTaskMillis < nexDayMillis) {
+        gap = 0;
+      }
     }
   }
   const start = interval.start!.plus({ [resolution.unit]: timeOffset }).toMillis() - gap;
@@ -166,4 +189,35 @@ export const onEndTimeRange = (
       [resolution.unit]: fromPxToTime(taskDimesion.width, resolution, columnWidth),
     }).toMillis();
   return { start, end };
+};
+
+export const connectedTasks = (taskData: TaskData, allValidTasks: TaskData[]) => {
+  let allKLine = taskData.relatedTasks ? taskData.relatedTasks : [];
+  let newKLine: string[] = [];
+  let noKLine = true;
+  let iOffset = 0;
+  do {
+    noKLine = false;
+    let pushCount = iOffset === 0 ? allKLine.length - 1 : 0;
+    for (let i = 0 + iOffset; i < allKLine.length; i++) {
+      const val = allValidTasks.find((item) => item.id === allKLine[i]);
+      if (val?.relatedTasks) {
+        val.relatedTasks.map((value) => {
+          if (!allKLine.includes(value) && !newKLine.includes(value)) {
+            newKLine.push(value);
+            pushCount++;
+          }
+        });
+      }
+    }
+    if (newKLine[0]) {
+      noKLine = true;
+    }
+    newKLine.unshift(...allKLine);
+    allKLine = [];
+    allKLine.push(...newKLine);
+    newKLine = [];
+    iOffset = iOffset + pushCount;
+  } while (noKLine);
+  return allKLine;
 };
