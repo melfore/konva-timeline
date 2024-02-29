@@ -1,3 +1,12 @@
+# [1.33.0](https://github.com/melfore/konva-timeline/compare/v1.32.3...v1.33.0) (2024-02-29)
+
+
+### Features
+
+* 🎸 [Task]onEndTimeRange function refactored ([9f01d48](https://github.com/melfore/konva-timeline/commit/9f01d485f59ea5e34bb469cf9e7d45c33602b1e2)), closes [#198](https://github.com/melfore/konva-timeline/issues/198)
+* 🎸 [TimeLine]Added connection between Tasks ([eedea42](https://github.com/melfore/konva-timeline/commit/eedea4242dea3636abc76c5605b32d3780f79347)), closes [#198](https://github.com/melfore/konva-timeline/issues/198)
+* 🎸 [TimeLine]Added Line between tasks in TimeLine ([0d9c009](https://github.com/melfore/konva-timeline/commit/0d9c009f43a8bfc49b947c9e144a2e557d4460f3)), closes [#198](https://github.com/melfore/konva-timeline/issues/198)
+
 ## [1.32.3](https://github.com/melfore/konva-timeline/compare/v1.32.2...v1.32.3) (2024-02-27)
 
 ### Bug Fixes
