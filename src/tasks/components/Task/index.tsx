@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Group, Rect, useStrictMode as enableStrictMode } from "react-konva";
 import { KonvaEventObject } from "konva/lib/Node";
-import { Duration } from "luxon";
+import { DateTime, Duration } from "luxon";
 
 import { KonvaText } from "../../../@konva";
 import { findResourceByCoordinate, findResourceIndexByCoordinate } from "../../../resources/utils/resources";
@@ -82,7 +82,7 @@ const Task = ({
 }: TaskProps) => {
   const {
     columnWidth,
-    timeBlocks,
+    externalRangeInMillis,
     displayTasksLabel,
     dragResolution: { sizeInUnits: dragSizeInUnits, unit: dragUnit },
     enableDrag,
@@ -137,7 +137,17 @@ const Task = ({
 
   const [taskDimensions, setTaskDimensions] = useState(initialTaskDimensions);
 
-  const finalPoint = useMemo(() => timeBlocks.length * columnWidth, [timeBlocks, columnWidth]);
+  const finalPoint = useMemo(() => {
+    const timeStart = DateTime.fromMillis(externalRangeInMillis.end);
+    const startOffsetInUnit = timeStart.diff(interval.start!).as(resolution.unit);
+    return (startOffsetInUnit * columnWidth) / resolution.sizeInUnits;
+  }, [externalRangeInMillis, columnWidth, resolution, interval]);
+
+  const startPoint = useMemo(() => {
+    const timeStart = DateTime.fromMillis(externalRangeInMillis.start);
+    const startOffsetInUnit = timeStart.diff(interval.start!).as(resolution.unit);
+    return (startOffsetInUnit * columnWidth) / resolution.sizeInUnits;
+  }, [externalRangeInMillis, columnWidth, resolution, interval]);
 
   useEffect(() => {
     const row = findResourceIndexByCoordinate(y, rowHeight, resources);
@@ -254,7 +264,7 @@ const Task = ({
     (e: KonvaEventObject<DragEvent>) => {
       const { x, y } = getDragPoint(e);
       const dragFinalX = Math.ceil(x / dragSnapInPX) * dragSnapInPX;
-      const xCoordinate = dragFinalX < 0 ? 0 : dragFinalX;
+      const xCoordinate = dragFinalX < startPoint ? startPoint : dragFinalX;
       const minY = rowHeight + rowHeight * TASK_OFFSET_Y;
       const maxY = rowHeight * (resources.length - 1) + rowHeight * TASK_OFFSET_Y;
       const taskFinalPoint = finalPoint - taskDimensions.width;
@@ -275,7 +285,7 @@ const Task = ({
 
       setTaskDimensions((dimensions) => ({ ...dimensions, ...point }));
     },
-    [dragSnapInPX, getDragPoint, resources, finalPoint, rowHeight, taskDimensions]
+    [dragSnapInPX, getDragPoint, resources, finalPoint, rowHeight, taskDimensions, startPoint]
   );
 
   const onDragEnd = useCallback(
@@ -365,15 +375,15 @@ const Task = ({
             if (handlerX >= taskEndX - TASK_BORDER_RADIUS) {
               return { ...taskDimensions };
             }
-            if (handlerX <= 0) {
-              return { ...taskDimensions, x: 0, width: taskEndX };
+            if (handlerX <= startPoint) {
+              return { ...taskDimensions };
             }
 
             return { ...taskDimensions, x: handlerX, width: taskEndX - handlerX };
         }
       });
     },
-    [getDragPoint, finalPoint]
+    [getDragPoint, finalPoint, startPoint]
   );
 
   const onResizeEnd = useCallback(

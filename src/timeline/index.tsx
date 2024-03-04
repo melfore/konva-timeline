@@ -4,6 +4,7 @@ import Konva from "konva";
 import { KonvaEventObject } from "konva/lib/Node";
 import { DateTime } from "luxon";
 
+import { KonvaLine, KonvaText } from "../@konva";
 import GridLayer from "../grid/Layer";
 import ResourcesLayer from "../resources/components/Layer";
 import { findResourceIndexByCoordinate, RESOURCE_HEADER_WIDTH } from "../resources/utils/resources";
@@ -46,6 +47,7 @@ const Timeline: FC<TimelineProps> = () => {
     drawRange,
     onAreaSelect,
     enableLines,
+    externalRangeInMillis,
   } = useTimelineContext();
 
   const [scrollbarSize, setScrollbarSize] = useState(0);
@@ -165,13 +167,33 @@ const Timeline: FC<TimelineProps> = () => {
     [scrollbarSize, themeColor, timelineCommonStyle]
   );
 
+  const xOfStart = useMemo(() => {
+    const timeStart = DateTime.fromMillis(externalRangeInMillis.start);
+    const startOffsetInUnit = timeStart.diff(interval.start!).as(resolution.unit);
+    return (startOffsetInUnit * columnWidth) / resolution.sizeInUnits;
+  }, [externalRangeInMillis, columnWidth, resolution, interval]);
+
+  const xOfEnd = useMemo(() => {
+    const timeStart = DateTime.fromMillis(externalRangeInMillis.end);
+    const startOffsetInUnit = timeStart.diff(interval.start!).as(resolution.unit);
+    return (startOffsetInUnit * columnWidth) / resolution.sizeInUnits;
+  }, [externalRangeInMillis, columnWidth, resolution, interval]);
+
+  const endOffset = useMemo(() => {
+    return fullTimelineWidth - xOfEnd;
+  }, [fullTimelineWidth, xOfEnd]);
+
+  const marginOffset = useMemo(() => {
+    return columnWidth * 0.01;
+  }, [columnWidth]);
+
   const gridStageWrapperStyle = useMemo(
     (): CSSProperties => ({
       ...timelineCommonStyle,
       overflow: "hidden",
-      width: fullTimelineWidth,
+      width: fullTimelineWidth - endOffset + marginOffset,
     }),
-    [fullTimelineWidth, timelineCommonStyle]
+    [fullTimelineWidth, timelineCommonStyle, endOffset, marginOffset]
   );
 
   const resourcesOffset = useMemo(() => (hideResources ? 0 : RESOURCE_HEADER_WIDTH + 1), [hideResources]);
@@ -286,6 +308,17 @@ const Timeline: FC<TimelineProps> = () => {
                 onTaskEvent={setExistTask}
               />
             )}
+            <Layer>
+              <KonvaLine
+                x={xOfStart}
+                y={rowHeight * 0.8}
+                points={[0, 0, 0, stageHeight]}
+                stroke="red"
+                strokeWidth={1}
+                dash={[8, 3]}
+              />
+              <KonvaText fill="red" x={xOfStart - 13} y={rowHeight * 0.8 - 10} text="Start" width={columnWidth} />
+            </Layer>
             {newTask && (
               <Layer>
                 <Rect
