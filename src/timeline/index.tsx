@@ -167,6 +167,13 @@ const Timeline: FC<TimelineProps> = () => {
     [scrollbarSize, themeColor, timelineCommonStyle]
   );
 
+  const startOffset = useMemo(() => {
+    if (externalRangeInMillis.start === +interval.start!) {
+      return false;
+    }
+    return true;
+  }, [externalRangeInMillis, interval]);
+
   const xOfStart = useMemo(() => {
     const timeStart = DateTime.fromMillis(externalRangeInMillis.start);
     const startOffsetInUnit = timeStart.diff(interval.start!).as(resolution.unit);
@@ -184,7 +191,7 @@ const Timeline: FC<TimelineProps> = () => {
   }, [fullTimelineWidth, xOfEnd]);
 
   const marginOffset = useMemo(() => {
-    return columnWidth * 0.01;
+    return columnWidth * 0.015;
   }, [columnWidth]);
 
   const gridStageWrapperStyle = useMemo(
@@ -308,17 +315,19 @@ const Timeline: FC<TimelineProps> = () => {
                 onTaskEvent={setExistTask}
               />
             )}
-            <Layer>
-              <KonvaLine
-                x={xOfStart}
-                y={rowHeight * 0.8}
-                points={[0, 0, 0, stageHeight]}
-                stroke="red"
-                strokeWidth={1}
-                dash={[8, 3]}
-              />
-              <KonvaText fill="red" x={xOfStart - 13} y={rowHeight * 0.8 - 10} text="Start" width={columnWidth} />
-            </Layer>
+            {startOffset && (
+              <Layer>
+                <KonvaLine
+                  x={xOfStart}
+                  y={rowHeight * 0.8}
+                  points={[0, 0, 0, stageHeight]}
+                  stroke="red"
+                  strokeWidth={1}
+                  dash={[8, 3]}
+                />
+                <KonvaText fill="red" x={xOfStart - 13} y={rowHeight * 0.8 - 20} text="Start" width={columnWidth} />
+              </Layer>
+            )}
             {newTask && (
               <Layer>
                 <Rect

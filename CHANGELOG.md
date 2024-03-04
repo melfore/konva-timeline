@@ -1,9 +1,8 @@
 # [1.34.0](https://github.com/melfore/konva-timeline/compare/v1.33.2...v1.34.0) (2024-03-04)
 
-
 ### Features
 
-* 🎸 [TimeLine]Reported start-end range ([df79cb0](https://github.com/melfore/konva-timeline/commit/df79cb0e5623b6abaf452a30def1180bf7a88da0)), closes [#202](https://github.com/melfore/konva-timeline/issues/202)
+- 🎸 [TimeLine]Reported start-end range ([df79cb0](https://github.com/melfore/konva-timeline/commit/df79cb0e5623b6abaf452a30def1180bf7a88da0)), closes [#202](https://github.com/melfore/konva-timeline/issues/202)
 
 ## [1.33.2](https://github.com/melfore/konva-timeline/compare/v1.33.1...v1.33.2) (2024-02-29)
 

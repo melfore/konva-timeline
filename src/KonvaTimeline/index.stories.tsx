@@ -132,7 +132,34 @@ export const NonPreciseRange: Story = {
         resourceId: "1",
         time: {
           start: 1697632200000,
-          end: 1697639400000,
+          end: 1697739400000,
+        },
+      },
+      {
+        id: "4",
+        label: "Task4",
+        resourceId: "3",
+        time: {
+          start: 1697802666000,
+          end: 1697939066000,
+        },
+      },
+      {
+        id: "3",
+        label: "Task3",
+        resourceId: "1",
+        time: {
+          start: 1697925606000,
+          end: 1698091206000,
+        },
+      },
+      {
+        id: "2",
+        label: "Task2",
+        resourceId: "2",
+        time: {
+          start: 1697691606000,
+          end: 1697818006000,
         },
       },
     ],
@@ -157,7 +184,7 @@ export const CompletedPercentage: Story = {
         resourceId: "2",
         completedPercentage: 28,
         time: {
-          start: 1698047900000,
+          start: 1698357600000,
           end: 1698557900000,
         },
       },

@@ -94,7 +94,7 @@ export const validateTasks = (
         return false;
       }
 
-      if (taskEnd < range.start || taskStart > range.end) {
+      if (taskStart < range.start || taskEnd > range.end) {
         errors.push({ entity: "task", level: "warn", message: "Outside range", refId: taskId });
         return false;
       }
