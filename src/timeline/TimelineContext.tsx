@@ -156,6 +156,7 @@ type TimelineContextType = Required<
   enableLines?: boolean;
   validLine?: LineData[];
   allValidTasks: TaskData<InternalTimeRange>[];
+  externalRangeInMillis: InternalTimeRange;
 };
 
 const TimelineContext = createContext<TimelineContextType | undefined>(undefined);
@@ -292,7 +293,6 @@ export const TimelineProvider = ({
       ),
     [externalTasks, range, timezone]
   );
-
   const timeBlocks = useMemo(
     () =>
       executeWithPerfomanceCheck("TimelineProvider", "timeBlocks", () =>
@@ -483,6 +483,7 @@ export const TimelineProvider = ({
         enableLines,
         validLine,
         allValidTasks,
+        externalRangeInMillis: range,
       }}
     >
       {children}

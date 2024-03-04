@@ -38,7 +38,7 @@ export const Line: Story = {
     enableLines: true,
     toolTip: false,
     onTaskClick: (task) => task,
-    initialDateTime: 1698516000000,
+    initialDateTime: 1698357600000,
     range: {
       start: 1698357600000,
       end: 1702095200000,
@@ -49,7 +49,7 @@ export const Line: Story = {
         label: "Task4",
         resourceId: "2",
         time: {
-          start: 1698411600000,
+          start: 1698357600000,
           end: 1698613200000,
         },
         relatedTasks: ["1"],
@@ -89,7 +89,7 @@ export const Line: Story = {
         resourceId: "1",
         time: {
           start: 1701505200000,
-          end: 1702105200000,
+          end: 1702095200000,
         },
       },
     ],

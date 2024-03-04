@@ -87,7 +87,6 @@ const TaskLine = ({
 }: TaskProps) => {
   const {
     columnWidth,
-    timeBlocks,
     displayTasksLabel,
     dragResolution: { sizeInUnits: dragSizeInUnits, unit: dragUnit },
     enableDrag,
@@ -103,6 +102,7 @@ const TaskLine = ({
     allValidTasks,
     enableLines,
     validLine,
+    externalRangeInMillis,
   } = useTimelineContext();
 
   const { id: taskId, completedPercentage } = data;
@@ -159,7 +159,17 @@ const TaskLine = ({
 
   const [taskDimensions, setTaskDimensions] = useState(initialTaskDimensions);
 
-  const finalPoint = useMemo(() => timeBlocks.length * columnWidth, [timeBlocks, columnWidth]);
+  const finalPoint = useMemo(() => {
+    const timeStart = DateTime.fromMillis(externalRangeInMillis.end);
+    const startOffsetInUnit = timeStart.diff(interval.start!).as(resolution.unit);
+    return (startOffsetInUnit * columnWidth) / resolution.sizeInUnits;
+  }, [externalRangeInMillis, columnWidth, resolution, interval]);
+
+  const startPoint = useMemo(() => {
+    const timeStart = DateTime.fromMillis(externalRangeInMillis.start);
+    const startOffsetInUnit = timeStart.diff(interval.start!).as(resolution.unit);
+    return (startOffsetInUnit * columnWidth) / resolution.sizeInUnits;
+  }, [externalRangeInMillis, columnWidth, resolution, interval]);
 
   useEffect(() => {
     const row = findResourceIndexByCoordinate(y, rowHeight, resources);
@@ -315,7 +325,7 @@ const TaskLine = ({
     (e: KonvaEventObject<DragEvent>) => {
       const { x, y } = getDragPoint(e);
       const dragFinalX = Math.ceil(x / dragSnapInPX) * dragSnapInPX;
-      const xCoordinate = dragFinalX < 0 ? 0 : dragFinalX;
+      const xCoordinate = dragFinalX < startPoint ? startPoint : dragFinalX;
       const minY = rowHeight + rowHeight * TASK_OFFSET_Y;
       const maxY = rowHeight * (resources.length - 1) + rowHeight * TASK_OFFSET_Y;
       const taskFinalPoint = finalPoint - taskDimensions.width;
@@ -336,7 +346,7 @@ const TaskLine = ({
 
       setTaskDimensions((dimensions) => ({ ...dimensions, ...point }));
     },
-    [dragSnapInPX, getDragPoint, resources, finalPoint, rowHeight, taskDimensions]
+    [dragSnapInPX, getDragPoint, resources, finalPoint, rowHeight, taskDimensions, startPoint]
   );
 
   const onDragEnd = useCallback(
@@ -464,15 +474,14 @@ const TaskLine = ({
             if (handlerX >= taskEndX - TASK_BORDER_RADIUS) {
               return { ...taskDimensions };
             }
-            if (handlerX <= 0) {
-              return { ...taskDimensions, x: 0, width: taskEndX };
+            if (handlerX <= startPoint) {
+              return { ...taskDimensions };
             }
-
             return { ...taskDimensions, x: handlerX, width: taskEndX - handlerX };
         }
       });
     },
-    [getDragPoint, finalPoint]
+    [getDragPoint, finalPoint, startPoint]
   );
 
   const onResizeEnd = useCallback(
