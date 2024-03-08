@@ -1,8 +1,10 @@
-# @melfore/konva-timeline
+# @melfore/kalendular
+
+![sample](./assets/logo.png)
 
 [![Konva Timeline - Release](https://github.com/melfore/konva-timeline/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/melfore/konva-timeline/actions/workflows/release.yml) [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
-`@melfore/konva-timeline` is a TypeScript ReactJS library that uses `konva` and `react-konva` to render a timeline component using canvas.
+`@melfore/konva-timeline` is a free, open source, TypeScript ReactJS library that uses `konva` and `react-konva` to render a scheduler / gantt / calendar component using canvas.
 
 <a href="https://github.com/melfore/konva-timeline/blob/master/CHANGELOG.md" target="_blank">**Changelog**</a> | <!--a href="https://github.com/melfore/mosaic/blob/master/CONTRIBUTING.md" target="_blank">**Contributing**</a> | <a href="https://github.com/melfore/mosaic/blob/master/MIGRATION.md" target="_blank">**Migration**</a> | --> <a href="https://melfore.github.io/konva-timeline" target="_blank">**Storybook**</a>
 
