@@ -158,31 +158,79 @@ export const onEndTimeRange = (
   columnWidth: number,
   interval: Interval
 ): TimeRange => {
+  const columnInHrs = resolution.unit === "week" ? (resolution.sizeInUnits === 1 ? 168 : 336) : 24;
   const hrs = 3600000;
+  const hrsInPx = columnWidth / columnInHrs;
 
   const timeOffset = fromPxToTime(taskDimesion.x, resolution, columnWidth);
   const startTaskMillis = interval.start!.plus({ [resolution.unit]: timeOffset }).toMillis();
   const startDate = DateTime.fromMillis(startTaskMillis);
 
+  const startOfBeforeDay = DateTime.fromMillis(startTaskMillis - 3600000).startOf("day");
+  const startOfBeforeDayTz = startOfBeforeDay.toISO()!.slice(-5, -3);
+
+  const startOfNextDay = DateTime.fromMillis(startTaskMillis + 3600000)
+    .startOf("day")
+    .toISO()!
+    .slice(-5, -3);
+
   const intervalStartTZ = interval.start?.toISO().slice(-5, -3); //Interval start TZ
-  const taskStartTZ = DateTime.fromMillis(startTaskMillis).toISO()?.slice(-5, -3); //Task start TZ
+  const taskStartTZ = DateTime.fromMillis(startTaskMillis).startOf("day").toISO()?.slice(-5, -3); //Task start TZ
   const diffTZ = +intervalStartTZ! - +taskStartTZ!;
 
   const startOfDay = startDate.startOf("day").toISO()?.slice(-5, -3); //Day start TZ
-  const nexDay = startDate.plus({ day: 1 }).toISO()?.slice(-5, -3); //Next Day TZ
-  const diffTZInDay = +startOfDay! - +nexDay!;
-  const nexDayMillis = startDate.startOf("day").toMillis() + 24 * hrs;
+  const nexDay = startDate.startOf("day").plus({ day: 1 }).toISO()?.slice(-5, -3); //Next Day TZ
+  const diffTZInDay = +nexDay! - +startOfDay!;
 
   let gap = 0;
+  let hrsSpecialCase = 0;
+
   if (resolution.unit === "day" || resolution.unit === "week") {
-    if (diffTZ !== 0) {
-      gap = hrs * diffTZ;
-      if (diffTZInDay !== 0 && startTaskMillis < nexDayMillis) {
+    if (diffTZ === 1) {
+      gap = hrsInPx * diffTZ;
+
+      if (+startOfBeforeDayTz - +intervalStartTZ! === 0 && +startOfNextDay - +intervalStartTZ! !== 0) {
         gap = 0;
+        hrsSpecialCase = hrs;
+      }
+    }
+
+    if (+startOfBeforeDayTz - +intervalStartTZ! !== 0 && +startOfNextDay - +intervalStartTZ! === 0) {
+      const timeOffsett = fromPxToTime(taskDimesion.x - hrsInPx * 23, resolution, columnWidth);
+      const startTaskMilliss = interval
+        .start!.plus({ [resolution.unit]: timeOffsett })
+        .startOf("hour")
+        .toMillis();
+      if (startOfBeforeDay.toMillis() === startTaskMilliss) {
+        hrsSpecialCase = hrs;
+      }
+    }
+    if (diffTZ === -1) {
+      gap = hrsInPx * diffTZ;
+
+      if (diffTZInDay === -1) {
+        gap = hrsInPx * diffTZInDay;
+      }
+      const timeOffsett = fromPxToTime(taskDimesion.x - hrsInPx * 23, resolution, columnWidth);
+      const startTaskMilliss = interval.start!.plus({ [resolution.unit]: timeOffsett }).startOf("hour");
+      if (startOfBeforeDay.toMillis() === startTaskMilliss.toMillis()) {
+        if (diffTZInDay !== 0) {
+          gap = 0;
+          hrsSpecialCase = -hrs;
+        }
+      }
+      if (
+        startTaskMilliss.toMillis() + hrs * 23 === startDate.startOf("day").toMillis() &&
+        startTaskMilliss.toISO().slice(-5, -3) === intervalStartTZ
+      ) {
+        gap = 0;
+        hrsSpecialCase = 0;
       }
     }
   }
-  const start = interval.start!.plus({ [resolution.unit]: timeOffset }).toMillis() - gap;
+  const timeOffsetB = fromPxToTime(taskDimesion.x - gap, resolution, columnWidth);
+
+  const start = interval.start!.plus({ [resolution.unit]: timeOffsetB }).toMillis() - hrsSpecialCase;
   const end =
     start +
     Duration.fromObject({
@@ -191,16 +239,31 @@ export const onEndTimeRange = (
   return { start, end };
 };
 
-export const connectedTasks = (taskData: TaskData, allValidTasks: TaskData[]) => {
+export const connectedTasks = (
+  taskData: TaskData,
+  allValidTasks: TaskData[],
+  addTime: number,
+  range: InternalTimeRange
+) => {
+  const { start, end } = range;
   let allKLine = taskData.relatedTasks ? taskData.relatedTasks : [];
   let newKLine: string[] = [];
   let noKLine = true;
   let iOffset = 0;
+  let maxAddTime = addTime;
   do {
     noKLine = false;
     let pushCount = iOffset === 0 ? allKLine.length - 1 : 0;
     for (let i = 0 + iOffset; i < allKLine.length; i++) {
       const val = allValidTasks.find((item) => item.id === allKLine[i]);
+      if (val) {
+        if (+val.time.start + addTime < start) {
+          maxAddTime = start - +val.time.start;
+        }
+        if (+val.time.end + addTime > end) {
+          maxAddTime = end - +val.time.end;
+        }
+      }
       if (val?.relatedTasks) {
         val.relatedTasks.map((value) => {
           if (!allKLine.includes(value) && !newKLine.includes(value)) {
@@ -219,5 +282,5 @@ export const connectedTasks = (taskData: TaskData, allValidTasks: TaskData[]) =>
     newKLine = [];
     iOffset = iOffset + pushCount;
   } while (noKLine);
-  return allKLine;
+  return { allKLine, maxAddTime };
 };

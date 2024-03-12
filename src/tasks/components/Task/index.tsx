@@ -157,7 +157,7 @@ const Task = ({
   const dragSnapInPX = useMemo(() => {
     const resolutionInSnapUnit = Duration.fromObject({ [unit]: sizeInUnits }).as(dragUnit);
     const dragSnapInResUnit = dragSizeInUnits / resolutionInSnapUnit;
-    const dragSnapInPx = Math.floor(dragSnapInResUnit * columnWidth);
+    const dragSnapInPx = dragSnapInResUnit * columnWidth;
     if (!dragSnapInPx || isNaN(dragSnapInPx)) {
       return 1;
     }

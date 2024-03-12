@@ -179,11 +179,10 @@ const TaskLine = ({
   const dragSnapInPX = useMemo(() => {
     const resolutionInSnapUnit = Duration.fromObject({ [unit]: sizeInUnits }).as(dragUnit);
     const dragSnapInResUnit = dragSizeInUnits / resolutionInSnapUnit;
-    const dragSnapInPx = Math.floor(dragSnapInResUnit * columnWidth);
+    const dragSnapInPx = dragSnapInResUnit * columnWidth;
     if (!dragSnapInPx || isNaN(dragSnapInPx)) {
       return 1;
     }
-
     return dragSnapInPx;
   }, [columnWidth, dragUnit, dragSizeInUnits, sizeInUnits, unit]);
 
@@ -371,8 +370,8 @@ const TaskLine = ({
       workLine && workLine([]);
       if (data.relatedTasks) {
         const addTime = +time.end - +data.time.end;
-        const tasksId = connectedTasks(data, allValidTasks);
-        onTaskChange({ ...data, resourceId, time }, { tasksId, addTime });
+        const tasksId = connectedTasks(data, allValidTasks, addTime, externalRangeInMillis);
+        onTaskChange({ ...data, resourceId, time }, { tasksId: tasksId.allKLine, addTime: tasksId.maxAddTime });
         return;
       }
       onTaskChange({ ...data, resourceId, time });
@@ -391,6 +390,7 @@ const TaskLine = ({
       interval,
       workLine,
       allValidTasks,
+      externalRangeInMillis,
     ]
   );
 
@@ -498,8 +498,8 @@ const TaskLine = ({
       workLine && workLine([]);
       if (enableLines && data.relatedTasks && frontLine) {
         const addTime = +time.end - +data.time.end;
-        const tasksId = connectedTasks(data, allValidTasks);
-        onTaskChange({ ...data, time }, { tasksId, addTime });
+        const tasksId = connectedTasks(data, allValidTasks, addTime, externalRangeInMillis);
+        onTaskChange({ ...data, time }, { tasksId: tasksId.allKLine, addTime: tasksId.maxAddTime });
         return;
       }
       onTaskChange({ ...data, time });
@@ -516,6 +516,7 @@ const TaskLine = ({
       allValidTasks,
       workLine,
       frontLine,
+      externalRangeInMillis,
     ]
   );
   const percentage = useMemo(() => {
