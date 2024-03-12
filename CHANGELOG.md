@@ -1,9 +1,8 @@
 # [1.35.0](https://github.com/melfore/konva-timeline/compare/v1.34.0...v1.35.0) (2024-03-04)
 
-
 ### Features
 
-* 🎸 [TimeLine]Changed StartLine Display ([e0f3ad2](https://github.com/melfore/konva-timeline/commit/e0f3ad20be3a8dda5d1a8e911807b01a5dc9e921)), closes [#207](https://github.com/melfore/konva-timeline/issues/207)
+- 🎸 [TimeLine]Changed StartLine Display ([e0f3ad2](https://github.com/melfore/konva-timeline/commit/e0f3ad20be3a8dda5d1a8e911807b01a5dc9e921)), closes [#207](https://github.com/melfore/konva-timeline/issues/207)
 
 # [1.34.0](https://github.com/melfore/konva-timeline/compare/v1.33.2...v1.34.0) (2024-03-04)
 
