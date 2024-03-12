@@ -1,3 +1,10 @@
+# [1.36.0](https://github.com/melfore/konva-timeline/compare/v1.35.0...v1.36.0) (2024-03-12)
+
+
+### Features
+
+* 🎸 [Task] Fixed time return ([4c69b29](https://github.com/melfore/konva-timeline/commit/4c69b29a1c7d5fae5bf647f81a9fe5b1e4ce01fc)), closes [#210](https://github.com/melfore/konva-timeline/issues/210)
+
 # [1.35.0](https://github.com/melfore/konva-timeline/compare/v1.34.0...v1.35.0) (2024-03-04)
 
 ### Features
