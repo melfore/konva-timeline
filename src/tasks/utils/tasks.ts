@@ -179,8 +179,8 @@ export const onEndTimeRange = (
   const diffTZ = +intervalStartTZ! - +taskStartTZ!;
 
   const startOfDay = startDate.startOf("day").toISO()?.slice(-5, -3); //Day start TZ
-  const nexDay = startDate.startOf("day").plus({ day: 1 }).toISO()?.slice(-5, -3); //Next Day TZ
-  const diffTZInDay = +nexDay! - +startOfDay!;
+  const nextDay = startDate.startOf("day").plus({ day: 1 }).toISO()?.slice(-5, -3); //Next Day TZ
+  const diffTZInDay = +nextDay! - +startOfDay!;
 
   let gap = 0;
   let hrsSpecialCase = 0;
@@ -197,11 +197,11 @@ export const onEndTimeRange = (
 
     if (+startOfBeforeDayTz - +intervalStartTZ! !== 0 && +startOfNextDay - +intervalStartTZ! === 0) {
       const timeOffsett = fromPxToTime(taskDimesion.x - hrsInPx * 23, resolution, columnWidth);
-      const startTaskMilliss = interval
+      const startTaskDayBefore = interval
         .start!.plus({ [resolution.unit]: timeOffsett })
         .startOf("hour")
         .toMillis();
-      if (startOfBeforeDay.toMillis() === startTaskMilliss) {
+      if (startOfBeforeDay.toMillis() === startTaskDayBefore) {
         hrsSpecialCase = hrs;
       }
     }
@@ -212,16 +212,16 @@ export const onEndTimeRange = (
         gap = hrsInPx * diffTZInDay;
       }
       const timeOffsett = fromPxToTime(taskDimesion.x - hrsInPx * 23, resolution, columnWidth);
-      const startTaskMilliss = interval.start!.plus({ [resolution.unit]: timeOffsett }).startOf("hour");
-      if (startOfBeforeDay.toMillis() === startTaskMilliss.toMillis()) {
+      const startTaskDayBefore = interval.start!.plus({ [resolution.unit]: timeOffsett }).startOf("hour");
+      if (startOfBeforeDay.toMillis() === startTaskDayBefore.toMillis()) {
         if (diffTZInDay !== 0) {
           gap = 0;
           hrsSpecialCase = -hrs;
         }
       }
       if (
-        startTaskMilliss.toMillis() + hrs * 23 === startDate.startOf("day").toMillis() &&
-        startTaskMilliss.toISO().slice(-5, -3) === intervalStartTZ
+        startTaskDayBefore.toMillis() + hrs * 23 === startDate.startOf("day").toMillis() &&
+        startTaskDayBefore.toISO().slice(-5, -3) === intervalStartTZ
       ) {
         gap = 0;
         hrsSpecialCase = 0;

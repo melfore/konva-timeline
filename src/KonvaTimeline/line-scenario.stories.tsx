@@ -78,8 +78,8 @@ export const Line: Story = {
         label: "Task2",
         resourceId: "2",
         time: {
-          start: 1700434800000,
-          end: 1700934800000,
+          start: 1699900000000,
+          end: 1700048000000,
         },
         relatedTasks: ["5"],
       },
@@ -88,8 +88,8 @@ export const Line: Story = {
         label: "Task5",
         resourceId: "1",
         time: {
-          start: 1701505200000,
-          end: 1702095200000,
+          start: 1700505200000,
+          end: 1700805200000,
         },
       },
     ],
