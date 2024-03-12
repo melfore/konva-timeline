@@ -24,14 +24,16 @@ export const getTimeBlocksTzInfo = (timeBlock: Interval[], initialTz?: string) =
           backHour: true,
           nextHour: false,
         });
-
         return;
       }
 
-      dayInfoArray.push({
-        backHour: false,
-        nextHour: true,
-      });
+      if (Number(initialTz?.slice(1, 3)) - Number(tzStart!.slice(1, 3)) < 0) {
+        dayInfoArray.push({
+          backHour: false,
+          nextHour: true,
+        });
+        return;
+      }
     }
 
     dayInfoArray.push({
