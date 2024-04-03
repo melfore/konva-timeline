@@ -31,6 +31,7 @@ const { range, resources, tasks } = generateStoryData({
   tasksCount: 5,
   timeRangeInDays: 1,
 });
+
 const customToolTip = (taskData: CustomToolTipData) => {
   return (
     <div
