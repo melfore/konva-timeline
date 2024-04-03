@@ -11,6 +11,7 @@
     "build": "tsc",
     "build:storybook": "storybook build -o docs --docs --quiet",
     "clean:code": "eslint ./ --ext .js,.jsx,.ts,.tsx --fix && prettier ./ --write",
+    "clean:install": "rimraf dist && rimraf coverage && rimraf node_modules && npm i",
     "commit": "git-cz",
     "pre:commit": "npm run clean:code && npm run build",
     "prepare": "husky",
@@ -87,6 +88,7 @@
     "react-dom": "^18.2.0",
     "react-konva": "^18.2.10",
     "react-konva-utils": "^1.0.6",
+    "rimraf": "^5.0.5",
     "semantic-release": "^22.0.5",
     "storybook": "^7.6.16",
     "typescript": "^5.3.3"
