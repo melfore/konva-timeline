@@ -1,19 +1,26 @@
 import type { StorybookConfig } from "@storybook/react-webpack5";
 
 const config: StorybookConfig = {
-  stories: ["../(src|stories)/**/*.mdx", "../(src|stories)/**/*.stories.@(js|jsx|ts|tsx)"],
   addons: [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
     "@storybook/addon-coverage",
+    "@storybook/addon-mdx-gfm",
+    "@storybook/addon-webpack5-compiler-babel",
   ],
+  docs: {
+    autodocs: "tag",
+  },
   framework: {
     name: "@storybook/react-webpack5",
     options: {},
   },
-  docs: {
-    autodocs: "tag",
+  stories: ["../(src|stories)/**/*.mdx", "../(src|stories)/**/*.stories.@(js|jsx|ts|tsx)"],
+  typescript: {
+    check: false,
+    reactDocgen: "react-docgen-typescript",
+    skipCompiler: false,
   },
 };
 
