@@ -50,6 +50,10 @@ jobs:
         run: |
           git commit -m "refactor: 💡 Clean code" -a
 
+      - name: Unit tests
+        run: |
+          npm run test:ci
+
       - name: Generate Docs
         id: generate-docs
         run: |
