@@ -2,10 +2,11 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { Layer, Stage } from "react-konva";
 import { Decorator } from "@storybook/react";
 
-import { generateStoryData } from "../KonvaTimeline/stories-data";
-import { TimelineProvider, useTimelineContext } from "../timeline/TimelineContext";
+import { TimelineProvider, useTimelineContext } from "../../../timeline/TimelineContext";
+import { generateStoryData } from "../utils";
 
-export const COLOR_ARG_TYPE = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const COLOR_ARG_TYPE: any = {
   control: {
     type: "color",
   },
@@ -18,11 +19,11 @@ export const STORY_DATA = generateStoryData({
   timeRangeInDays: 1,
 });
 
-export const LayerDecorator: Decorator = (storyFn) => {
-  return <Layer>{storyFn()}</Layer>;
+export const LayerDecorator: Decorator = (Story) => {
+  return <Layer>{Story()}</Layer>;
 };
 
-export const TaskDecorator: Decorator = (storyFn) => {
+export const TaskDecorator: Decorator = (Story) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const [width, setWidth] = React.useState(0);
@@ -45,7 +46,7 @@ export const TaskDecorator: Decorator = (storyFn) => {
     >
       <div ref={wrapperRef}>
         <Stage height={200} width={width}>
-          <Layer>{storyFn()}</Layer>
+          <Layer>{Story()}</Layer>
         </Stage>
       </div>
     </TimelineProvider>
@@ -71,7 +72,7 @@ const TasksLayerInternalDecorator = ({ storyFn }: any) => {
   );
 };
 
-export const TasksLayerDecorator: Decorator = (storyFn) => {
+export const TasksLayerDecorator: Decorator = (Story) => {
   return (
     <TimelineProvider
       {...STORY_DATA}
@@ -79,7 +80,7 @@ export const TasksLayerDecorator: Decorator = (storyFn) => {
       onTaskChange={(task) => alert(`OnTaskChange event handler - TaskId: ${task.id}`)}
       resolution="1hrs"
     >
-      <TasksLayerInternalDecorator storyFn={storyFn} />
+      <TasksLayerInternalDecorator storyFn={Story} />
     </TimelineProvider>
   );
 };

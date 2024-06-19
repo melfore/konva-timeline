@@ -4,8 +4,8 @@ import { DateTime } from "luxon";
 
 import { AreaSelect } from "../tasks/utils/tasks";
 import { CustomToolTipData } from "../timeline/TimelineContext";
+import { generateStoryData } from "../utils/stories/utils";
 
-import { generateStoryData } from "./stories-data";
 import KonvaTimeline from ".";
 
 const meta = {

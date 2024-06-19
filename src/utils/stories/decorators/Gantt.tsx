@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { Decorator } from "@storybook/react";
 
-import { TimelineProviderProps } from "../timeline/TimelineContext";
-import { TaskData } from "..";
+import { TaskData } from "../../..";
+import { TimelineProviderProps } from "../../../timeline/TimelineContext";
 
-const DecoratorGantt: Decorator<TimelineProviderProps> = (
+const GanttDecorator: Decorator<TimelineProviderProps> = (
   Story,
   { args: { onTaskChange: externalOnTaskChange, tasks: externalTasks, ...args } }
 ) => {
@@ -47,4 +47,4 @@ const DecoratorGantt: Decorator<TimelineProviderProps> = (
   });
 };
 
-export default DecoratorGantt;
+export default GanttDecorator;

@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { generateStoryData } from "./stories-data";
+import { generateStoryData } from "../utils/stories/utils";
+
 import KonvaTimeline from ".";
 
 const meta = {
-  title: "Scenario/Yearly Report",
+  title: "Scenario/Monthly Report",
   component: KonvaTimeline,
   tags: ["autodocs"],
   argTypes: {
@@ -17,18 +18,17 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const yearlyStoryData = generateStoryData({
-  averageTaskDurationInMinutes: 600,
-  resourcesCount: 20,
-  tasksCount: 3000,
-  timeRangeInDays: 365 * 5,
+const monthlyStoryData = generateStoryData({
+  averageTaskDurationInMinutes: 10,
+  resourcesCount: 16,
+  tasksCount: 5000,
+  timeRangeInDays: 60,
 });
 
-export const YearlyReport: Story = {
+export const MonthlyReport: Story = {
   args: {
-    ...yearlyStoryData,
-    resolution: "1day",
-    initialDateTime: yearlyStoryData.range.start,
+    ...monthlyStoryData,
+    resolution: "1min",
     onAreaSelect: undefined,
   },
 };

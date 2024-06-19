@@ -1,4 +1,4 @@
-import { generateStoryData } from "../../KonvaTimeline/stories-data";
+import { generateStoryData } from "../../utils/stories/utils";
 import { InternalTimeRange } from "../../utils/time";
 
 import { getTaskYCoordinate, TASK_HEIGHT_OFFSET, validateTasks } from "./tasks";
