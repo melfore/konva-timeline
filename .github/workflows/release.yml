@@ -17,7 +17,7 @@ jobs:
       - name: Install NodeJS
         uses: actions/setup-node@v3
         with:
-          node-version: lts/hydrogen
+          node-version: lts/iron
 
       - name: Cache Dependencies
         id: cache-dependencies
