@@ -9,7 +9,7 @@ import { getTaskYCoordinate } from "../../utils/tasks";
 import Task from "../Task";
 import TaskTooltip, { TaskTooltipProps } from "../Tooltip";
 
-interface TasksLayerProps {
+export interface TasksLayerProps {
   taskTooltip: TaskTooltipProps | null;
   setTaskTooltip: (tooltip: TaskTooltipProps | null) => void;
   create?: boolean;

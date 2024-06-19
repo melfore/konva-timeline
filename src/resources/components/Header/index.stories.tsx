@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { TaskDecorator } from "../../../utils/stories";
+import { TaskDecorator } from "../../../utils/stories/decorators/Tasks";
 
 import { ResourceHeaderDocs } from ".";
 

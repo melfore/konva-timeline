@@ -1,11 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { generateStoryData } from "./stories-data";
+import TimelineDecorator from "../utils/stories/decorators/Timeline";
+import { generateStoryData } from "../utils/stories/utils";
+
 import KonvaTimeline from ".";
 
 const meta = {
   title: "Scenario/Monthly Report",
   component: KonvaTimeline,
+  decorators: [TimelineDecorator],
   tags: ["autodocs"],
   argTypes: {
     onTaskChange: {

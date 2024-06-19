@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import DecoratoGantt from "../utils/decorator";
+import DecoratoGantt from "../utils/stories/decorators/Gantt";
+import { generateStoryData } from "../utils/stories/utils";
 
-import { generateStoryData } from "./stories-data";
 import KonvaTimeline from ".";
 
 const meta = {
