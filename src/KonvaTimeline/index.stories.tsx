@@ -4,6 +4,7 @@ import { DateTime } from "luxon";
 
 import { AreaSelect } from "../tasks/utils/tasks";
 import { CustomToolTipData } from "../timeline/TimelineContext";
+import TimelineDecorator from "../utils/stories/decorators/Timeline";
 import { generateStoryData } from "../utils/stories/utils";
 
 import KonvaTimeline from ".";
@@ -11,6 +12,7 @@ import KonvaTimeline from ".";
 const meta = {
   title: "Main/KonvaTimeline",
   component: KonvaTimeline,
+  decorators: [TimelineDecorator],
   tags: ["autodocs"],
   argTypes: {
     onTaskClick: {
