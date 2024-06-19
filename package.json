@@ -25,7 +25,7 @@
     "test:sb": "test-storybook --coverage --coverageDirectory coverage/storybook --ci --verbose",
     "test:sb:coverage": "npx nyc report --reporter=lcov -t coverage/storybook --report-dir coverage/storybook",
     "semantic-release": "semantic-release",
-    "update:packages": "npx npm-check-updates --interactive --upgrade --doctor --doctorTest 'npm run build'"
+    "update:packages": "npx npm-check-updates --interactive --upgrade --doctor --doctorTest 'npm run pre:push'"
   },
   "repository": {
     "type": "git",
