@@ -16,7 +16,7 @@
     "commit": "git-cz",
     "pre:build": "copyfiles -a -f ./.typescript/build/tsconfig.json ./",
     "pre:commit": "npm run clean:code",
-    "pre:push": "npm run build:test",
+    "pre:push": "npm run test:ci && npm run build:test",
     "pre:test": "copyfiles -a -f ./.typescript/test/tsconfig.json ./",
     "prepare": "husky",
     "start": "npm run pre:test && storybook dev -p 6006",
