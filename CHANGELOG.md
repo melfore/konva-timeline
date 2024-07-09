@@ -1,3 +1,10 @@
+# [1.37.0](https://github.com/melfore/konva-timeline/compare/v1.36.2...v1.37.0) (2024-07-09)
+
+
+### Features
+
+* 🎸 [Task]Fixed areaselect return ([3edcae2](https://github.com/melfore/konva-timeline/commit/3edcae2688c290d0de4a40309a65665fa93e20c3)), closes [#215](https://github.com/melfore/konva-timeline/issues/215)
+
 ## [1.36.2](https://github.com/melfore/konva-timeline/compare/v1.36.1...v1.36.2) (2024-06-19)
 
 ## [1.36.1](https://github.com/melfore/konva-timeline/compare/v1.36.0...v1.36.1) (2024-04-04)
