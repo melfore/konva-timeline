@@ -219,8 +219,8 @@ const Timeline: FC<TimelineProps> = () => {
 
   const createNewTaskData = useCallback(() => {
     const taksRange = onEndTimeRange(newTaskDimension, resolution, columnWidth, interval);
-    return { resourceId: newTaskDimension.row.toString(), range: taksRange };
-  }, [newTaskDimension, columnWidth, resolution, interval]);
+    return { resourceId: resources[newTaskDimension.row].id, range: taksRange };
+  }, [newTaskDimension, columnWidth, resolution, interval, resources]);
 
   const onMouseDown = useCallback(
     (e: KonvaEventObject<MouseEvent>) => {
