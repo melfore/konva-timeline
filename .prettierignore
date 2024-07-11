@@ -21,6 +21,7 @@
 .env.test.local
 .env.production.local
 report.*.json
+CHANGELOG.md
 
 # log files
 npm-debug.log*
