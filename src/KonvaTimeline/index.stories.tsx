@@ -274,3 +274,79 @@ export const CustomTooltip: Story = {
     customToolTip: customToolTip,
   },
 };
+
+export const CustomColor: Story = {
+  args: {
+    ...Primary.args,
+    resources,
+    resolution: "2weeks",
+    range: {
+      start: 1698357600000,
+      end: 1702095200000,
+    },
+    tasks: [
+      {
+        id: "4",
+        label: "Task4",
+        resourceId: "2",
+        time: {
+          start: 1698357600000,
+          end: 1698557900000,
+        },
+      },
+      {
+        id: "6",
+        label: "Task6",
+        resourceId: "2",
+        time: {
+          start: 1698599900000,
+          end: 1698793200000,
+        },
+        taskColor: "#fc0303",
+      },
+      {
+        id: "1",
+        label: "Task1",
+        resourceId: "1",
+        time: {
+          start: 1698793200000,
+          end: 1699434800000,
+        },
+      },
+      {
+        id: "3",
+        label: "Task3",
+        resourceId: "3",
+        time: {
+          start: 1699734800000,
+          end: 1700234800000,
+        },
+      },
+      {
+        id: "2",
+        label: "Task2",
+        resourceId: "2",
+        time: {
+          start: 1700434800000,
+          end: 1700934800000,
+        },
+      },
+      {
+        id: "5",
+        label: "Task5",
+        resourceId: "1",
+        time: {
+          start: 1701505200000,
+          end: 1702105200000,
+        },
+      },
+    ],
+  },
+};
+
+export const ResourceClickable: Story = {
+  args: {
+    ...Primary.args,
+    onResourceClick: (resource) => alert(`OnResourceClick handler, ResourceLabel: ${resource.label}`),
+  },
+};

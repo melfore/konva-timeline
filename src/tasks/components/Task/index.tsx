@@ -110,12 +110,16 @@ const Task = ({
       return DISABLED_TASK_DEFAULT_FILL;
     }
     try {
+      if (data.taskColor) {
+        const rgb = getRGB(data.taskColor);
+        return ` rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+      }
       const rgb = getRGB(fill);
       return ` rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
     } catch (error) {
       return INVALIDFILL_TASK_DEFAULT_FILL;
     }
-  }, [fill, disabled]);
+  }, [fill, disabled, data]);
 
   const mainStroke = useMemo(() => {
     if (disabled) {

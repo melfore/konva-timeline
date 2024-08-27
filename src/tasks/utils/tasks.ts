@@ -29,6 +29,10 @@ export interface TaskData<T extends TimeRange = TimeRange> {
    * Id of connected Tasks
    */
   relatedTasks?: string[];
+  /**
+   * Color of the single task
+   */
+  taskColor?: string;
 }
 
 type FilteredTasks = Operation<TaskData<InternalTimeRange>>;
