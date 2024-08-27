@@ -1,7 +1,7 @@
 import React, { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
 import { DateTime, Interval } from "luxon";
 
-import { addHeaderResource } from "../resources/utils/resources";
+import { addHeaderResource, Resource } from "../resources/utils/resources";
 import { AreaSelect, filterTasks, TaskData, validateTasks } from "../tasks/utils/tasks";
 import { DEFAULT_GRID_COLUMN_WIDTH, DEFAULT_GRID_ROW_HEIGHT, MINIMUM_GRID_ROW_HEIGHT } from "../utils/dimensions";
 import { logDebug, logWarn } from "../utils/logger";
@@ -117,6 +117,10 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
    * Enables connection between tasks (if kLine is set in taskData)
    */
   enableLines?: boolean;
+  /**
+   * Event handler for resource click
+   */
+  onResourceClick?: (task: Resource) => void;
 };
 
 type TimelineTheme = {
@@ -157,6 +161,7 @@ type TimelineContextType = Required<
   validLine?: LineData[];
   allValidTasks: TaskData<InternalTimeRange>[];
   externalRangeInMillis: InternalTimeRange;
+  onResourceClick?: (resource: Resource) => void;
 };
 
 const TimelineContext = createContext<TimelineContextType | undefined>(undefined);
@@ -197,6 +202,7 @@ export const TimelineProvider = ({
   customToolTip,
   enableTaskPattern = true,
   enableLines,
+  onResourceClick,
 }: TimelineProviderProps) => {
   const timezone = useMemo(() => {
     if (!externalTimezone) {
@@ -484,6 +490,7 @@ export const TimelineProvider = ({
         validLine,
         allValidTasks,
         externalRangeInMillis: range,
+        onResourceClick,
       }}
     >
       {children}

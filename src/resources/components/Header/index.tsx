@@ -1,6 +1,7 @@
-import React, { memo, useMemo } from "react";
+import React, { memo, useCallback, useMemo } from "react";
+import { Group, Rect } from "react-konva";
 
-import { KonvaGroup, KonvaLine, KonvaRect, KonvaText } from "../../../@konva";
+import { KonvaLine, KonvaRect, KonvaText } from "../../../@konva";
 import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { DEFAULT_TEXT_SIZE } from "../../../utils/dimensions";
 import {
@@ -25,15 +26,24 @@ interface ResourceHeaderProps {
    * The resource object to handle
    */
   resource: Resource;
+  /**
+   * On click event
+   */
+  onClick?: () => void;
+  /**
+   * Prop that idicate if resource is header
+   */
+  header?: boolean;
 }
 
 /**
  * This component renders a resource header. It displays a text (`resource.label`) and a delimiter line.
  */
-const ResourceHeader = ({ index, isLast = false, resource }: ResourceHeaderProps) => {
+const ResourceHeader = ({ index, isLast = false, resource, header }: ResourceHeaderProps) => {
   const {
     rowHeight,
     theme: { color: themeColor },
+    onResourceClick,
   } = useTimelineContext();
 
   const rowPoints = useMemo(() => [0, rowHeight, RESOURCE_HEADER_WIDTH, rowHeight], [rowHeight]);
@@ -53,8 +63,15 @@ const ResourceHeader = ({ index, isLast = false, resource }: ResourceHeaderProps
     }
     return DEFAULT_STROKE_DARK_MODE;
   }, [themeColor]);
+
+  const onClick = useCallback(
+    () => onResourceClick && !header && onResourceClick(resource),
+    [resource, header, onResourceClick]
+  );
+
   return (
-    <KonvaGroup y={yCoordinate}>
+    <Group y={yCoordinate}>
+      <Rect onClick={onClick} width={RESOURCE_HEADER_WIDTH} height={rowHeight} />
       <KonvaText
         fill={themeColor}
         fontSize={DEFAULT_TEXT_SIZE}
@@ -64,12 +81,12 @@ const ResourceHeader = ({ index, isLast = false, resource }: ResourceHeaderProps
         x={RESOURCE_TEXT_OFFSET}
       />
       {!isLast && (
-        <KonvaGroup>
+        <Group>
           <KonvaLine points={rowPoints} stroke={stroke} />
           <KonvaRect x={0} y={rowHeight} width={RESOURCE_HEADER_WIDTH} height={rowHeight} fill={fill} />
-        </KonvaGroup>
+        </Group>
       )}
-    </KonvaGroup>
+    </Group>
   );
 };
 
