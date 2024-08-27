@@ -118,7 +118,7 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
    */
   enableLines?: boolean;
   /**
-   * Event handler for reosurce click
+   * Event handler for resource click
    */
   onResourceClick?: (task: Resource) => void;
 };
