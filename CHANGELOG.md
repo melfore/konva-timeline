@@ -1,3 +1,10 @@
+# [1.38.0](https://github.com/melfore/konva-timeline/compare/v1.37.1...v1.38.0) (2024-08-27)
+
+
+### Features
+
+* 🎸 [Task] Added custom color for single task ([6bfd3e8](https://github.com/melfore/konva-timeline/commit/6bfd3e8e781acc9ff2e05f497bce2c9cbed2af58)), closes [#219](https://github.com/melfore/konva-timeline/issues/219)
+
 ## [1.37.1](https://github.com/melfore/konva-timeline/compare/v1.37.0...v1.37.1) (2024-07-11)
 
 # [1.37.0](https://github.com/melfore/konva-timeline/compare/v1.36.2...v1.37.0) (2024-07-09)
