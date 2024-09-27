@@ -1,5 +1,6 @@
 import React, { memo, useCallback, useMemo } from "react";
 import { Group, Rect } from "react-konva";
+import { Html } from "react-konva-utils";
 
 import { KonvaLine, KonvaRect, KonvaText } from "../../../@konva";
 import { useTimelineContext } from "../../../timeline/TimelineContext";
@@ -44,6 +45,7 @@ const ResourceHeader = ({ index, isLast = false, resource, header }: ResourceHea
     rowHeight,
     theme: { color: themeColor },
     onResourceClick,
+    customResources,
   } = useTimelineContext();
 
   const rowPoints = useMemo(() => [0, rowHeight, RESOURCE_HEADER_WIDTH, rowHeight], [rowHeight]);
@@ -69,17 +71,38 @@ const ResourceHeader = ({ index, isLast = false, resource, header }: ResourceHea
     [resource, header, onResourceClick]
   );
 
+  const resData = useMemo(() => {
+    return { resource, dimension: { width: RESOURCE_HEADER_WIDTH, height: rowHeight } };
+  }, [resource, rowHeight]);
+
   return (
     <Group y={yCoordinate}>
       <Rect onClick={onClick} width={RESOURCE_HEADER_WIDTH} height={rowHeight} />
-      <KonvaText
-        fill={themeColor}
-        fontSize={DEFAULT_TEXT_SIZE}
-        height={rowHeight}
-        text={resource.label}
-        verticalAlign="middle"
-        x={RESOURCE_TEXT_OFFSET}
-      />
+      {customResources && !header ? (
+        <Html>
+          {
+            <div
+              style={{
+                width: RESOURCE_HEADER_WIDTH,
+                height: rowHeight,
+                objectFit: "contain",
+                overflow: "hidden",
+              }}
+            >
+              {customResources(resData)}
+            </div>
+          }
+        </Html>
+      ) : (
+        <KonvaText
+          fill={themeColor}
+          fontSize={DEFAULT_TEXT_SIZE}
+          height={rowHeight}
+          text={resource.label}
+          verticalAlign="middle"
+          x={RESOURCE_TEXT_OFFSET}
+        />
+      )}
       {!isLast && (
         <Group>
           <KonvaLine points={rowPoints} stroke={stroke} />

@@ -7,6 +7,7 @@ import { DateTime } from "luxon";
 import { KonvaLine, KonvaText } from "../@konva";
 import GridLayer from "../grid/Layer";
 import ResourcesLayer from "../resources/components/Layer";
+import SummaryLayer from "../resources/components/Summary";
 import { findResourceIndexByCoordinate, RESOURCE_HEADER_WIDTH } from "../resources/utils/resources";
 import TasksLayer from "../tasks/components/Layer";
 import LayerLine from "../tasks/components/LayerLine";
@@ -48,6 +49,8 @@ const Timeline: FC<TimelineProps> = () => {
     onAreaSelect,
     enableLines,
     externalRangeInMillis,
+    showSummary,
+    summaryWidth,
   } = useTimelineContext();
 
   const [scrollbarSize, setScrollbarSize] = useState(0);
@@ -112,8 +115,9 @@ const Timeline: FC<TimelineProps> = () => {
 
   useEffect(() => {
     logDebug("Timeline", "Applying effects of size changes...");
+    //DrawLayer space calculate
     onWindowResize();
-  }, [hideResources, onWindowResize]);
+  }, [hideResources, onWindowResize, showSummary]);
 
   useEffect(() => {
     if (!wrapper.current || !initialDateTime) {
@@ -140,11 +144,15 @@ const Timeline: FC<TimelineProps> = () => {
     [resourcesContentHeight]
   );
 
+  const summaryLeft = useMemo(() => {
+    return hideResources ? 0 : RESOURCE_HEADER_WIDTH;
+  }, [hideResources]);
+
   const timelineWrapperStyle = useMemo(
     (): CSSProperties => ({
       ...timelineCommonStyle,
       border: `1px solid ${themeColor}`,
-      display: "inline-block",
+      display: "flex",
       position: "relative",
       width: "100%",
     }),
@@ -165,6 +173,21 @@ const Timeline: FC<TimelineProps> = () => {
       zIndex: 1,
     }),
     [scrollbarSize, themeColor, timelineCommonStyle]
+  );
+  const summaryStageWrapperStyle = useMemo(
+    (): CSSProperties => ({
+      ...timelineCommonStyle,
+      backgroundColor: "transparent",
+      boxShadow: "4px 4px 32px 1px #0000000f",
+      borderRight: `1px solid ${themeColor}`,
+      left: summaryLeft,
+      paddingBottom: scrollbarSize,
+      position: "sticky",
+      top: 0,
+      width: summaryWidth,
+      zIndex: 1,
+    }),
+    [scrollbarSize, themeColor, timelineCommonStyle, summaryWidth, summaryLeft]
   );
 
   const startOffset = useMemo(() => {
@@ -205,16 +228,18 @@ const Timeline: FC<TimelineProps> = () => {
 
   const resourcesOffset = useMemo(() => (hideResources ? 0 : RESOURCE_HEADER_WIDTH + 1), [hideResources]);
 
+  const summaryOffset = useMemo(() => (!showSummary ? 0 : summaryWidth), [showSummary, summaryWidth]);
+
   const gridWrapperStyle = useMemo(
     (): CSSProperties => ({
       ...timelineCommonStyle,
-      left: resourcesOffset,
+      left: resourcesOffset + summaryOffset,
       overflow: "auto",
       position: "absolute",
       top: 0,
-      width: `calc(100% - ${resourcesOffset}px)`,
+      width: `calc(100% - (${resourcesOffset}px + ${summaryOffset}px))`,
     }),
-    [resourcesOffset, timelineCommonStyle]
+    [resourcesOffset, timelineCommonStyle, summaryOffset]
   );
 
   const createNewTaskData = useCallback(() => {
@@ -286,6 +311,13 @@ const Timeline: FC<TimelineProps> = () => {
         <div style={resourcesStageWrapperStyle}>
           <Stage height={stageHeight} width={RESOURCE_HEADER_WIDTH}>
             <ResourcesLayer />
+          </Stage>
+        </div>
+      )}
+      {showSummary && (
+        <div style={summaryStageWrapperStyle}>
+          <Stage height={stageHeight} width={summaryWidth}>
+            <SummaryLayer />
           </Stage>
         </div>
       )}
