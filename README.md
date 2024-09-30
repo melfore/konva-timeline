@@ -103,8 +103,7 @@ If `onResourceClick` is set, it allow an click event on resource
 
 ### Summary
 
-Display a new column.
-Set Summary data prop, id of a single summary's value must be the same as the resource's id in order to display that value in the right place.
+Display a new column by setting Summary data prop, id of a single summary's value must be the same as the resource's id in order to display that value in the right place.
 If id does not exist, 🚫 will be dispaly instead of the value.
 
 In order to diplay the data its also necessary set `showSummary` prop.
