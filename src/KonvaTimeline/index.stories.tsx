@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { DateTime } from "luxon";
 
 import { AreaSelect } from "../tasks/utils/tasks";
-import { CustomToolTipData } from "../timeline/TimelineContext";
+import { CustomRes, CustomToolTipData } from "../timeline/TimelineContext";
 import TimelineDecorator from "../utils/stories/decorators/Timeline";
 import { generateStoryData } from "../utils/stories/utils";
 
@@ -53,6 +53,24 @@ const customToolTip = (taskData: CustomToolTipData) => {
       <b style={{ justifyContent: "center", alignItems: "top", display: "flex", marginBottom: 4 }}>Range:</b>
       <span style={{ justifyContent: "center", alignItems: "top", display: "flex" }}>{taskData.start}</span>
       <span style={{ justifyContent: "center", alignItems: "top", display: "flex", margin: 0 }}>{taskData.end}</span>
+    </div>
+  );
+};
+
+const customRes = (resourceData: CustomRes) => {
+  return (
+    <div style={{ display: "flex", alignItems: "center", marginLeft: 8 }}>
+      <img
+        style={{
+          verticalAlign: "middle",
+          width: "45px",
+          height: "45px",
+          borderRadius: "50%",
+        }}
+        src="https://png.pngtree.com/png-vector/20191101/ourmid/pngtree-cartoon-color-simple-male-avatar-png-image_1934459.jpg"
+        alt="Avatar"
+      />
+      <p style={{ fontWeight: "bold", color: "red", marginLeft: 8 }}>{resourceData.resource.label}</p>
     </div>
   );
 };
@@ -348,5 +366,23 @@ export const ResourceClickable: Story = {
   args: {
     ...Primary.args,
     onResourceClick: (resource) => alert(`OnResourceClick handler, ResourceLabel: ${resource.label}`),
+  },
+};
+
+export const Summary: Story = {
+  args: {
+    ...Primary.args,
+    showSummary: true,
+    summary: [
+      { id: "1", label: "6" },
+      { id: "3", label: "8" },
+    ],
+  },
+};
+
+export const CustomResource: Story = {
+  args: {
+    ...Primary.args,
+    customResources: customRes,
   },
 };

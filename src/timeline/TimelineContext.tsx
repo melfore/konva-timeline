@@ -48,6 +48,14 @@ export type LineData = {
   end: number;
 };
 
+export type CustomRes = {
+  resource: Resource;
+  dimension: {
+    width: number;
+    height: number;
+  };
+};
+
 export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
   /**
    * Enables debug logging in browser console
@@ -121,6 +129,22 @@ export type TimelineProviderProps = PropsWithChildren<TimelineInput> & {
    * Event handler for resource click
    */
   onResourceClick?: (task: Resource) => void;
+  /**
+   * Summary data
+   */
+  summary?: { id: string; label: string }[];
+  /**
+   * Enable summary
+   */
+  showSummary?: boolean;
+  /**
+   * Header label to display in summary column, default is Summary
+   */
+  summaryHeader?: string;
+  /**
+   * Callback that return a personalized resources(this func return also the dimension of a single resourse)
+   */
+  customResources?: (resourceData: CustomRes) => React.JSX.Element;
 };
 
 type TimelineTheme = {
@@ -162,6 +186,11 @@ type TimelineContextType = Required<
   allValidTasks: TaskData<InternalTimeRange>[];
   externalRangeInMillis: InternalTimeRange;
   onResourceClick?: (resource: Resource) => void;
+  summary?: { id: string; label: string }[];
+  showSummary?: boolean;
+  summaryWidth: number;
+  summaryHeader?: string;
+  customResources?: (resourceData: CustomRes) => React.JSX.Element;
 };
 
 const TimelineContext = createContext<TimelineContextType | undefined>(undefined);
@@ -203,6 +232,10 @@ export const TimelineProvider = ({
   enableTaskPattern = true,
   enableLines,
   onResourceClick,
+  summary: externalSummary,
+  showSummary,
+  summaryHeader,
+  customResources,
 }: TimelineProviderProps) => {
   const timezone = useMemo(() => {
     if (!externalTimezone) {
@@ -446,11 +479,17 @@ export const TimelineProvider = ({
     };
   }, [externalTheme]);
 
+  const summaryWidth = useMemo(() => (columnWidth > 120 ? 120 : columnWidth < 60 ? 60 : columnWidth), [columnWidth]);
+
   useEffect(() => {
     if (onErrors) {
       onErrors(validTasks.errors);
     }
   }, [onErrors, validTasks]);
+
+  const summary = useMemo(() => {
+    return externalSummary ? [{ id: "0summary", label: "Summary" }, ...externalSummary] : [];
+  }, [externalSummary]);
 
   return (
     <TimelineContext.Provider
@@ -491,6 +530,11 @@ export const TimelineProvider = ({
         allValidTasks,
         externalRangeInMillis: range,
         onResourceClick,
+        summary,
+        showSummary,
+        summaryHeader,
+        summaryWidth,
+        customResources,
       }}
     >
       {children}

@@ -90,6 +90,28 @@ It's possible to personalize the toolTip passing createToolTip callback that ret
 
 ![personalized toolTip](./assets/personalized-tooltip.png)
 
+### Personalized Resource and Clickable Resource
+
+It's possible to personalize the resource passing `customResources` callback that return jsx element.
+
+CustomResources expose a prop `ResourceData` that contain data of a single resource and also its dimension,
+it allow a easy acces to the width and heigh in order to fit a custom Resource.
+
+If `onResourceClick` is set, it allow an click event on resource
+
+![personalized toolTip](./assets/customRes.png)
+
+### Summary
+
+Display a new column by setting Summary data prop, id of a single summary's value must be the same as the resource's id in order to display that value in the right place.
+If id does not exist, 🚫 will be dispaly instead of the value.
+
+In order to diplay the data its also necessary set `showSummary` prop.
+
+Default summary header is "Summary", its possible to change it passing a new header by `summaryHeader` prop
+
+![personalized toolTip](./assets/summary.png)
+
 ## Getting started
 
 To install the library run:
