@@ -1,3 +1,10 @@
+# [1.39.0](https://github.com/melfore/konva-timeline/compare/v1.38.0...v1.39.0) (2024-10-01)
+
+
+### Features
+
+* 🎸 Custom resources ([f307c68](https://github.com/melfore/konva-timeline/commit/f307c689a1c62914f576a14f0728e0ebbeca9005)), closes [#222](https://github.com/melfore/konva-timeline/issues/222)
+
 # [1.38.0](https://github.com/melfore/konva-timeline/compare/v1.37.1...v1.38.0) (2024-08-27)
 
 
