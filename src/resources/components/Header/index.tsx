@@ -14,7 +14,7 @@ import {
 } from "../../../utils/theme";
 import { Resource, RESOURCE_HEADER_WIDTH, RESOURCE_TEXT_OFFSET } from "../../utils/resources";
 
-interface ResourceHeaderProps {
+export interface ResourceHeaderProps {
   /**
    * The row index of current resource
    */
