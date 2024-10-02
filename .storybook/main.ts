@@ -7,10 +7,9 @@ const config: StorybookConfig = {
     "@storybook/addon-interactions",
     "@storybook/addon-coverage",
     "@storybook/addon-webpack5-compiler-babel",
+    "@storybook/addon-mdx-gfm",
   ],
-  docs: {
-    autodocs: "tag",
-  },
+  docs: {},
   framework: {
     name: "@storybook/react-webpack5",
     options: {},

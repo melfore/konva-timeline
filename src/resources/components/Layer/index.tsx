@@ -4,7 +4,7 @@ import { Layer } from "react-konva";
 import { useTimelineContext } from "../../../timeline/TimelineContext";
 import ResourceHeader from "../Header";
 
-interface ResourcesLayerProps {}
+export interface ResourcesLayerProps {}
 
 /**
  * This component renders a Konva layer containing one header for each resource (`ResourceHeader`).
