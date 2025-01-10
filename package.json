@@ -46,10 +46,10 @@
     "react-konva-utils": ">= 1.0.5 < 2"
   },
   "devDependencies": {
-    "@babel/plugin-transform-private-property-in-object": "^7.24.7",
-    "@babel/preset-env": "^7.25.4",
-    "@babel/preset-react": "^7.24.7",
-    "@babel/preset-typescript": "^7.24.7",
+    "@babel/plugin-transform-private-property-in-object": "^7.25.9",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.26.3",
+    "@babel/preset-typescript": "^7.26.0",
     "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
     "@semantic-release/changelog": "^6.0.3",
