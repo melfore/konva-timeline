@@ -1,17 +1,21 @@
-import { useCallback, useEffect, useState } from "react";
+import { cloneElement, ReactElement, useCallback, useEffect, useState } from "react";
+import React from "react";
 import { Decorator } from "@storybook/react";
 
 import { KonvaTimelineError, TaskData } from "../../..";
 import { TimelineProviderProps } from "../../../timeline/TimelineContext";
 
-const TimelineDecorator: Decorator<TimelineProviderProps> = (
-  Story,
-  { args: { onErrors: externalOnErrors, onTaskChange: externalOnTaskChange, tasks: externalTasks, ...args } }
-) => {
+const FormMock = ({
+  children,
+  onErrors: externalOnErrors,
+  onTaskChange: externalOnTaskChange,
+  tasks: externalTasks,
+  ...props
+}: TimelineProviderProps) => {
   const [tasks, setTasks] = useState<TaskData[]>(externalTasks || []);
 
   useEffect(() => {
-    if (externalTasks !== tasks) {
+    if (JSON.stringify(externalTasks) !== JSON.stringify(tasks)) {
       setTasks(externalTasks || []);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -38,14 +42,12 @@ const TimelineDecorator: Decorator<TimelineProviderProps> = (
     [externalOnErrors]
   );
 
-  return Story({
-    args: {
-      ...args,
-      onErrors,
-      onTaskChange,
-      tasks,
-    },
-  });
+  return <>{cloneElement(children as ReactElement, { onErrors, onTaskChange, tasks, ...props })}</>;
 };
+
+//export default TimelineDecorator;
+const TimelineDecorator: Decorator<TimelineProviderProps> = (Story, { args }) => (
+  <FormMock {...args}>{Story()}</FormMock>
+);
 
 export default TimelineDecorator;

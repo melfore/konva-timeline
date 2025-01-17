@@ -1,13 +1,16 @@
-import { useCallback, useEffect, useState } from "react";
+import { cloneElement, ReactElement, useCallback, useEffect, useState } from "react";
+import React from "react";
 import { Decorator } from "@storybook/react";
 
 import { TaskData } from "../../..";
 import { TimelineProviderProps } from "../../../timeline/TimelineContext";
 
-const GanttDecorator: Decorator<TimelineProviderProps> = (
-  Story,
-  { args: { onTaskChange: externalOnTaskChange, tasks: externalTasks, ...args } }
-) => {
+const FormMock = ({
+  children,
+  onTaskChange: externalOnTaskChange,
+  tasks: externalTasks,
+  ...props
+}: TimelineProviderProps) => {
   const [tasks, setTasks] = useState<TaskData[]>(externalTasks || []);
 
   useEffect(() => {
@@ -38,13 +41,9 @@ const GanttDecorator: Decorator<TimelineProviderProps> = (
     [externalOnTaskChange, tasks]
   );
 
-  return Story({
-    args: {
-      ...args,
-      onTaskChange,
-      tasks,
-    },
-  });
+  return <>{cloneElement(children as ReactElement, { onTaskChange, tasks, ...props })}</>;
 };
+
+const GanttDecorator: Decorator<TimelineProviderProps> = (Story, { args }) => <FormMock {...args}>{Story()}</FormMock>;
 
 export default GanttDecorator;

@@ -83,6 +83,7 @@ export const Primary: Story = {
     tasks,
     resolution: "1hrs",
     onAreaSelect: undefined,
+    onTaskChange: undefined,
   },
 };
 
