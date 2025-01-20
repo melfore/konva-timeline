@@ -5,7 +5,7 @@ import { Decorator } from "@storybook/react";
 import { KonvaTimelineError, TaskData } from "../../..";
 import { TimelineProviderProps } from "../../../timeline/TimelineContext";
 
-const FormMock = ({
+const TimeLineMock = ({
   children,
   onErrors: externalOnErrors,
   onTaskChange: externalOnTaskChange,
@@ -15,7 +15,7 @@ const FormMock = ({
   const [tasks, setTasks] = useState<TaskData[]>(externalTasks || []);
 
   useEffect(() => {
-    if (JSON.stringify(externalTasks) !== JSON.stringify(tasks)) {
+    if (externalTasks !== tasks) {
       setTasks(externalTasks || []);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -47,7 +47,7 @@ const FormMock = ({
 
 //export default TimelineDecorator;
 const TimelineDecorator: Decorator<TimelineProviderProps> = (Story, { args }) => (
-  <FormMock {...args}>{Story()}</FormMock>
+  <TimeLineMock {...args}>{Story()}</TimeLineMock>
 );
 
 export default TimelineDecorator;

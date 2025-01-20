@@ -5,7 +5,7 @@ import { Decorator } from "@storybook/react";
 import { TaskData } from "../../..";
 import { TimelineProviderProps } from "../../../timeline/TimelineContext";
 
-const FormMock = ({
+const GanttMock = ({
   children,
   onTaskChange: externalOnTaskChange,
   tasks: externalTasks,
@@ -44,6 +44,8 @@ const FormMock = ({
   return <>{cloneElement(children as ReactElement, { onTaskChange, tasks, ...props })}</>;
 };
 
-const GanttDecorator: Decorator<TimelineProviderProps> = (Story, { args }) => <FormMock {...args}>{Story()}</FormMock>;
+const GanttDecorator: Decorator<TimelineProviderProps> = (Story, { args }) => (
+  <GanttMock {...args}>{Story()}</GanttMock>
+);
 
 export default GanttDecorator;
