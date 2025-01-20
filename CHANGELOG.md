@@ -1,3 +1,10 @@
+## [1.39.3](https://github.com/melfore/konva-timeline/compare/v1.39.2...v1.39.3) (2025-01-20)
+
+
+### Bug Fixes
+
+* 🐛 Fixed storybook update state loop ([57431f7](https://github.com/melfore/konva-timeline/commit/57431f74c10457a8f3635743f30b38d92c714c29)), closes [#226](https://github.com/melfore/konva-timeline/issues/226)
+
 ## [1.39.2](https://github.com/melfore/konva-timeline/compare/v1.39.1...v1.39.2) (2025-01-10)
 
 ## [1.39.1](https://github.com/melfore/konva-timeline/compare/v1.39.0...v1.39.1) (2024-10-02)
