@@ -246,7 +246,7 @@ Add an array of tasks:
 +     {
 +       id: '5',
 +       label: 'Task #5',
-+       resourceId: '2',
++       resourceId: '3',
 +       time: {
 +         end: 1577865540100,
 +         start: 1577842440100
