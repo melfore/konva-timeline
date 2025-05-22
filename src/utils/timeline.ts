@@ -6,7 +6,7 @@ import { Resolution } from "./time-resolution";
 
 export type TimelineInput = {
   /**
-   * Custom column width (defaults to 60px)
+   * Custom column width (defaults to 60px), minimum custom width allowed 20px
    */
   columnWidth?: number;
   /**
