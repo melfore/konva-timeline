@@ -1,3 +1,10 @@
+# [1.40.0](https://github.com/melfore/konva-timeline/compare/v1.39.4...v1.40.0) (2025-05-22)
+
+
+### Features
+
+* 🎸 Allow external columnWidth under 60px ([a8930a4](https://github.com/melfore/konva-timeline/commit/a8930a4e7c4edbef3d9e033b5764f4d1192beef3)), closes [#234](https://github.com/melfore/konva-timeline/issues/234)
+
 ## [1.39.4](https://github.com/melfore/konva-timeline/compare/v1.39.3...v1.39.4) (2025-05-09)
 
 ## [1.39.3](https://github.com/melfore/konva-timeline/compare/v1.39.2...v1.39.3) (2025-01-20)
