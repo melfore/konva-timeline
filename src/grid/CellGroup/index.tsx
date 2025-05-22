@@ -3,6 +3,7 @@ import { Duration, Interval } from "luxon";
 
 import { KonvaGroup, KonvaLine, KonvaText } from "../../@konva";
 import { useTimelineContext } from "../../timeline/TimelineContext";
+import { DEFAULT_GRID_COLUMN_WIDTH } from "../../utils/dimensions";
 import { DEFAULT_STROKE_DARK_MODE, DEFAULT_STROKE_LIGHT_MODE } from "../../utils/theme";
 import { displayAboveInterval } from "../../utils/time-resolution";
 
@@ -113,6 +114,14 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
     }
     return DEFAULT_STROKE_DARK_MODE;
   }, [themeColor]);
+
+  const fontSize = useMemo(() => {
+    const percent = 4 / 100;
+    const cc = DEFAULT_GRID_COLUMN_WIDTH - columnWidth;
+    const negativ = (100 / 40) * cc * percent;
+    return negativ >= 0 && negativ <= 4 ? negativ : 0;
+  }, [columnWidth]);
+
   return (
     <KonvaGroup key={`timeslot-${index}`}>
       <KonvaLine x={xPos} y={0} points={points} stroke={stroke} strokeWidth={1} />
@@ -123,6 +132,7 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
         y={yPos - 8}
         text={cellLabel}
         width={unitAboveSpanInPx}
+        fontSize={12 - fontSize}
       />
     </KonvaGroup>
   );

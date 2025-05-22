@@ -19,6 +19,7 @@ import {
   TASK_HEIGHT_OFFSET,
   TaskDimensions,
 } from "../tasks/utils/tasks";
+import { DEFAULT_GRID_COLUMN_WIDTH } from "../utils/dimensions";
 import { logDebug } from "../utils/logger";
 
 import { useTimelineContext } from "./TimelineContext";
@@ -305,6 +306,13 @@ const Timeline: FC<TimelineProps> = () => {
     return rowHeight * TASK_HEIGHT_OFFSET;
   }, [rowHeight]);
 
+  const fontSize = useMemo(() => {
+    const percent = 4 / 100;
+    const cc = DEFAULT_GRID_COLUMN_WIDTH - columnWidth;
+    const negativ = (100 / 40) * cc * percent;
+    return negativ >= 0 && negativ <= 4 ? negativ : 0;
+  }, [columnWidth]);
+
   return (
     <div style={timelineWrapperStyle}>
       {!hideResources && (
@@ -357,7 +365,14 @@ const Timeline: FC<TimelineProps> = () => {
                   strokeWidth={1}
                   dash={[8, 3]}
                 />
-                <KonvaText fill="red" x={xOfStart - 13} y={rowHeight * 0.8 - 20} text="Start" width={columnWidth} />
+                <KonvaText
+                  fill="red"
+                  x={xOfStart - 13}
+                  y={rowHeight * 0.8 - 20}
+                  text="Start"
+                  width={columnWidth}
+                  fontSize={12 - fontSize}
+                />
               </Layer>
             )}
             {newTask && (

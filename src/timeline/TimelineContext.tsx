@@ -3,7 +3,7 @@ import { DateTime, Interval } from "luxon";
 
 import { addHeaderResource, Resource } from "../resources/utils/resources";
 import { AreaSelect, filterTasks, TaskData, validateTasks } from "../tasks/utils/tasks";
-import { DEFAULT_GRID_COLUMN_WIDTH, DEFAULT_GRID_ROW_HEIGHT, MINIMUM_GRID_ROW_HEIGHT } from "../utils/dimensions";
+import { DEFAULT_GRID_ROW_HEIGHT, MIN_GRID_COLUMN_WIDTH, MINIMUM_GRID_ROW_HEIGHT } from "../utils/dimensions";
 import { logDebug, logWarn } from "../utils/logger";
 import {
   getValidRangeTime,
@@ -364,7 +364,7 @@ export const TimelineProvider = ({
 
   const columnWidth = useMemo(() => {
     logDebug("TimelineProvider", "Calculating columnWidth...");
-    return !externalColumnWidth || externalColumnWidth < DEFAULT_GRID_COLUMN_WIDTH
+    return !externalColumnWidth || externalColumnWidth < MIN_GRID_COLUMN_WIDTH
       ? resolution.columnSize
       : externalColumnWidth;
   }, [externalColumnWidth, resolution]);
