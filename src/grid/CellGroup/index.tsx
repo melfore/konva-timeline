@@ -118,8 +118,8 @@ const GridCellGroup = ({ column, index, dayInfo, hourInfo }: GridCellGroupProps)
   const fontSize = useMemo(() => {
     const percent = 4 / 100;
     const cc = DEFAULT_GRID_COLUMN_WIDTH - columnWidth;
-    const negativ = (100 / 40) * cc * percent;
-    return negativ >= 0 && negativ <= 4 ? negativ : 0;
+    const negative = (100 / 40) * cc * percent;
+    return negative >= 0 && negative <= 4 ? negative : 0;
   }, [columnWidth]);
 
   return (

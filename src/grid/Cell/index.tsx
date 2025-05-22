@@ -67,8 +67,8 @@ const GridCell = ({ column, height, index, hourInfo: visibleDayInfo }: GridCellP
     const maxSubtractSize = resolutionUnit === "hour" ? 5 : 4;
     const percentMultiplier = maxSubtractSize / 100;
     const widthDifference = DEFAULT_GRID_COLUMN_WIDTH - columnWidth;
-    const negativ = (100 / 40) * widthDifference * percentMultiplier;
-    return negativ >= 0 && negativ <= maxSubtractSize ? negativ : 0;
+    const negative = (100 / 40) * widthDifference * percentMultiplier;
+    return negative >= 0 && negative <= maxSubtractSize ? negative : 0;
   }, [columnWidth, resolutionUnit]);
 
   return (
