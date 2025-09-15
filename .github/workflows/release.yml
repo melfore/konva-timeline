@@ -66,6 +66,14 @@ jobs:
         run: |
           git commit -m "docs: ✏️ Updated StoryBook" -a
 
+      - name: Install Playwright system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libasound2t64 \
+            libffi8 \
+            libx264-164
+
       - name: Test runner
         run: |
           npx playwright install --with-deps
