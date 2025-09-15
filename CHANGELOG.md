@@ -1,3 +1,16 @@
+# [1.41.0](https://github.com/melfore/konva-timeline/compare/v1.40.0...v1.41.0) (2025-09-15)
+
+
+### Bug Fixes
+
+* 🐛 Axios version and ubuntu latest ([cd178cc](https://github.com/melfore/konva-timeline/commit/cd178cc7853cdae9f3850099a50c66152242df4c))
+* 🐛 playwright version compatible with ubuntu latest ([020868d](https://github.com/melfore/konva-timeline/commit/020868d8ab652a01b649b49a661ef456080866b2)), closes [#228](https://github.com/melfore/konva-timeline/issues/228)
+
+
+### Features
+
+* 🎸 Instal system dep for playwright ([dc94294](https://github.com/melfore/konva-timeline/commit/dc9429448d5778508a84e5ae312c3fddc3540f41)), closes [#228](https://github.com/melfore/konva-timeline/issues/228)
+
 # [1.40.0](https://github.com/melfore/konva-timeline/compare/v1.39.4...v1.40.0) (2025-05-22)
 
 
