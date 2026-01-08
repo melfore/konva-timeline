@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import DecoratoGantt from "../utils/stories/decorators/Gantt";
 import { generateStoryData } from "../utils/stories/utils";
@@ -94,7 +94,7 @@ export const Line: Story = {
       },
     ],
     onTaskChange: (task, opts) => {
-      task.id, opts;
+      (task.id, opts);
     },
   },
 };

@@ -2,11 +2,11 @@ import { getContrastColor } from "./theme";
 
 describe("getContrastTextColor", () => {
   it("empty", () => {
-    expect(() => getContrastColor("")).toThrowError("Missing HEX color!");
+    expect(() => getContrastColor("")).toThrow("Missing HEX color!");
   });
 
   it("< 6 digits", () => {
-    expect(() => getContrastColor("#93c41")).toThrowError("Invalid HEX color!");
+    expect(() => getContrastColor("#93c41")).toThrow("Invalid HEX color!");
   });
 
   it("black", () => {

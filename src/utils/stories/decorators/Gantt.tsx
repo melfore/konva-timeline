@@ -1,51 +1,65 @@
-import { cloneElement, ReactElement, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import React from "react";
-import { Decorator } from "@storybook/react";
+import { Decorator } from "@storybook/react-webpack5";
 
 import { TaskData } from "../../..";
 import { TimelineProviderProps } from "../../../timeline/TimelineContext";
 
-const GanttMock = ({
-  children,
-  onTaskChange: externalOnTaskChange,
-  tasks: externalTasks,
-  ...props
-}: TimelineProviderProps) => {
-  const [tasks, setTasks] = useState<TaskData[]>(externalTasks || []);
+const GanttDecorator: Decorator<TimelineProviderProps> = (Story, context) => {
+  const { args } = context;
+  const [tasks, setTasks] = useState<TaskData[]>(args.tasks || []);
+
+  const prevTasksRef = useRef<TaskData[]>(args.tasks || []);
 
   useEffect(() => {
-    if (externalTasks !== tasks) {
-      setTasks(externalTasks || []);
+    const tasksChanged = JSON.stringify(args.tasks) !== JSON.stringify(prevTasksRef.current);
+
+    if (tasksChanged && args.tasks) {
+      prevTasksRef.current = args.tasks;
+      setTasks(args.tasks);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [externalTasks]);
+  }, [args.tasks]);
 
   const onTaskChange = useCallback(
     (task: TaskData, opts?: { tasksId: string[]; addTime: number }) => {
-      externalOnTaskChange && externalOnTaskChange(task, opts);
-      const newTasks = tasks.map((i) => {
-        if (opts && opts.tasksId.includes(i.id)) {
-          const start = i.time.start;
-          return { ...i, time: { start: Number(start) + opts.addTime, end: Number(i.time.end) + opts.addTime } };
-        }
+      if (args.onTaskChange) {
+        args.onTaskChange(task, opts);
+      }
 
-        if (i.id === task.id) {
-          return task;
-        }
+      setTasks((prevTasks) => {
+        const newTasks = prevTasks.map((i) => {
+          if (opts && opts.tasksId.includes(i.id)) {
+            const start = i.time.start;
+            return {
+              ...i,
+              time: {
+                start: Number(start) + opts.addTime,
+                end: Number(i.time.end) + opts.addTime,
+              },
+            };
+          }
 
-        return i;
+          if (i.id === task.id) {
+            return { ...task };
+          }
+
+          return i;
+        });
+
+        prevTasksRef.current = newTasks;
+        return newTasks;
       });
-
-      setTasks(newTasks);
     },
-    [externalOnTaskChange, tasks]
+    [args]
   );
 
-  return <>{cloneElement(children as ReactElement, { onTaskChange, tasks, ...props })}</>;
-};
+  const updatedArgs = {
+    ...args,
+    tasks,
+    onTaskChange,
+  };
 
-const GanttDecorator: Decorator<TimelineProviderProps> = (Story, { args }) => (
-  <GanttMock {...args}>{Story()}</GanttMock>
-);
+  return <Story args={updatedArgs} />;
+};
 
 export default GanttDecorator;

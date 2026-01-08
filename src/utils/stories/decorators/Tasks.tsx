@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import { Layer, Stage } from "react-konva";
-import { Decorator } from "@storybook/react";
+import { Decorator } from "@storybook/react-webpack5";
 
 import { TimelineProvider, useTimelineContext } from "../../../timeline/TimelineContext";
 import { generateStoryData } from "../utils";
@@ -20,12 +20,15 @@ export const STORY_DATA = generateStoryData({
 });
 
 export const LayerDecorator: Decorator = (Story) => {
-  return <Layer>{Story()}</Layer>;
+  return (
+    <Layer>
+      <Story />
+    </Layer>
+  );
 };
 
 export const TaskDecorator: Decorator = (Story) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
-
   const [width, setWidth] = React.useState(0);
 
   useEffect(() => {
@@ -46,15 +49,16 @@ export const TaskDecorator: Decorator = (Story) => {
     >
       <div ref={wrapperRef}>
         <Stage height={200} width={width}>
-          <Layer>{Story()}</Layer>
+          <Layer>
+            <Story />
+          </Layer>
         </Stage>
       </div>
     </TimelineProvider>
   );
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const TasksLayerInternalDecorator = ({ storyFn }: any) => {
+const TasksLayerInternalDecorator = ({ Story }: { Story: React.ComponentType }) => {
   const { setDrawRange } = useTimelineContext();
 
   const stageWidth = useMemo(() => 60 * 24, []);
@@ -66,7 +70,7 @@ const TasksLayerInternalDecorator = ({ storyFn }: any) => {
   return (
     <div>
       <Stage height={200} width={60 * 24}>
-        {storyFn()}
+        <Story />
       </Stage>
     </div>
   );
@@ -80,7 +84,7 @@ export const TasksLayerDecorator: Decorator = (Story) => {
       onTaskChange={(task) => alert(`OnTaskChange event handler - TaskId: ${task.id}`)}
       resolution="1hrs"
     >
-      <TasksLayerInternalDecorator storyFn={Story} />
+      <TasksLayerInternalDecorator Story={Story} />
     </TimelineProvider>
   );
 };

@@ -116,26 +116,26 @@ Default summary header is "Summary", its possible to change it passing a new hea
 
 To install the library run:
 
-```
+```txt
 npm i @melfore/konva-timeline
 ```
 
 This library has the following required peerDependencies:
 
-```
-"konva": ">= 9.2.0 < 10",
+```txt
+"konva": "^10.0.0",
 "luxon": ">= 3.3.0 < 4",
-"react": ">= 18.2.0 < 19",
-"react-dom": ">= 18.2.0 < 19",
-"react-konva": ">= 18.2.9 < 19",
-"react-konva-utils": ">= 1.0.5 < 2"
+"react": ">= 18.2.0 < 20",
+"react-dom": ">= 18.2.0 < 20",
+"react-konva": ">= 18.2.9 < 20",
+"react-konva-utils": "^2.0.0"
 ```
 
 ### ⚠️ Installing with npm < 7
 
 If installing with versions of npm < 7, you have to manually install them.
 
-```
+```txt
 npm i konva luxon react react-dom react-konva
 ```
 
@@ -145,13 +145,13 @@ Beware to check the versions installed, they must match peerDependencies ranges.
 
 Import the `KonvaTimeline` component from `@melfore/konva-timeline` library:
 
-```
+```txt
 import { KonvaTimeline } from "@melfore/konva-timeline";
 ```
 
 Provide the minimum set of required props.
 
-```
+```txt
   <KonvaTimeline
     range={{
       end: 1577919600000,
@@ -183,7 +183,7 @@ This will print an empty timeline with three resources:
 
 Add an array of tasks:
 
-```
+```txt
   <KonvaTimeline
     range={{
       end: 1577919600000,
