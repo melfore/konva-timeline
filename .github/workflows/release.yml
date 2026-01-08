@@ -78,7 +78,7 @@ jobs:
 
       - name: Push changes before release
         run: |
-          git push https://x-access-token:${{ secrets.PA_TOKEN }}@github.com/${{ github.repository }} HEAD:main || echo "Nothing to push"
+          git push https://x-access-token:${{ secrets.PA_TOKEN }}@github.com/melfore/konva-timeline.git HEAD:main || echo "Nothing to push"
 
       - name: Release
         env:
