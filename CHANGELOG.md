@@ -1,3 +1,10 @@
+## [2.0.5](https://github.com/melfore/konva-timeline/compare/v2.0.4...v2.0.5) (2026-01-08)
+
+
+### Bug Fixes
+
+* 🐛 fixed ci release loop ([83b242f](https://github.com/melfore/konva-timeline/commit/83b242ff954cd8e4bdd57e668563b14d5074db0c))
+
 ## [2.0.4](https://github.com/melfore/konva-timeline/compare/v2.0.3...v2.0.4) (2026-01-08)
 
 ## [2.0.3](https://github.com/melfore/konva-timeline/compare/v2.0.2...v2.0.3) (2026-01-08)
