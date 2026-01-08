@@ -2,12 +2,10 @@ import type { StorybookConfig } from "@storybook/react-webpack5";
 
 const config: StorybookConfig = {
   addons: [
-    "@storybook/addon-links",
-    "@storybook/addon-essentials",
-    "@storybook/addon-interactions",
-    "@storybook/addon-coverage",
     "@storybook/addon-webpack5-compiler-babel",
-    "@storybook/addon-mdx-gfm",
+    "@storybook/addon-links",
+    "@storybook/addon-coverage",
+    "@storybook/addon-docs",
   ],
   docs: {},
   framework: {

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import TimelineDecorator from "../utils/stories/decorators/Timeline";
 import { generateStoryData } from "../utils/stories/utils";
@@ -32,5 +32,6 @@ export const MonthlyReport: Story = {
     ...monthlyStoryData,
     resolution: "1min",
     onAreaSelect: undefined,
+    onTaskChange: () => null,
   },
 };

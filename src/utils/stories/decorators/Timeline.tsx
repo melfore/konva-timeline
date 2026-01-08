@@ -1,53 +1,64 @@
-import { cloneElement, ReactElement, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import React from "react";
-import { Decorator } from "@storybook/react";
+import { Decorator } from "@storybook/react-webpack5";
 
 import { KonvaTimelineError, TaskData } from "../../..";
 import { TimelineProviderProps } from "../../../timeline/TimelineContext";
 
-const TimeLineMock = ({
-  children,
-  onErrors: externalOnErrors,
-  onTaskChange: externalOnTaskChange,
-  tasks: externalTasks,
-  ...props
-}: TimelineProviderProps) => {
-  const [tasks, setTasks] = useState<TaskData[]>(externalTasks || []);
+const TimelineDecorator: Decorator<TimelineProviderProps> = (Story, context) => {
+  const { args } = context;
+  const [tasks, setTasks] = useState<TaskData[]>(args.tasks || []);
+
+  const prevTasksRef = useRef<TaskData[]>(args.tasks || []);
 
   useEffect(() => {
-    if (externalTasks !== tasks) {
-      setTasks(externalTasks || []);
+    const tasksChanged = JSON.stringify(args.tasks) !== JSON.stringify(prevTasksRef.current);
+
+    if (tasksChanged && args.tasks) {
+      prevTasksRef.current = args.tasks;
+      setTasks(args.tasks);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [externalTasks]);
+  }, [args.tasks]);
 
   const onTaskChange = useCallback(
     (task: TaskData) => {
-      externalOnTaskChange && externalOnTaskChange(task);
-      setTasks((prevTasks) => prevTasks.map((currentTask) => (currentTask.id === task.id ? task : currentTask)));
+      if (args.onTaskChange) {
+        args.onTaskChange(task);
+      }
+
+      setTasks((prevTasks) => {
+        const newTasks = prevTasks.map((currentTask) => (currentTask.id === task.id ? { ...task } : currentTask));
+        prevTasksRef.current = newTasks;
+        return newTasks;
+      });
     },
-    [externalOnTaskChange]
+    [args]
   );
 
   const onErrors = useCallback(
     (errors: KonvaTimelineError[]) => {
-      if (!errors || !errors.length) {
+      if (!errors?.length) {
         return;
       }
 
-      externalOnErrors && externalOnErrors(errors);
+      if (args.onErrors) {
+        args.onErrors(errors);
+      }
+
       // eslint-disable-next-line no-console
       errors.forEach((error) => console[error.level]({ ...error }));
     },
-    [externalOnErrors]
+    [args]
   );
 
-  return <>{cloneElement(children as ReactElement, { onErrors, onTaskChange, tasks, ...props })}</>;
-};
+  const updatedArgs = {
+    ...args,
+    tasks,
+    onTaskChange,
+    onErrors,
+  };
 
-//export default TimelineDecorator;
-const TimelineDecorator: Decorator<TimelineProviderProps> = (Story, { args }) => (
-  <TimeLineMock {...args}>{Story()}</TimeLineMock>
-);
+  return <Story args={updatedArgs} />;
+};
 
 export default TimelineDecorator;
