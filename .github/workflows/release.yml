@@ -76,6 +76,10 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Push changes before release
+        run: |
+          git push https://x-access-token:${{ secrets.PA_TOKEN }}@github.com/${{ github.repository }} HEAD:main || echo "Nothing to push"
+
       - name: Release
         env:
           GIT_AUTHOR_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
