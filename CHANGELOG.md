@@ -1,3 +1,24 @@
+# [2.0.0](https://github.com/melfore/konva-timeline/compare/v1.41.0...v2.0.0) (2026-01-08)
+
+
+### Bug Fixes
+
+* 🐛 fixed push url ([14425cf](https://github.com/melfore/konva-timeline/commit/14425cfccbe11333b2ba2a389a0b786fc43c0014))
+* 🐛 missing push after commit in CI ([7bcc9d8](https://github.com/melfore/konva-timeline/commit/7bcc9d862add72a3f70dcac31cd4621d0fd59c80))
+
+
+### Features
+
+* 🎸 migrate to ESM and ES2020 ([a2fce00](https://github.com/melfore/konva-timeline/commit/a2fce00d6fb6f617478770ad9ad3dc3fa4d74a59))
+
+
+### BREAKING CHANGES
+
+* 🧨 Migrated from CommonJS to ESM and updated compilation target to ES2020.
+
+✅ Closes: Module System: Library now uses native ESM ("type": "module" in
+package.json).
+
 # [1.41.0](https://github.com/melfore/konva-timeline/compare/v1.40.0...v1.41.0) (2025-09-15)
 
 
