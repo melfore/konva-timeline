@@ -59,7 +59,6 @@ const GanttDecorator: Decorator<TimelineProviderProps> = (Story, context) => {
     onTaskChange,
   };
 
-  // Passa gli args aggiornati direttamente alla Story
   return <Story args={updatedArgs} />;
 };
 

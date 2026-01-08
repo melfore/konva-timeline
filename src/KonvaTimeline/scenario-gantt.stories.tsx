@@ -94,7 +94,7 @@ export const Line: Story = {
       },
     ],
     onTaskChange: (task, opts) => {
-      task.id, opts;
+      (task.id, opts);
     },
   },
 };
