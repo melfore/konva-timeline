@@ -1,3 +1,10 @@
+## [2.0.6](https://github.com/melfore/konva-timeline/compare/v2.0.5...v2.0.6) (2026-03-18)
+
+
+### Bug Fixes
+
+* npm audit ([031919d](https://github.com/melfore/konva-timeline/commit/031919d7dc006ee9de4ed89791a4be924cf6a702))
+
 ## [2.0.5](https://github.com/melfore/konva-timeline/compare/v2.0.4...v2.0.5) (2026-01-08)
 
 
