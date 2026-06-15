@@ -1,6 +1,6 @@
+import { DateTime } from "luxon";
 import React, { FC, useCallback } from "react";
 import { Layer } from "react-konva";
-import { DateTime } from "luxon";
 
 import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { KonvaPoint } from "../../../utils/konva";

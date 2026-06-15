@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import TimelineDecorator from "../utils/stories/decorators/Timeline";
 import { generateStoryData } from "../utils/stories/utils";
-
 import KonvaTimeline from ".";
 
 const meta = {

@@ -1,5 +1,4 @@
 import { DEFAULT_GRID_ROW_HEIGHT } from "../../utils/dimensions";
-
 import { addHeaderResource, findResourceByCoordinate, Resource } from "./resources";
 
 let resources: Resource[] = [

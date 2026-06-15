@@ -1,12 +1,11 @@
-import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import { DateTime } from "luxon";
+import React from "react";
 
 import { AreaSelect } from "../tasks/utils/tasks";
 import { CustomRes, CustomToolTipData } from "../timeline/TimelineContext";
 import TimelineDecorator from "../utils/stories/decorators/Timeline";
 import { generateStoryData } from "../utils/stories/utils";
-
 import KonvaTimeline from ".";
 
 const meta = {

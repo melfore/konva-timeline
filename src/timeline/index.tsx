@@ -1,8 +1,8 @@
-import React, { CSSProperties, FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Layer, Rect, Stage } from "react-konva";
 import Konva from "konva";
 import { KonvaEventObject } from "konva/lib/Node";
 import { DateTime } from "luxon";
+import React, { CSSProperties, FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Layer, Rect, Stage } from "react-konva";
 
 import { KonvaLine, KonvaText } from "../@konva";
 import GridLayer from "../grid/Layer";
@@ -21,7 +21,6 @@ import {
 } from "../tasks/utils/tasks";
 import { DEFAULT_GRID_COLUMN_WIDTH } from "../utils/dimensions";
 import { logDebug } from "../utils/logger";
-
 import { useTimelineContext } from "./TimelineContext";
 
 interface TimelineProps {}

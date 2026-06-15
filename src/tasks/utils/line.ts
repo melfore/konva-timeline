@@ -1,5 +1,4 @@
 import { LineData } from "../../timeline/TimelineContext";
-
 import { TASK_HEIGHT_OFFSET } from "./tasks";
 
 export type LineType = {

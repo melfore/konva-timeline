@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import { COLOR_ARG_TYPE, STORY_DATA, TaskDecorator } from "../../../utils/stories/decorators/Tasks";
-
 import { TaskDocs } from ".";
 
 const meta = {

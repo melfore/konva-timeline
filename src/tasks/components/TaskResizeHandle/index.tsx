@@ -1,6 +1,6 @@
+import { KonvaEventObject } from "konva/lib/Node";
 import React, { useCallback, useMemo } from "react";
 import { Rect } from "react-konva";
-import { KonvaEventObject } from "konva/lib/Node";
 
 import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { TASK_BORDER_RADIUS } from "../../utils/tasks";

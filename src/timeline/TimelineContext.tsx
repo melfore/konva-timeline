@@ -1,6 +1,7 @@
-import React, { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
 import { DateTime, Interval } from "luxon";
+import React, { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
 
+import { KonvaTimelineError } from "..";
 import { addHeaderResource, Resource } from "../resources/utils/resources";
 import { AreaSelect, filterTasks, TaskData, validateTasks } from "../tasks/utils/tasks";
 import { DEFAULT_GRID_ROW_HEIGHT, MIN_GRID_COLUMN_WIDTH, MINIMUM_GRID_ROW_HEIGHT } from "../utils/dimensions";
@@ -16,7 +17,6 @@ import { getIntervalFromInternalTimeRange } from "../utils/time";
 import { getResolutionData, Resolution, ResolutionData } from "../utils/time-resolution";
 import { TimelineInput } from "../utils/timeline";
 import { executeWithPerfomanceCheck } from "../utils/utils";
-import { KonvaTimelineError } from "..";
 
 declare global {
   interface Window {

@@ -1,6 +1,5 @@
 import { Resource } from "../resources/utils/resources";
 import { TaskData } from "../tasks/utils/tasks";
-
 import { TimeRange } from "./time";
 import { Resolution } from "./time-resolution";
 

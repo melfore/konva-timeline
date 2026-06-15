@@ -1,6 +1,6 @@
+import Konva from "konva";
 import React from "react";
 import { Group, Layer, Line, Rect, Text } from "react-konva";
-import Konva from "konva";
 
 export const KonvaGroup = (props: Konva.GroupConfig) => {
   return <Group {...props} listening={false} perfectDrawEnabled={false} />;

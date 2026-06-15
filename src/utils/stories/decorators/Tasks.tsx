@@ -1,6 +1,6 @@
+import { Decorator } from "@storybook/react-webpack5";
 import React, { useEffect, useMemo, useRef } from "react";
 import { Layer, Stage } from "react-konva";
-import { Decorator } from "@storybook/react-webpack5";
 
 import { TimelineProvider, useTimelineContext } from "../../../timeline/TimelineContext";
 import { generateStoryData } from "../utils";

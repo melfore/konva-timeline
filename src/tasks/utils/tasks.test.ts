@@ -1,6 +1,5 @@
 import { generateStoryData } from "../../utils/stories/utils";
 import { InternalTimeRange } from "../../utils/time";
-
 import { getTaskYCoordinate, TASK_HEIGHT_OFFSET, validateTasks } from "./tasks";
 
 // From: Sunday, 1 January 2023 00:00:00 GMT+01:00

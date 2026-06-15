@@ -13,7 +13,6 @@ const logger = (level: LogLevel, component: string, message: string) => {
 
   switch (level) {
     case "debug":
-      // eslint-disable-next-line no-console
       console.info(text);
       return;
     case "error":

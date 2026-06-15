@@ -1,12 +1,11 @@
+import { DateTime, Duration } from "luxon";
 import React, { FC, useMemo } from "react";
 import { Label } from "react-konva";
 import { Html } from "react-konva-utils";
-import { DateTime, Duration } from "luxon";
 
 import { useTimelineContext } from "../../../timeline/TimelineContext";
 import { KonvaPoint } from "../../../utils/konva";
 import { TaskData } from "../../utils/tasks";
-
 import DefaultToolTip from "./DefaultToolTip";
 
 export interface TaskTooltipProps extends KonvaPoint {

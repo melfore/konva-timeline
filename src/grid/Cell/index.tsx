@@ -1,5 +1,5 @@
-import React, { memo, useMemo } from "react";
 import { Interval } from "luxon";
+import React, { memo, useMemo } from "react";
 
 import { KonvaGroup, KonvaLine, KonvaText } from "../../@konva";
 import { useTimelineContext } from "../../timeline/TimelineContext";

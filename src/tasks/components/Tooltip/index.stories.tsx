@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 import { LayerDecorator, STORY_DATA, TasksLayerDecorator } from "../../../utils/stories/decorators/Tasks";
-
 import TaskTooltip from ".";
 
 const meta = {

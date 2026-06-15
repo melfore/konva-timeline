@@ -1,7 +1,7 @@
-import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { Group, Rect, useStrictMode as enableStrictMode } from "react-konva";
 import { KonvaEventObject } from "konva/lib/Node";
 import { DateTime, Duration } from "luxon";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { Group, Rect, useStrictMode as enableStrictMode } from "react-konva";
 
 import { KonvaText } from "../../../@konva";
 import { findResourceByCoordinate, findResourceIndexByCoordinate } from "../../../resources/utils/resources";

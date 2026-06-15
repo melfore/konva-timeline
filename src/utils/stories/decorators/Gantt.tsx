@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import React from "react";
 import { Decorator } from "@storybook/react-webpack5";
+import React from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { TaskData } from "../../..";
 import { TimelineProviderProps } from "../../../timeline/TimelineContext";
